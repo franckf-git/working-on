@@ -7,4 +7,17 @@ const processNumber = (num) => {
     }
 }
 
-module.exports = processNumber
+const collatzProcess = (entryPoint) => {
+    let collatzList = []
+    collatzList.push(entryPoint)
+
+    while (collatzList[collatzList.length - 1] > 1) {
+        let lastNumber = collatzList[collatzList.length - 1]
+        let numberProcessed = processNumber(lastNumber)
+        collatzList.push(numberProcessed)
+    }
+    console.log(collatzList)
+    return collatzList
+}
+
+module.exports = { processNumber, collatzProcess }
