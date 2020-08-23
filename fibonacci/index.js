@@ -16,13 +16,21 @@ const fibo = (size) => {
     return suite
 }
 
+console.time('fiboSum')
 fibo(number)
+console.timeEnd('fiboSum')
 
 const binet = (fn) => {
     const phi = (1 + Math.sqrt(5)) / 2
     const fiboValue = Math.pow(phi, fn) / Math.sqrt(5)
-    return Math.floor(fiboValue)
+    const resultFN = Math.floor(fiboValue)
+    console.log(resultFN)
+    return resultFN
 }
+
+console.time('binetMath')
+binet(number)
+console.timeEnd('binetMath')
 
 module.exports = { addTwo, fibo, binet }
 
