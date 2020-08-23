@@ -16,8 +16,8 @@ const collatzProcess = (entryPoint) => {
         let numberProcessed = processNumber(lastNumber)
         collatzList.push(numberProcessed)
     }
-    console.log(collatzList)
     return collatzList
 }
 
-module.exports = { processNumber, collatzProcess }
+export { processNumber, collatzProcess }
+// module.exports = { processNumber, collatzProcess }

@@ -6,7 +6,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
         <link rel="stylesheet" href="./bulma.min.css" />
-        <script src="./index.js" type="module"></script>
     </head>
 
     <body>
@@ -17,10 +16,10 @@
                     <div class="column">
                         <div class="field has-addons has-addons-centered">
                             <p class="control">
-                                <input class="input is-rounded" type="text" placeholder="number">
+                                <input class="input is-rounded" type="text" placeholder="number" id="choosenumber">
                             </p>
                             <p class="control">
-                                <a class="button is-rounded is-primary">
+                                <a class="button is-rounded is-primary" id="gograph">
                                     go graph brrrr
                                 </a>
                             </p>
@@ -28,8 +27,8 @@
                     </div>
 
                     <div class="column">
-                        <h2 class="subtitle">flight :</h2>
-                        <h2 class="subtitle">top :</h2>
+                        <h2 class="subtitle" id="flight">flight :</h2>
+                        <h2 class="subtitle" id="topvalue">top :</h2>
                     </div>
 
                 </div>
@@ -39,8 +38,17 @@
 
             </section>
         </div>
-        <script>
+        <script type="module">
+            import { collatzProcess } from "./index.js";
+            const gograph = document.getElementById('gograph')
+            const flight = document.getElementById('flight')
+            const topvalue = document.getElementById('topvalue')
+            gograph.addEventListener('click', () => {
+                const choosenumber = document.getElementById('choosenumber').value
+                const chain = collatzProcess(choosenumber)
+                console.log(chain)
 
+            })
         </script>
     </body>
 
