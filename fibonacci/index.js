@@ -18,5 +18,11 @@ const fibo = (size) => {
 
 fibo(number)
 
+const binet = (fn) => {
+    const phi = (1 + Math.sqrt(5)) / 2
+    const fiboValue = Math.pow(phi, fn) / Math.sqrt(5)
+    return Math.floor(fiboValue)
+}
+
 module.exports = { addTwo, fibo, binet }
 

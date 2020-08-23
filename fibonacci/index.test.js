@@ -13,3 +13,6 @@ it('should process as long as need ', () => {
     expect(fibo(9)).toStrictEqual(resultion)
 })
 
+it('should compute finonacci with binet formula ', () => {
+    expect(binet(50)).toBe(12586269025)
+})
