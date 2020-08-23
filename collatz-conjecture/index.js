@@ -9,6 +9,7 @@ const processNumber = (num) => {
 
 const collatzProcess = (entryPoint) => {
     let collatzList = []
+    entryPoint = parseInt(entryPoint)
     collatzList.push(entryPoint)
 
     while (collatzList[collatzList.length - 1] > 1) {
