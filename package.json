@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest -o",
+    "watch": "jest --watch"
   },
   "repository": "git@gitlab.com:franckf/working-on.git",
   "author": "franckf",
