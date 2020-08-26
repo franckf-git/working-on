@@ -1,0 +1,14 @@
+{
+  "name": "working-on",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": "git@gitlab.com:franckf/working-on.git",
+  "author": "franckf",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^26.4.2"
+  }
+}
