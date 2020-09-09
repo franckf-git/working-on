@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/storageusers",
+      "handler": "storageusers.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/storageusers/count",
+      "handler": "storageusers.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/storageusers/:id",
+      "handler": "storageusers.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/storageusers",
+      "handler": "storageusers.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/storageusers/:id",
+      "handler": "storageusers.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/storageusers/:id",
+      "handler": "storageusers.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

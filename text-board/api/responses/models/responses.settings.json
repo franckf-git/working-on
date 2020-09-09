@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "responses",
+  "info": {
+    "name": "responses"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "message": {
+      "type": "text"
+    },
+    "intent": {
+      "type": "integer"
+    },
+    "original": {
+      "via": "responses",
+      "model": "messages"
+    }
+  }
+}
