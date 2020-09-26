@@ -2,15 +2,21 @@ const api = 'http://localhost:1337'
 
 /**
  * call to api to get all boards
- * @return {Array} lsit of the boards
+ * @return {Promise<Array>} list of the boards
  */
 const getBoards = async () => {
-    const call = fetch(`${api}/boards`)
-
-    const result = await call
-    console.log(result)
-    return result
+    try {
+        const call = await fetch(`${api}/boards`)
+        const data = await call.json()
+        if (call.status === 200) {
+            return data
+        }
+    } catch (error) {
+        console.error(error)
+    }
 }
-
-module.exports = { getBoards }
+getBoards().then((value) => {
+    console.log(value)
+});
+//module.exports = { getBoards }
 // export { getBoards }
