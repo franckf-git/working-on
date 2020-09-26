@@ -4,18 +4,9 @@
   "version": "0.1.0",
   "description": "A Strapi application",
   "jest": {
-    "transform": {
-      ".(ts|tsx)": "ts-jest"
-    },
     "testPathIgnorePatterns": [
       "<rootDir>/.cache/",
       "<rootDir>/node_modules/"
-    ],
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
     ]
   },
   "scripts": {

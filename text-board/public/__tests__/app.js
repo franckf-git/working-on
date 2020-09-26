@@ -1,4 +1,4 @@
-import { getBoards } from "./app";
+const { getBoards } = require('./../app')
 
 test('Exist', () => {
     expect(getBoards()).toBeDefined()
