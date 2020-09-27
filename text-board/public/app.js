@@ -1,3 +1,4 @@
+const fetch = require('node-fetch')
 const api = 'http://localhost:1337'
 
 /**
@@ -19,4 +20,4 @@ getBoards().then((value) => {
     console.log(value)
 });
 //module.exports = { getBoards }
-// export { getBoards }
+export { getBoards }
