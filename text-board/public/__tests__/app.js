@@ -5,7 +5,7 @@ test('Exist', () => {
     expect(getBoards()).toBeDefined()
 })
 
-test('Get at least one board', () => {
-    const firstBoard = getBoards()[0]
-    expect(firstBoard.id).toBe('1')
+test('Get at least one board', async () => {
+    const firstBoard = await getBoards()
+    expect(firstBoard[0].id).toBeGreaterThanOrEqual(1)
 })

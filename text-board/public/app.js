@@ -16,8 +16,9 @@ const getBoards = async () => {
         console.error(error)
     }
 }
+/*
 getBoards().then((value) => {
     console.log(value)
 });
-//module.exports = { getBoards }
+*/
 export { getBoards }
