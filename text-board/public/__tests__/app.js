@@ -8,4 +8,5 @@ test('Exist', () => {
 test('Get at least one board', async () => {
     const firstBoard = await getBoards()
     expect(firstBoard[0].id).toBeGreaterThanOrEqual(1)
+    expect(firstBoard[0].name).toMatch(/[a-zA-Z]/)
 })
