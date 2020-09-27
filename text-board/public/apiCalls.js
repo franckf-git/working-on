@@ -1,5 +1,5 @@
 const fetch = require('node-fetch')
-const api = 'http://localhost:5500'
+const api = 'http://127.0.0.1:5500'
 
 /**
  * call to api to get all boards
