@@ -1,5 +1,4 @@
-//const { getBoards } = require('./../app')
-import { getBoards } from './../app'
+import { getBoards } from "../apiCalls"
 
 test('Exist', () => {
     expect(getBoards()).toBeDefined()
