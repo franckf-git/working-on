@@ -6,8 +6,8 @@ console.log(`
 ██║     ██║  ██║██║  ██║██║ ╚████║╚██████╗██║  ██╗██║     
 ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚═╝  ╚═╝╚═╝     
 `)
-import { getBoards } from './apiCalls.js'
+import { addBoardsLinks } from './createDOM.js'
 
-getBoards().then((value) => {
-    console.log(value)
-})
+
+addBoardsLinks()
+
