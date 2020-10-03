@@ -6,8 +6,8 @@ console.log(`
 ██║     ██║  ██║██║  ██║██║ ╚████║╚██████╗██║  ██╗██║     
 ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚═╝  ╚═╝╚═╝     
 `)
-import { addBoardsLinks } from './createDOM.js'
+import { addBoardsLinks, header } from './createDOM.js'
 
-
+header()
 addBoardsLinks()
 
