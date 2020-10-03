@@ -2,17 +2,21 @@ import { getBoards } from './apiCalls.js'
 
 const app = document.getElementById('app')
 
+/**
+ * get boards and put them in links
+ * @return {} HTML element
+ */
 const addBoardsLinks = async () => {
     const boards = await getBoards()
     const section = document.createElement('section')
     section.classList.add('section')
     app.appendChild(section)
 
-    boards.forEach((board)=>{
+    boards.forEach((board) => {
         const subtitle = document.createElement('h2')
         subtitle.classList.add('subtitle')
         const node = document.createElement('a')
-        node.href=board.shortname
+        node.href = board.shortname
         const textnode = document.createTextNode(board.name)
         node.appendChild(textnode)
         subtitle.appendChild(node)
@@ -21,7 +25,10 @@ const addBoardsLinks = async () => {
 
 }
 
-
+/**
+ * create header
+ * @return {} HTML element
+ */
 const header = () => {
     const title = 'Texts Boards'
     const section = document.createElement('section')
@@ -30,7 +37,6 @@ const header = () => {
 
     const heroBody = document.createElement('div')
     heroBody.classList.add('hero-body')
-
 
     const heroContainer = document.createElement('div')
     heroContainer.classList.add('container')
@@ -49,4 +55,3 @@ const header = () => {
 }
 
 export { addBoardsLinks, header }
-

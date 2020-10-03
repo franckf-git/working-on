@@ -8,6 +8,7 @@ console.log(`
 `)
 import { addBoardsLinks, header } from './createDOM.js'
 
-header()
-addBoardsLinks()
-
+if (window.location.pathname === '/') {
+    header()
+    addBoardsLinks()
+}
