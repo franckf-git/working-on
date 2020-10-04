@@ -1,5 +1,5 @@
 import { app } from './app.js'
-import { getThreads } from './apiCalls.js'
+import { addThreadsLinks } from './createDOM.js'
 
 /**
  * click boards - change url and clear page
@@ -12,8 +12,7 @@ const clickBoard = () => {
             history.pushState({}, '', event.target.href)
             app.innerHTML = ''
             const shortname = window.location.pathname.slice(1)
-            const threads = await getThreads(shortname)
-            console.log(threads)
+            addThreadsLinks(shortname)
         }
     })
 }

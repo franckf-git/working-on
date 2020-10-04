@@ -1,4 +1,4 @@
-import { getBoards } from './apiCalls.js'
+import { getBoards, getThreads } from './apiCalls.js'
 import { app } from './app.js'
 
 /**
@@ -54,4 +54,28 @@ const header = () => {
 
 }
 
-export { addBoardsLinks, header }
+/**
+ * get threads from board shortname and put them in links
+ * @param {String} shortname
+ * @return {} HTML element
+ */
+const addThreadsLinks = async (shortname) => {
+    const threads = await getThreads(shortname)
+    const section = document.createElement('section')
+    section.classList.add('section')
+    app.appendChild(section)
+
+    threads.forEach((thread) => {
+        const subtitle = document.createElement('h2')
+        subtitle.classList.add('subtitle')
+        const node = document.createElement('a')
+        node.href = thread.id
+        const textnode = document.createTextNode(thread.description)
+        node.appendChild(textnode)
+        subtitle.appendChild(node)
+        section.appendChild(subtitle)
+    })
+
+}
+
+export { addBoardsLinks, addThreadsLinks, header }
