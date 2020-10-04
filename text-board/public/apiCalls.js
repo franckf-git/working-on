@@ -18,7 +18,7 @@ const getBoards = async () => {
 
 /**
  * call to api to get all threads from a board
- * @param {string} shortname
+ * @param {String} shortname
  * @return {Promise<Array>} list of the threads
  */
 const getThreads = async (shortname) => {
