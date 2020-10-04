@@ -1,6 +1,5 @@
 import { getBoards } from './apiCalls.js'
-
-const app = document.getElementById('app')
+import { app } from './app.js'
 
 /**
  * get boards and put them in links
