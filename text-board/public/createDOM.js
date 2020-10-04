@@ -69,7 +69,7 @@ const addThreadsLinks = async (shortname) => {
         const subtitle = document.createElement('h2')
         subtitle.classList.add('subtitle')
         const node = document.createElement('a')
-        node.href = thread.id
+        node.href = `${window.location.pathname}/${thread.id}`
         const textnode = document.createTextNode(thread.description)
         node.appendChild(textnode)
         subtitle.appendChild(node)
