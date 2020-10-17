@@ -33,4 +33,38 @@ const getThreads = async (shortname) => {
     }
 }
 
-export { getBoards, getThreads }
+/**
+ * add a new thread to the board
+ *
+ * @return {Promise<boolean>} success post or not
+ */
+const postThread = async () => {
+    try {
+        const shortname = window.location.pathname.slice(1)
+        const callboard = await fetch(`${api}/boards?shortname=${shortname}`)
+        const databoard = await callboard.json()
+        const currentBoard = databoard[0].id
+
+        const newThread = document.getElementById('new-thread').value
+        const thread = {
+            'description': newThread ,
+            'board': currentBoard
+        }
+
+        const call = await fetch(`${api}/threads`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(thread)
+        })
+        const data = await call.json()
+        if (call.status === 200) {
+            return data
+        }
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export { getBoards, getThreads, postThread }

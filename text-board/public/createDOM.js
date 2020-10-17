@@ -22,7 +22,6 @@ const addBoardsLinks = async () => {
         subtitle.appendChild(node)
         section.appendChild(subtitle)
     })
-
 }
 
 /**
@@ -64,6 +63,32 @@ const addThreadsLinks = async (shortname) => {
     const section = document.createElement('section')
     section.classList.add('section')
     app.appendChild(section)
+
+    const inputThread = document.createElement('input')
+    inputThread.classList.add('input')
+    inputThread.type = 'text'
+    inputThread.id = 'new-thread'
+    inputThread.placeholder = 'Add a new thread'
+    const inputThreadControl = document.createElement('div')
+    inputThreadControl.classList.add('control')
+    inputThreadControl.appendChild(inputThread)
+
+    const buttonThread = document.createElement('a')
+    buttonThread.classList.add('button')
+    buttonThread.id = 'button-new-thread'
+    const textButtonThread = document.createTextNode('Add')
+    buttonThread.appendChild(textButtonThread)
+    const buttonThreadControl = document.createElement('div')
+    buttonThreadControl.classList.add('control')
+    buttonThreadControl.appendChild(buttonThread)
+
+    const newThreadField = document.createElement('div')
+    newThreadField.classList.add('field')
+    newThreadField.classList.add('has-addons')
+    newThreadField.appendChild(inputThreadControl)
+    newThreadField.appendChild(buttonThreadControl)
+
+    section.appendChild(newThreadField)
 
     threads.forEach((thread) => {
         const subtitle = document.createElement('h2')
