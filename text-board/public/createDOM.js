@@ -16,6 +16,7 @@ const addBoardsLinks = async () => {
         subtitle.classList.add('subtitle')
         const node = document.createElement('a')
         node.href = board.shortname
+        node.title = board.name
         node.id = 'board-link'
         const textnode = document.createTextNode(board.name)
         node.appendChild(textnode)
