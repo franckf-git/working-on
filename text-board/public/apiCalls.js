@@ -67,4 +67,21 @@ const postThread = async () => {
     }
 }
 
-export { getBoards, getThreads, postThread }
+/**
+ * call to api to get notifications
+ * @return {Promise<Array>}
+ */
+const getNotifs = async () => {
+    try {
+        const call = await fetch(`${api}/notifications`)
+        const data = await call.json()
+        if (call.status === 200) {
+            return data
+        }
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+
+export { getBoards, getThreads, postThread, getNotifs }
