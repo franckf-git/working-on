@@ -59,6 +59,10 @@ const addNotif = async () => {
     notifcard.appendChild(footercard)
 
     app.appendChild(notifcard)
+
+    const getitbutton = document.querySelector('.card-footer-item')
+    const notificationcard = document.querySelector('.card')
+    getitbutton.addEventListener('click', () => { notificationcard.classList.add('is-hidden') })
 }
 
 /**
