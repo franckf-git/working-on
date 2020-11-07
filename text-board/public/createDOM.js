@@ -1,4 +1,4 @@
-import { getBoards, getThreads } from './apiCalls.js'
+import { getBoards, getThreads, getNotifs } from './apiCalls.js'
 import { app } from './app.js'
 
 /**
@@ -23,6 +23,42 @@ const addBoardsLinks = async () => {
         subtitle.appendChild(node)
         section.appendChild(subtitle)
     })
+}
+
+/**
+ * get notif and display it
+ * @return {} HTML element
+ */
+const addNotif = async () => {
+    const notifs = await getNotifs()
+
+    const notifcard = document.createElement('div')
+    notifcard.classList.add('card')
+    notifcard.classList.add('notifications')
+
+    const headercard = document.createElement('header')
+    headercard.classList.add('card-header')
+
+    const titlecard = document.createElement('p')
+    titlecard.classList.add('card-header-title')
+    const messagenotif = document.createTextNode(notifs[0].message)
+    titlecard.appendChild(messagenotif)
+
+    headercard.appendChild(titlecard)
+    notifcard.appendChild(headercard)
+
+    const footercard = document.createElement('footer')
+    footercard.classList.add('card-footer')
+
+    const buttoncard = document.createElement('a')
+    buttoncard.classList.add('card-footer-item')
+    const getit = document.createTextNode('Get it')
+    buttoncard.appendChild(getit)
+
+    footercard.appendChild(buttoncard)
+    notifcard.appendChild(footercard)
+
+    app.appendChild(notifcard)
 }
 
 /**
@@ -104,4 +140,4 @@ const addThreadsLinks = async (shortname) => {
 
 }
 
-export { addBoardsLinks, addThreadsLinks, header }
+export { addBoardsLinks, addThreadsLinks, header, addNotif }
