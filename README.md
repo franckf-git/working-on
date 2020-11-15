@@ -12,4 +12,3 @@
 | [pascal-triangle](pascal-triangle/readme.md)     |       |      |
 | [pi](pi/readme.md)                               |       |      |
 | [setup](setup/readme.md)                         |       |      |
-|  | [text-board](text-board/readme.md)               |       |
