@@ -85,4 +85,3 @@ https://www.codeheroes.fr/2020/02/02/securiser-une-api-rest-2-3-implementation-e
 https://www.codeheroes.fr/2020/06/20/securiser-une-api-rest-3-3-gestion-du-jwt-cote-client/
 https://medium.com/@ryanchenkie_40935/react-authentication-how-to-store-jwt-in-a-cookie-346519310e81
 
----
