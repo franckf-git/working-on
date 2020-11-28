@@ -11,7 +11,6 @@
 | [hanoi](hanoi/readme.md)                         |       |      |
 | [pascal-triangle](pascal-triangle/readme.md)     |       |      |
 | [pi](pi/readme.md)                               |       |      |
-| [setup](setup/readme.md)                         | ts node template |      |
 
 ## notes and test to come
 
