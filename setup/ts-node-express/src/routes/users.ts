@@ -1,9 +1,15 @@
-import express, { Router } from 'express'
+import express from 'express'
 const router = express.Router()
 
-/* GET users listing. */
-router.get('/', function (req, res, next) {
-  res.send('respond with a resource')
+/**
+ * users page (public)
+ * @route {GET} /users
+ * @param {object} request
+ * @param {object} response
+ * @param next
+ */
+router.get('/', (request: express.Request, response: express.Response, next) => {
+  response.send('respond with a resource')
 })
 
 export default router
