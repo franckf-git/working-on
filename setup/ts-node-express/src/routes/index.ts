@@ -2,7 +2,7 @@ import express from 'express'
 const router = express.Router()
 
 /**
- * users home (public)
+ * homepage (public)
  * @route {GET} /
  * @param {object} request
  * @param {object} response
