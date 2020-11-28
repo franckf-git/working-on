@@ -1,9 +1,15 @@
-import express, { Router } from 'express'
+import express from 'express'
 const router = express.Router()
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Express' })
+/**
+ * users home (public)
+ * @route {GET} /
+ * @param {object} request
+ * @param {object} response
+ * @param next
+ */
+router.get('/', (request: express.Request, response: express.Response, next) => {
+  response.render('index', { title: 'Express' })
 })
 
 export default router
