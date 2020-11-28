@@ -7,6 +7,8 @@ import http from 'http'
 
 /**
  * Normalize a port into a number, string, or false.
+ * @param {any} val
+ * @returns {number}
  */
 const normalizePort = (val: any) => {
   const port = parseInt(val, 10)
@@ -26,6 +28,8 @@ const normalizePort = (val: any) => {
 
 /**
  * Event listener for HTTP server "error" event.
+ * @param {any} error
+ * @returns error
  */
 const onError = (error: any) => {
   if (error.syscall !== 'listen') {
