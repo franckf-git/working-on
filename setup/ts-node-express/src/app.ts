@@ -23,19 +23,19 @@ app.use('/', indexRouter)
 app.use('/users', usersRouter)
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use((request: express.Request, response: express.Response, next) => {
   next(createError(404))
 })
 
 // error handler
-app.use(function (err: any, req: any, res: any, next: any) {
+app.use((errors: any, request: express.Request, response: express.Response, next: any) => {
   // set locals, only providing error in development
-  res.locals.message = err.message
-  res.locals.error = req.app.get('env') === 'development' ? err : {}
+  response.locals.message = errors.message
+  response.locals.error = request.app.get('env') === 'development' ? errors : {}
 
   // render the error page
-  res.status(err.status || 500)
-  res.render('error')
+  response.status(errors.status || 500)
+  response.render('error')
 })
 
 export default app
