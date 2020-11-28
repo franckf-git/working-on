@@ -48,11 +48,6 @@ node-json-db
 * @param {Object} some object
 * @return {bool} some bool
 */
-
-/**
- * Contact form page.
- * @route GET /contact
- */
 ```
 
 - make a function to store/read cookies with json (frontend)
