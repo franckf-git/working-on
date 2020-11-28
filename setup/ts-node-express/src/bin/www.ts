@@ -2,10 +2,8 @@
 /**
  * Module dependencies.
  */
-import app from "../app"
-import debug from "debug"
-//var debug = require('debug')('mod-les:server');
-import http from "http"
+import app from './../app'
+import http from 'http'
 
 /**
  * Get port from environment and store in Express.

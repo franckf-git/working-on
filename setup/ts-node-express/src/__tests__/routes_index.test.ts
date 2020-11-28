@@ -1,5 +1,5 @@
-import request from 'supertest';
-import app from './../app';
+import request from 'supertest'
+import app from './../app'
 
 test("basic route home", async () => {
     const response = await request(app).get('/')

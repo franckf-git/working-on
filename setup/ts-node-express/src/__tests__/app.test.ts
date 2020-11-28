@@ -1,5 +1,5 @@
-import request from 'supertest';
-import app from './../app';
+import request from 'supertest'
+import app from './../app'
 
 test("if a 404 if displayed on unknown pages", async () => {
     const response = await request(app).get('/arandompagewithoutroute')
