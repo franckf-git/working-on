@@ -14,6 +14,12 @@
 
 ## notes and test to come
 
+- DOM testing :
+https://github.com/puppeteer/puppeteer
+https://playwright.dev/
+https://jestjs.io/docs/en/snapshot-testing
+https://www.npmjs.com/package/jsdom
+
 - try to use setAttribute vs addClass in frontend js
 
 - `console.log(process.memoryUsage())`
