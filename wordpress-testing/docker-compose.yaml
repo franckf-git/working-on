@@ -1,0 +1,42 @@
+version: "3.8"
+services: 
+
+  web:
+    image: wordpress
+    restart: always
+    volumes:
+      - wordpress:/var/www/html
+    ports:
+      - 8080:80
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: magazine
+      WORDPRESS_DB_NAME: magazine
+      WORDPRESS_DB_PASSWORD: 1maGazine!
+      WORDPRESS_TABLE_PREFIX: cz
+      WORDPRESS_DEBUG: 0
+    depends_on:
+      - db
+    networks:
+      - wpnet
+  db:
+    image: mariadb:10.5
+    restart: always
+    ports:
+      - 6603:3306
+    volumes:
+      - wpdbvol:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: magazine
+      MYSQL_USER: magazine
+      MYSQL_PASSWORD: 1maGazine!
+      MYSQL_ROOT_PASSWORD: 1maGazine!
+    networks:
+      - wpnet
+
+volumes:
+  wordpress: {}
+  wpdbvol: {}
+
+networks:
+  wpnet: {}
