@@ -24,3 +24,4 @@ import AdminsController from 'App/Controllers/Http/AdminsController'
 Route.on('/').render('welcome')
 Route.on('/services').render('service')
 Route.get('admin', 'AdminsController.index')
+Route.post('admin', 'AdminsController.connect')
