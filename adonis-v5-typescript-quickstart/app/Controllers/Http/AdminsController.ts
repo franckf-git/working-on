@@ -11,7 +11,7 @@ export default class AdminsController {
         const postSchema = schema.create({ username: schema.string(), password: schema.string() })
         const data = await request.validate({ schema: postSchema, cacheKey: request.url() })
 
-        console.log(data)
+        console.log(data) // trim username ?
         return 'connect admin'
     }
 }
