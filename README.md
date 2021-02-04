@@ -14,6 +14,12 @@
 
 ## notes and test to come
 
+- [ramda-functional](https://ramdajs.com/docs/)
+
+- [datefns](https://date-fns.org/)
+
+- [dayjs](https://day.js.org/en/)
+
 - DOM testing :
 https://github.com/puppeteer/puppeteer
 https://playwright.dev/
