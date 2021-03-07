@@ -1,3 +1,7 @@
+
+`!cheat` in duckduckgo
+`cheat.sh` in browser/curl/w3m https://github.com/chubin/cheat.sh
+
 ## notes and test to come
 
 - cwebp
