@@ -2,7 +2,8 @@ package main
 
 import (
 	"html/template"
-	"os"
+	"log"
+	"net/http"
 )
 
 func main() {
@@ -21,9 +22,9 @@ func main() {
 		SubTitle: subtitle,
 	}
 
-	err = indextemplate.Execute(os.Stdout, data)
-	if err != nil {
-		panic(err)
-	}
+	http.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
+		indextemplate.Execute(res, data)
+	})
+	log.Print(http.ListenAndServe(":5500", nil))
 
 }
