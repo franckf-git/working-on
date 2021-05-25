@@ -13,6 +13,20 @@ func main() {
 
 	// lister toutes commandes à retourner dans la page web
 
+        var command map[string]string = map[string]string{
+        "uptime": "uptime",
+        "user": "whoami",
+        "ips": "ip a",
+        "hostname": "hostname",
+        "packages": "dnf list --installed | wc -l", // prévoir pour debian distro
+        "kernel": "uname -a",
+        "os": "lsb_release -a", // prévoir une gestion des erreurs si la commande n'est disponible
+        "top": "ps aux | sort -nk +4 | tail",
+        "memory": "free -h",
+        "loads": "uptime | cut -d' ' -f10-",
+        "cpu": "lscpu | grep 'Model name' | cut -d' ' -f12-",
+        "disks": "df -h",
+    }
 	// les executer
 	// conncurrence ? await ? channels ?
 	hostname, err := os.Hostname()
