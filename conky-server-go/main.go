@@ -4,34 +4,31 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"os"
 	"os/exec"
 )
+
+// lister toutes commandes à retourner dans la page web
+var command map[string]string = map[string]string{
+	"uptime":   "uptime",
+	"user":     "whoami",
+	"ips":      "ip a",
+	"hostname": "hostname",
+	"packages": "dnf list --installed | wc -l", // prévoir pour debian distro
+	"kernel":   "uname -a",
+	// "os":       "lsb_release -a",
+	"top":    "ps aux | sort -nk +4 | tail",
+	"memory": "free -h",
+	"loads":  "uptime | cut -d' ' -f10-",
+	"cpu":    "lscpu | grep 'Model name' | cut -d' ' -f12-",
+	"disks":  "df -h",
+}
 
 func main() {
 	// dirty
 
-	// lister toutes commandes à retourner dans la page web
-
-	var command map[string]string = map[string]string{
-		"uptime":   "uptime",
-		"user":     "whoami",
-		"ips":      "ip a",
-		"hostname": "hostname",
-		"packages": "dnf list --installed | wc -l", // prévoir pour debian distro
-		"kernel":   "uname -a",
-		"os":       "lsb_release -a", // prévoir une gestion des erreurs si la commande n'est disponible
-		"top":      "ps aux | sort -nk +4 | tail",
-		"memory":   "free -h",
-		"loads":    "uptime | cut -d' ' -f10-",
-		"cpu":      "lscpu | grep 'Model name' | cut -d' ' -f12-",
-		"disks":    "df -h",
-	}
-
-	for k, v := range command {
+	for _, v := range command {
 		// les executer
 		// conncurrence ? await ? channels ?
-		log.Println("the key is", k, "- the value is", v)
 		log.Println(runCommand(v))
 	}
 
@@ -70,7 +67,7 @@ func main() {
 func runCommand(command string) string {
 	output, errcmd := exec.Command("bash", "-c", command).CombinedOutput()
 	if errcmd != nil {
-		os.Stderr.WriteString(errcmd.Error())
+		log.Fatal("La commande ", command, " n'existe pas")
 	}
 	result := string(output)
 	return result
