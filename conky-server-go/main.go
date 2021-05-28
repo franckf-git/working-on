@@ -13,34 +13,27 @@ func main() {
 
 	// lister toutes commandes à retourner dans la page web
 
-        var command map[string]string = map[string]string{
-        "uptime": "uptime",
-        "user": "whoami",
-        "ips": "ip a",
-        "hostname": "hostname",
-        "packages": "dnf list --installed | wc -l", // prévoir pour debian distro
-        "kernel": "uname -a",
-        "os": "lsb_release -a", // prévoir une gestion des erreurs si la commande n'est disponible
-        "top": "ps aux | sort -nk +4 | tail",
-        "memory": "free -h",
-        "loads": "uptime | cut -d' ' -f10-",
-        "cpu": "lscpu | grep 'Model name' | cut -d' ' -f12-",
-        "disks": "df -h",
-    }
-	// les executer
-	// conncurrence ? await ? channels ?
-	hostname, err := os.Hostname()
-	if err != nil {
-		log.Printf("Error : %v", err)
+	var command map[string]string = map[string]string{
+		"uptime":   "uptime",
+		"user":     "whoami",
+		"ips":      "ip a",
+		"hostname": "hostname",
+		"packages": "dnf list --installed | wc -l", // prévoir pour debian distro
+		"kernel":   "uname -a",
+		"os":       "lsb_release -a", // prévoir une gestion des erreurs si la commande n'est disponible
+		"top":      "ps aux | sort -nk +4 | tail",
+		"memory":   "free -h",
+		"loads":    "uptime | cut -d' ' -f10-",
+		"cpu":      "lscpu | grep 'Model name' | cut -d' ' -f12-",
+		"disks":    "df -h",
 	}
-	log.Println(hostname)
 
-	output, errcmd := exec.Command("uptime").CombinedOutput()
-	if errcmd != nil {
-		os.Stderr.WriteString(errcmd.Error())
+	for k, v := range command {
+		// les executer
+		// conncurrence ? await ? channels ?
+		log.Println("the key is", k, "- the value is", v)
+		log.Println(runCommand(v))
 	}
-	result := string(output)
-	log.Print(result)
 
 	// recupérer le template
 	indextemplate, err := template.ParseFiles("indextemplate.html")
@@ -67,9 +60,18 @@ func main() {
 	})
 	log.Print(http.ListenAndServe(":5500", nil))
 
-	// ouverture auto du navigateur par défaut ?
+	// ouverture auto du navigateur par défaut ? `xdg-open http://127.0.0.1:5500`
 
 	//! **refacto**
 
 	return
+}
+
+func runCommand(command string) string {
+	output, errcmd := exec.Command(command).CombinedOutput()
+	if errcmd != nil {
+		os.Stderr.WriteString(errcmd.Error())
+	}
+	result := string(output)
+	return result
 }
