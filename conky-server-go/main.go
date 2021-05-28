@@ -56,23 +56,19 @@ func serveTemplate(res http.ResponseWriter, req *http.Request) {
 	title := "ConkyWeb"
 	data := struct {
 		Title    string
-		Commands []string
+		Commands map[string]string
 	}{
 		Title: title,
-		Commands: []string{
-			"1",
-			"2",
-			"3",
-			"2",
-			"3",
-			"2",
-			"3",
-			"2",
-			"3",
-			"2",
-			"3",
-			"2",
-			"3",
+		Commands: map[string]string{
+			"1": "a",
+			"2": "b",
+			"3": "c",
+			"9": "a",
+			"8": "b",
+			"7": "c",
+			"6": "a",
+			"5": "b",
+			"4": "c",
 		},
 	}
 	indextemplate.Execute(res, data)
