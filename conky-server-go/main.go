@@ -7,7 +7,8 @@ import (
 	"os/exec"
 )
 
-// lister toutes commandes à retourner dans la page web
+const title string = "ConkyWeb"
+
 var commands map[string]string = map[string]string{
 	"uptime":   "uptime",
 	"user":     "whoami",
@@ -24,37 +25,24 @@ var commands map[string]string = map[string]string{
 }
 
 func main() {
-	// dirty
-
-	// servir le template
 	http.HandleFunc("/", serveTemplate)
 	log.Println("Le serveur est en ligne, visitez http://127.0.0.1:5500")
+	// TODO ouverture auto du navigateur par défaut ? `xdg-open http://127.0.0.1:5500`
 	http.ListenAndServe(":5500", nil)
-
-	// ouverture auto du navigateur par défaut ? `xdg-open http://127.0.0.1:5500`
-
-	//! **refacto**
-
 	return
 }
 
 func serveTemplate(res http.ResponseWriter, req *http.Request) {
 	var commandsExec map[string]string
 	for title, command := range commands {
-		// les executer
-		// conncurrence ? await ? channels ?
 		commandsExec[title] = runCommand(command)
 	}
 
-	// recupérer le template
 	indextemplate, err := template.ParseFiles("indextemplate.html")
 	if err != nil {
 		panic(err)
 	}
 
-	// definir les champs du template avec les infos des commandes externes
-	// prévoir une boucle dans le template
-	title := "ConkyWeb"
 	data := struct {
 		Title    string
 		Commands map[string]string
