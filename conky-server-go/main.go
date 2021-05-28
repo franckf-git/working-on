@@ -68,7 +68,7 @@ func main() {
 }
 
 func runCommand(command string) string {
-	output, errcmd := exec.Command(command).CombinedOutput()
+	output, errcmd := exec.Command("bash", "-c", command).CombinedOutput()
 	if errcmd != nil {
 		os.Stderr.WriteString(errcmd.Error())
 	}
