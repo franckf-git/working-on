@@ -8,7 +8,7 @@ import (
 )
 
 // lister toutes commandes à retourner dans la page web
-var command map[string]string = map[string]string{
+var commands map[string]string = map[string]string{
 	"uptime":   "uptime",
 	"user":     "whoami",
 	"ips":      "ip a",
@@ -26,12 +26,6 @@ var command map[string]string = map[string]string{
 func main() {
 	// dirty
 
-	for _, v := range command {
-		// les executer
-		// conncurrence ? await ? channels ?
-		log.Println(runCommand(v))
-	}
-
 	// servir le template
 	http.HandleFunc("/", serveTemplate)
 	log.Println("Le serveur est en ligne, visitez http://127.0.0.1:5500")
@@ -45,6 +39,13 @@ func main() {
 }
 
 func serveTemplate(res http.ResponseWriter, req *http.Request) {
+	var commandsExec map[string]string
+	for title, command := range commands {
+		// les executer
+		// conncurrence ? await ? channels ?
+		commandsExec[title] = runCommand(command)
+	}
+
 	// recupérer le template
 	indextemplate, err := template.ParseFiles("indextemplate.html")
 	if err != nil {
@@ -58,18 +59,8 @@ func serveTemplate(res http.ResponseWriter, req *http.Request) {
 		Title    string
 		Commands map[string]string
 	}{
-		Title: title,
-		Commands: map[string]string{
-			"1": "a",
-			"2": "b",
-			"3": "c",
-			"9": "a",
-			"8": "b",
-			"7": "c",
-			"6": "a",
-			"5": "b",
-			"4": "c",
-		},
+		Title:    title,
+		Commands: commandsExec,
 	}
 	indextemplate.Execute(res, data)
 }
