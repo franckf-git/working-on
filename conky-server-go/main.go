@@ -53,14 +53,27 @@ func serveTemplate(res http.ResponseWriter, req *http.Request) {
 
 	// definir les champs du template avec les infos des commandes externes
 	// prévoir une boucle dans le template
-	title := "Titre de la page de template"
-	subtitle := "Sous-titre du héros"
+	title := "ConkyWeb"
 	data := struct {
 		Title    string
-		SubTitle string
+		Commands []string
 	}{
-		Title:    title,
-		SubTitle: subtitle,
+		Title: title,
+		Commands: []string{
+			"1",
+			"2",
+			"3",
+			"2",
+			"3",
+			"2",
+			"3",
+			"2",
+			"3",
+			"2",
+			"3",
+			"2",
+			"3",
+		},
 	}
 	indextemplate.Execute(res, data)
 }
