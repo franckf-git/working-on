@@ -32,6 +32,19 @@ func main() {
 		log.Println(runCommand(v))
 	}
 
+	// servir le template
+	http.HandleFunc("/", serveTemplate)
+	log.Println("Le serveur est en ligne, visitez http://127.0.0.1:5500")
+	http.ListenAndServe(":5500", nil)
+
+	// ouverture auto du navigateur par défaut ? `xdg-open http://127.0.0.1:5500`
+
+	//! **refacto**
+
+	return
+}
+
+func serveTemplate(res http.ResponseWriter, req *http.Request) {
 	// recupérer le template
 	indextemplate, err := template.ParseFiles("indextemplate.html")
 	if err != nil {
@@ -40,7 +53,6 @@ func main() {
 
 	// definir les champs du template avec les infos des commandes externes
 	// prévoir une boucle dans le template
-
 	title := "Titre de la page de template"
 	subtitle := "Sous-titre du héros"
 	data := struct {
@@ -50,18 +62,7 @@ func main() {
 		Title:    title,
 		SubTitle: subtitle,
 	}
-
-	// servir le template
-	http.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
-		indextemplate.Execute(res, data)
-	})
-	log.Print(http.ListenAndServe(":5500", nil))
-
-	// ouverture auto du navigateur par défaut ? `xdg-open http://127.0.0.1:5500`
-
-	//! **refacto**
-
-	return
+	indextemplate.Execute(res, data)
 }
 
 func runCommand(command string) string {
