@@ -17,7 +17,7 @@
     <div class="container is-fluid">
       <section class="section">
         <div class="container">
-          <h2 class="title">{{.Title}}</h2>
+          <h2 class="title has-text-primary">{{.Title}}</h2>
           <h3 class="subtitle">USER@HOTSNAME</h3>
         </div>
       </section>
@@ -27,9 +27,9 @@
           <div class="columns is-multiline">
             {{ range $cmdtitle, $cmdexec := .Commands }}
             <div class="column is-6-tablet is-3-desktop">
-              <div class="card">
+              <div class="card has-background-grey-lighter">
                 <div class="card-header">
-                  <h3 class="card-header-title is-inline">
+                  <h3 class="card-header-title is-inline has-text-danger">
                       <span>{{ $cmdtitle }}</span>
                   </h3>
                 </div>
