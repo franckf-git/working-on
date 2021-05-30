@@ -33,9 +33,9 @@ func main() {
 }
 
 func serveTemplate(res http.ResponseWriter, req *http.Request) {
-	log.Println(req)
+	log.Println(req.URL, req.UserAgent())
 
-	var commandsExec map[string]string
+	var commandsExec = make(map[string]string) // obliger de faire un make sinon le map reste nil
 	for title, command := range commands {
 		commandsExec[title] = runCommand(command)
 	}
