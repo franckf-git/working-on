@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os/exec"
+	"regexp"
 )
 
 const title string = "ConkyWeb"
@@ -61,6 +62,9 @@ func runCommand(command string) string {
 	if errcmd != nil {
 		log.Fatal("La commande ", command, " n'existe pas")
 	}
-	result := string(output)
+	regexp, _ := regexp.Compile(`\n`)
+	formatoutput := regexp.ReplaceAllString(string(output), "<br>")
+
+	result := string(formatoutput)
 	return result
 }
