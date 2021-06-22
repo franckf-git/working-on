@@ -6,4 +6,5 @@
 * [Accueil - Espace RDF de l'INSEE](http://rdf.insee.fr/index.html)
 * [Query results - INSEE SPARQL Endpoint - DataLift](http://rdf.insee.fr/sparql)
 * [Accueil - data.gouv.fr](https://www.data.gouv.fr/fr/)
+* [Datasets - data.gov](https://catalog.data.gov/dataset)
 * [Recherche API](https://api.gouv.fr/rechercher-api)
