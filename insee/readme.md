@@ -9,3 +9,4 @@
 * [Datasets - data.gov](https://catalog.data.gov/dataset)
 * [Recherche API](https://api.gouv.fr/rechercher-api)
 * [CERN](http://opendata.cern.ch)
+* [wiki dump - use dumps to create a link to link scrapper](https://en.wikipedia.org/wiki/Wikipedia:Database_download)
