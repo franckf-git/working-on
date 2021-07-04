@@ -10,3 +10,10 @@
 * [Recherche API](https://api.gouv.fr/rechercher-api)
 * [CERN](http://opendata.cern.ch)
 * [wiki dump - use dumps to create a link to link scrapper](https://en.wikipedia.org/wiki/Wikipedia:Database_download)
+
+### deal with xls files in go
+
+catdoc
+xls2csv
+ssconvert book.xlsx file.csv (gnumeric)
+https://github.com/northbright/xls2csv-go
