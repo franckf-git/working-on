@@ -19,22 +19,8 @@ func main() {
 
 	startDatabase(db)
 
-	insert, err := db.Begin()
-	if err != nil {
-		log.Fatal(err)
-	}
-	stmt, err := insert.Prepare("insert into doc(id, title, url, abstract, links) values(?, ?, ?, ?, ?)")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer stmt.Close()
-	for i := 0; i < 100; i++ {
-		_, err = stmt.Exec(i, "title", "https://url.test", "abstract", i)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-	insert.Commit()
+	id, title, url, abstract, links := 1, "title", "https://url.test", "abstract", 2
+	insertDatabase(db, id, title, url, abstract, links)
 
 	rows, err := db.Query("select id, title from doc")
 	if err != nil {
@@ -80,4 +66,25 @@ func startDatabase(db *sql.DB) {
 		log.Printf("%q: %s\n", err, sqlStmt)
 	}
 	log.Println("database created")
+}
+
+func insertDatabase(db *sql.DB, id int, title string, url string, abstract string, links int) bool {
+	insert, err := db.Begin()
+	if err != nil {
+		log.Fatal(err)
+		return false
+	}
+	stmt, err := insert.Prepare("insert into doc(id, title, url, abstract, links) values(?, ?, ?, ?, ?)")
+	if err != nil {
+		log.Fatal(err)
+		return false
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(id, title, url, abstract, links)
+	if err != nil {
+		log.Fatal(err)
+		return false
+	}
+	insert.Commit()
+	return true
 }
