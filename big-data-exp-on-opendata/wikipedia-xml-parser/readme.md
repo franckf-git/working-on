@@ -55,3 +55,16 @@ iddoc int // relationnal with `doc`
 - What about if the source file is corrumpt, it is an autosave of wikipedia, like missing closing tags ? > the errors will be handle in the code.
 - TDD ? > a lot of new things for eme (parsing xml, sqlite, data visualization), so no, not this time.
 - concurrency ? > it will be a perfect case, but start single, if the performances are bad we will come back to it (and I am not sure sqlite like multi writing).
+
+# data visualization
+
+Having datas is good, charts is better. The datas don't allow to directly have a chart, this will need some choices. Numbers of links by length of titles, numbers of links by alphabet, ...
+
+## tools
+
+A lot of tools for go, need some tries:
+
+- https://github.com/go-echarts/go-echarts
+- https://github.com/gonum/plot
+- https://github.com/wcharczuk/go-chart
+- https://github.com/vdobler/chart
