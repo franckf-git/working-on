@@ -3,14 +3,13 @@ package main
 import (
 	"database/sql"
 	"log"
-	"os"
 	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
-	os.Remove("./enwiki-abstract.db")
+	// os.Remove("./enwiki-abstract.db")
 	db, err := sql.Open("sqlite3", "./enwiki-abstract.db")
 	if err != nil {
 		log.Fatal(err)
@@ -18,32 +17,29 @@ func main() {
 	defer db.Close()
 
 	startDatabase(db)
-	insertDatabase(db, 1, "title", "https://url.test", "abstract", 2)
-	insertDatabase(db, 2, "dex", "url", "abstract", 54)
-	insertDatabase(db, 4, "TITLE", "https://url.fr", "abstract4", 462)
+	insertDatabase(db, 8, "title", "https://url.test", "abstract", 2)
+	insertDatabase(db, 9, "dex", "url", "abstract", 54)
+	insertDatabase(db, 11, "TITLE", "https://url.fr", "abstract4", 462)
 	output := selectAllDatabase(db)
 	log.Println(output)
-
 }
 
+// startDatabase init database with tables doc and unknown
 func startDatabase(db *sql.DB) {
-
 	sqlStmt := `
-	CREATE TABLE doc(
+	CREATE TABLE IF NOT EXISTS doc(
 		id INTEGER NOT NULL PRIMARY KEY,
 		title TEXT NOT NULL,
 		url TEXT NOT NULL,
 		abstract TEXT NOT NULL,
 		links INTEGER NOT NULL
 		);
-	CREATE TABLE unknown(
+	CREATE TABLE IF NOT EXISTS unknown(
 		id INTEGER NOT NULL PRIMARY KEY,
 		unknowntag TEXT NOT NULL,
 		iddoc INTEGER NOT NULL,
 		FOREIGN KEY(iddoc) REFERENCES doc(id)
-		);
-	`
-
+		);`
 	var err error
 	_, err = db.Exec(sqlStmt)
 	if err != nil {
@@ -52,13 +48,14 @@ func startDatabase(db *sql.DB) {
 	log.Println("database created")
 }
 
+// insertDatabase insert values in databasee
 func insertDatabase(db *sql.DB, id int, title string, url string, abstract string, links int) bool {
 	insert, err := db.Begin()
 	if err != nil {
 		log.Fatal(err)
 		return false
 	}
-	stmt, err := insert.Prepare("insert into doc(id, title, url, abstract, links) values(?, ?, ?, ?, ?)")
+	stmt, err := insert.Prepare("INSERT INTO doc(id, title, url, abstract, links) VALUES(?, ?, ?, ?, ?)")
 	if err != nil {
 		log.Fatal(err)
 		return false
