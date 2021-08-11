@@ -4,7 +4,9 @@ It is a training on larger data in go code.
 # parsing
 
 ## source file
+
 xml file start with a `feed` anchor them list terms with the tags:
+
 ```
 <doc>
 <title>Wikipedia: Mariapia Degli Esposti</title>
@@ -28,6 +30,7 @@ xml file start with a `feed` anchor them list terms with the tags:
 
 From the structure of the xml, the database structure look like:
 table `doc`
+
 ```
 id int
 title string
@@ -37,11 +40,14 @@ links int
 ```
 
 table `unknown`
+
 ```
 id int
 unknowntag string
 iddoc int // relationnal with `doc`
 ```
+
+> database, open and insert DONE
 
 ## others
 
@@ -49,4 +55,3 @@ iddoc int // relationnal with `doc`
 - What about if the source file is corrumpt, it is an autosave of wikipedia, like missing closing tags ? > the errors will be handle in the code.
 - TDD ? > a lot of new things for eme (parsing xml, sqlite, data visualization), so no, not this time.
 - concurrency ? > it will be a perfect case, but start single, if the performances are bad we will come back to it (and I am not sure sqlite like multi writing).
-
