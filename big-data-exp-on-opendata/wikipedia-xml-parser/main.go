@@ -2,9 +2,9 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"os"
+	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -18,28 +18,12 @@ func main() {
 	defer db.Close()
 
 	startDatabase(db)
+	insertDatabase(db, 1, "title", "https://url.test", "abstract", 2)
+	insertDatabase(db, 2, "dex", "url", "abstract", 54)
+	insertDatabase(db, 4, "TITLE", "https://url.fr", "abstract4", 462)
+	output := selectAllDatabase(db)
+	log.Println(output)
 
-	id, title, url, abstract, links := 1, "title", "https://url.test", "abstract", 2
-	insertDatabase(db, id, title, url, abstract, links)
-
-	rows, err := db.Query("select id, title from doc")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var id int
-		var name string
-		err = rows.Scan(&id, &name)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(id, name)
-	}
-	err = rows.Err()
-	if err != nil {
-		log.Fatal(err)
-	}
 }
 
 func startDatabase(db *sql.DB) {
@@ -87,4 +71,38 @@ func insertDatabase(db *sql.DB, id int, title string, url string, abstract strin
 	}
 	insert.Commit()
 	return true
+}
+
+// selectAllDatabase return all lines in a slice of slices - VERY BAD DESIGN - TO redo
+func selectAllDatabase(db *sql.DB) [][]string {
+	result := make([][]string, 0)
+
+	rows, err := db.Query("SELECT * FROM doc")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var id int
+		var title string
+		var url string
+		var abstract string
+		var links int
+		err = rows.Scan(&id, &title, &url, &abstract, &links)
+		if err != nil {
+			log.Fatal(err)
+		}
+		currentRow := make([]string, 5)
+		currentRow[0] = strconv.Itoa(id)
+		currentRow[1] = title
+		currentRow[2] = url
+		currentRow[3] = abstract
+		currentRow[4] = strconv.Itoa(links)
+		result = append(result, currentRow)
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return result
 }
