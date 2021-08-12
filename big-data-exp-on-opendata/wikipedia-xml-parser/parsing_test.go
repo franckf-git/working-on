@@ -14,7 +14,12 @@ func Test_parseBlock(t *testing.T) {
 		wantAbstract   string
 		wantCountLinks int
 	}{
-		{"test block", args{block: `<doc><title>Albedo</title><url>https://en.wikipedia.org/wiki/Albedo</url><abstract>Albedo (pronounced ; , meaning 'whiteness')</abstract><links><sublink linktype="nav"><anchor>Terrestrial albedo</anchor><link>https://en.wikipedia.org/wiki/Albedo#Terrestrial_albedo</link></sublink><sublink linktype="nav"><anchor>White-sky, black-sky, and blue-sky albedo</anchor><link>https://en.wikipedia.org/wiki/Albedo#White-sky,_black-sky,_and_blue-sky_albedo</link></sublink><sublink linktype="nav"><anchor>External links</anchor><link>https://en.wikipedia.org/wiki/Albedo#External_links</link></sublink></links></doc>`}, "Albedo", "https://en.wikipedia.org/wiki/Albedo", "Albedo (pronounced ; , meaning 'whiteness')", 0},
+		{"test block",
+			args{block: `<doc><title>Albedo</title><url>https://en.wikipedia.org/wiki/Albedo</url><abstract>Albedo (pronounced ; , meaning 'whiteness')</abstract><links><sublink linktype="nav"><anchor>Terrestrial albedo</anchor><link>https://en.wikipedia.org/wiki/Albedo#Terrestrial_albedo</link></sublink><sublink linktype="nav"><anchor>White-sky, black-sky, and blue-sky albedo</anchor><link>https://en.wikipedia.org/wiki/Albedo#White-sky,_black-sky,_and_blue-sky_albedo</link></sublink><sublink linktype="nav"><anchor>External links</anchor><link>https://en.wikipedia.org/wiki/Albedo#External_links</link></sublink></links></doc>`},
+			"Albedo",
+			"https://en.wikipedia.org/wiki/Albedo",
+			"Albedo (pronounced ; , meaning 'whiteness')",
+			0},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
