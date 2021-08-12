@@ -41,7 +41,27 @@ func Test_selectAllDatabase(t *testing.T) {
 	want := [][]string{{"7", "title2", "https://url.test", "abstract", "2"}, {"8", "title1", "https://url.test", "abstract", "2"}}
 	got := selectAllDatabase(db)
 	if !reflect.DeepEqual(got, want) {
-		t.Errorf("selectAllDatabasetests fail: want %v - got %v", want, got)
+		t.Errorf("selectAllDatabase tests fail: want %v - got %v", want, got)
+	}
+
+	os.Remove("./test.db")
+}
+
+func Test_countValues(t *testing.T) {
+	db, err := sql.Open("sqlite3", "./test.db")
+	if err != nil {
+		log.Fatal("Fail to open database:", err)
+	}
+	defer db.Close()
+	startDatabase(db)
+
+	want := 15
+	for i := 0; i < want; i++ {
+		insertDatabase(db, i, "1", "https://url.test", "abstract", 2)
+	}
+	got := countValues(db)
+	if want != got {
+		t.Errorf("countValues fail: want %v - got %v", want, got)
 	}
 
 	os.Remove("./test.db")

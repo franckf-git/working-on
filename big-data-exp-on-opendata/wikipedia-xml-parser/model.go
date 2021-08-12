@@ -95,3 +95,20 @@ func selectAllDatabase(db *sql.DB) [][]string {
 	}
 	return result
 }
+
+func countValues(db *sql.DB) int {
+	rows, err := db.Query("SELECT COUNT(id) FROM doc")
+	if err != nil {
+		log.Fatal("Count fail - executing query:", err)
+	}
+	defer rows.Close()
+
+	var id int
+	for rows.Next() {
+		err := rows.Scan(&id)
+		if err != nil {
+			log.Panic(err)
+		}
+	}
+	return id
+}
