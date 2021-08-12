@@ -9,7 +9,6 @@ import (
 )
 
 func openDatabase() *sql.DB {
-	// os.Remove("./enwiki-abstract.db")
 	db, err := sql.Open("sqlite3", "./enwiki-abstract.db")
 	if err != nil {
 		log.Fatal("Fail to open database:", err)
@@ -56,7 +55,7 @@ func insertDatabase(db *sql.DB, id int, title string, url string, abstract strin
 	defer stmt.Close()
 	_, err = stmt.Exec(id, title, url, abstract, links)
 	if err != nil {
-		log.Fatal("Insert fail - executing query:", err)
+		log.Println("Insert fail - executing query:", err)
 		return false
 	}
 	insert.Commit()
