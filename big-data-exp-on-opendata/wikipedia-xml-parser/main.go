@@ -9,11 +9,7 @@ import (
 )
 
 func main() {
-	// os.Remove("./enwiki-abstract.db")
-	db, err := sql.Open("sqlite3", "./enwiki-abstract.db")
-	if err != nil {
-		log.Fatal("Fail to open database:", err)
-	}
+	db := openDatabase()
 	defer db.Close()
 
 	startDatabase(db)
@@ -22,6 +18,15 @@ func main() {
 	insertDatabase(db, 11, "TITLE", "https://url.fr", "abstract4", 462)
 	output := selectAllDatabase(db)
 	log.Println("Results:", output)
+}
+
+func openDatabase() *sql.DB {
+	// os.Remove("./enwiki-abstract.db")
+	db, err := sql.Open("sqlite3", "./enwiki-abstract.db")
+	if err != nil {
+		log.Fatal("Fail to open database:", err)
+	}
+	return db
 }
 
 // startDatabase init database with tables doc and unknown
