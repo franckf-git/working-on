@@ -8,10 +8,6 @@ import (
 	"strings"
 )
 
-type feed struct {
-	Doc []Doc `xml:"doc"`
-}
-
 type Doc struct {
 	Title    string `xml:"title"`
 	Url      string `xml:"url"`
