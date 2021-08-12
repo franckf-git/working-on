@@ -27,31 +27,38 @@ func main() {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-
-	var block string
+	block := ""
 	incrementId := 1
+
 	for scanner.Scan() {
-		if scanner.Text() == "<doc>" {
+		line := scanner.Text()
+
+		if line == "<doc>" {
 			block = ""
 		}
-
-		block = block + scanner.Text()
-
-		if scanner.Text() == "</doc>" {
-			blockParsing := &Doc{}
-			xml.Unmarshal([]byte(block), blockParsing)
-			countLinks := len(strings.Split(blockParsing.Links, "\n")) / 2
-
-			insertDatabase(db, incrementId, blockParsing.Title, blockParsing.Url, blockParsing.Abstract, countLinks)
-
+		if line == "</doc>" {
+			title, url, abstract, links := parseBlock(block)
+			insertDatabase(db, incrementId, title, url, abstract, links)
 			incrementId = incrementId + 1
 		}
-
+		block = block + line
 	}
+
 	if err := scanner.Err(); err != nil {
 		log.Fatal("Error while reading scan of file:", err)
 	}
 
 	log.Println("Parsing complete.")
 	log.Println(selectAllDatabase(db))
+}
+
+func parseBlock(block string) (title string, url string, abstract string, countLinks int) {
+	blockParsing := &Doc{}
+	xml.Unmarshal([]byte(block), blockParsing)
+
+	title = blockParsing.Title
+	url = blockParsing.Url
+	abstract = blockParsing.Abstract
+	countLinks = len(strings.Split(blockParsing.Links, "\n")) / 2
+	return
 }
