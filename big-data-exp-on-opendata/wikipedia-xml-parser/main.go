@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"encoding/xml"
 	"log"
+	"os"
 	"strings"
 )
 
@@ -22,26 +24,43 @@ func main() {
 	defer db.Close()
 	startDatabase(db)
 
-	data := `
-	<feed>
-	<doc>
-	<title>Wikipedia: Mariapia Degli Esposti</title>
-	<url>https://en.wikipedia.org/wiki/Mariapia_Degli_Esposti</url>
-	<abstract>Cancer Council of Western Australia Cancer Researcher of the Year 2017Research Excellence Awards - Cancer Council Western Australia (2017)</abstract>
-	<links>
-	<sublink linktype="nav"><anchor>Research</anchor><link>https://en.wikipedia.org/wiki/Mariapia_Degli_Esposti#Research</link></sublink>
-	<sublink linktype="nav"><anchor>Education</anchor><link>https://en.wikipedia.org/wiki/Mariapia_Degli_Esposti#Education</link></sublink>
-	</links>
-	</doc>
-	</feed>
-	`
-	mariapia := &feed{}
-	xml.Unmarshal([]byte(data), mariapia)
+	openAndParseXML("./small.xml")
+}
 
-	log.Printf("%#v\n", mariapia)
-	log.Println("title:", mariapia.Doc[0].Title)
-	log.Println("url:", mariapia.Doc[0].Url)
-	log.Println("abstract:", mariapia.Doc[0].Abstract)
-	log.Println("links:", len(strings.Split(mariapia.Doc[0].Links, "\n"))/2)
+func openAndParseXML(sourcefile string) {
+	file, err := os.Open(sourcefile)
+	if err != nil {
+		log.Println("Error opening xml file:", err)
+	}
+	defer file.Close()
 
+	scanner := bufio.NewScanner(file)
+	parseFile(scanner)
+
+}
+
+func parseFile(scanner *bufio.Scanner) {
+	var block string
+	incrementId := 1
+	for scanner.Scan() {
+		if scanner.Text() == "<doc>" {
+			block = ""
+		}
+
+		block = block + scanner.Text()
+
+		if scanner.Text() == "</doc>" {
+			blockParsing := &Doc{}
+			xml.Unmarshal([]byte(block), blockParsing)
+			countLinks := len(strings.Split(blockParsing.Links, "\n")) / 2
+
+			insertDatabase(db, incrementId, blockParsing.Title, blockParsing.Url, blockParsing.Abstract, countLinks)
+
+			incrementId = incrementId + 1
+		}
+
+	}
+	if err := scanner.Err(); err != nil {
+		log.Fatal("Error while reading scan of file:", err)
+	}
 }
