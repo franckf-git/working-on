@@ -24,22 +24,14 @@ func main() {
 	defer db.Close()
 	startDatabase(db)
 
-	openAndParseXML("./small.xml")
-}
-
-func openAndParseXML(sourcefile string) {
-	file, err := os.Open(sourcefile)
+	file, err := os.Open("./small.xml")
 	if err != nil {
 		log.Println("Error opening xml file:", err)
 	}
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	parseFile(scanner)
 
-}
-
-func parseFile(scanner *bufio.Scanner) {
 	var block string
 	incrementId := 1
 	for scanner.Scan() {
@@ -63,4 +55,7 @@ func parseFile(scanner *bufio.Scanner) {
 	if err := scanner.Err(); err != nil {
 		log.Fatal("Error while reading scan of file:", err)
 	}
+
+	log.Println("Parsing complete.")
+	log.Println(selectAllDatabase(db))
 }
