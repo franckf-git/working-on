@@ -36,6 +36,7 @@ func parseAndSave(file *os.File, db *sql.DB) {
 			block = ""
 		}
 		if line == "</doc>" {
+			block = block + line
 			title, url, abstract, links := parseBlock(block)
 			insertDatabase(db, incrementId, title, url, abstract, links)
 			incrementId = incrementId + 1
