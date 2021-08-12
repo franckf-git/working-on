@@ -19,7 +19,7 @@ func Test_parseBlock(t *testing.T) {
 			"Albedo",
 			"https://en.wikipedia.org/wiki/Albedo",
 			"Albedo (pronounced ; , meaning 'whiteness')",
-			0},
+			3},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

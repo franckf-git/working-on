@@ -6,14 +6,22 @@ import (
 	"encoding/xml"
 	"log"
 	"os"
-	"strings"
 )
 
 type Doc struct {
-	Title    string `xml:"title"`
-	Url      string `xml:"url"`
-	Abstract string `xml:"abstract"`
-	Links    string `xml:"links"`
+	Title    string  `xml:"title"`
+	Url      string  `xml:"url"`
+	Abstract string  `xml:"abstract"`
+	Links    []Links `xml:"links"`
+}
+
+type Links struct {
+	Sublink []Sublink `xml:"sublink"`
+}
+
+type Sublink struct {
+	anchor string `xml:"anchor"`
+	link   string `xml:"link"`
 }
 
 func openXML(sourcefile string) *os.File {
@@ -56,6 +64,6 @@ func parseBlock(block string) (title string, url string, abstract string, countL
 	title = blockParsing.Title
 	url = blockParsing.Url
 	abstract = blockParsing.Abstract
-	countLinks = len(strings.Split(blockParsing.Links, "\n")) / 2
+	countLinks = len(blockParsing.Links[0].Sublink)
 	return
 }
