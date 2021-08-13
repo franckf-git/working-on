@@ -1,12 +1,15 @@
 BINARY_NAME=wikipedia-xml-parser
 
-.PHONY: help build test cover clean install
+.PHONY: help build test cover clean install visualdata
 .DEFAULT_GOAL := all
 
-all: test build ## test and build
+all: test build ## test and build (default)
 
-build: ## create binary
+build: ## create binary for parsing
 	go build -ldflags="-s -w" -o ${BINARY_NAME} ./...
+
+visualdata: ## create binary for data visualization
+	go build -ldflags="-s -w" -o visualdata visualdata.go
 
 test: ## run the tests
 	go test ./... -v
