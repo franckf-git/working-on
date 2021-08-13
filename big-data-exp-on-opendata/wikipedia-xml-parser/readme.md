@@ -62,7 +62,6 @@ iddoc int // relationnal with `doc`
 
 ## **execution**
 
-0.754
 Parsing and saving the `enwiki-20210620-abstract.xml` file take 5 hours 18 min and an average of 25% of the CPU and no RAM.
 The sqlite file is 1151 Mo and contain 6322427 lines.
 
