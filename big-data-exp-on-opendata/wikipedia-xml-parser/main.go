@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	sourcefile := "./small.xml"
+	sourcefile := "./enwiki-20210620-abstract.xml"
 
 	db := openDatabase()
 	defer db.Close()
@@ -17,5 +17,4 @@ func main() {
 	parseAndSave(file, db)
 
 	log.Println("Parsing complete.")
-	log.Println(selectAllDatabase(db))
 }

@@ -26,6 +26,10 @@ xml file start with a `feed` anchor them list terms with the tags:
 
 `title`, `url` and `abstract` will be easy to parse and put in database. `links` and the `sublinks` are more trickies (not really but put them on the side for now) we will just save the count of `sublinks` in each `doc` for now.
 
+> parsing and save DONE
+>
+> > error handling TODO
+
 ## database structure
 
 From the structure of the xml, the database structure look like:
@@ -55,6 +59,16 @@ iddoc int // relationnal with `doc`
 - What about if the source file is corrumpt, it is an autosave of wikipedia, like missing closing tags ? > the errors will be handle in the code.
 - TDD ? > a lot of new things for eme (parsing xml, sqlite, data visualization), so no, not this time.
 - concurrency ? > it will be a perfect case, but start single, if the performances are bad we will come back to it (and I am not sure sqlite like multi writing).
+
+## **execution**
+
+0.754
+Parsing and saving the `enwiki-20210620-abstract.xml` file take 5 hours 18 min and an average of 25% of the CPU and no RAM.
+The sqlite file is 1151 Mo and contain 6322427 lines.
+
+For each insert sqlite create a journal file, this create CPUiowait and maybe reveal a problem: do we execute `CREATE TABLE` at each time ?
+
+The parsing is correct but it is take too much time. Will need optimizations, maybe parsing of `links` and counting `sublink` is the slow part.
 
 # data visualization
 
