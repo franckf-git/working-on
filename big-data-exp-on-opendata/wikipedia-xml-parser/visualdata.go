@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/wcharczuk/go-chart/v2"
 )
@@ -36,7 +37,8 @@ func getAlphabetFreq(db *sql.DB, limit int) map[string]float64 {
 		if err != nil {
 			log.Fatal("Select fail - scanning values:", err)
 		}
-		alphabet[title] = float64(links)
+		letter := parsingTitle(title)
+		alphabet[letter] = float64(links)
 	}
 	err = rows.Err()
 	if err != nil {
@@ -70,4 +72,9 @@ func createChart(datas map[string]float64) {
 	chartFile, _ := os.Create("output.png")
 	defer chartFile.Close()
 	graph.Render(chart.PNG, chartFile)
+}
+
+func parsingTitle(title string) string {
+	withoutWikipedia := strings.Replace(title, "Wikipedia: ", "", -1)
+	return withoutWikipedia[:1]
 }
