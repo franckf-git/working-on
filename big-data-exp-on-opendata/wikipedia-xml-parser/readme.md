@@ -79,5 +79,5 @@ A lot of tools for go, need some tries:
 
 - https://github.com/go-echarts/go-echarts > use javascript
 - https://github.com/gonum/plot
-- https://github.com/wcharczuk/go-chart
+- https://github.com/wcharczuk/go-chart > simple
 - https://github.com/vdobler/chart
