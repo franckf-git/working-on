@@ -1,55 +1,37 @@
 package main
 
 import (
-	"gonum.org/v1/plot"
-	"gonum.org/v1/plot/plotter"
-	"gonum.org/v1/plot/plotutil"
-	"gonum.org/v1/plot/vg"
+	"os"
+
+	"github.com/wcharczuk/go-chart/v2"
 )
 
 func main() {
-	groupA := plotter.Values{20, 35, 30, 35, 27}
-	groupB := plotter.Values{25, 32, 34, 20, 25}
-	groupC := plotter.Values{12, 28, 15, 21, 8}
+	createChart()
+}
 
-	p := plot.New()
+func createChart() {
 
-	p.Title.Text = "Bar chart"
-	p.Y.Label.Text = "Heights"
+	values := []chart.Value{}
 
-	w := vg.Points(20)
+	adding1 := []chart.Value{{Value: 50, Label: "Encore"}}
+	adding2 := []chart.Value{{Value: 10, Label: "Avant"}}
+	values = append(values, adding1...)
+	values = append(values, adding2...)
 
-	barsA, err := plotter.NewBarChart(groupA, w)
-	if err != nil {
-		panic(err)
+	graph := chart.BarChart{
+		Title: "Stats - Links by Letter",
+		Background: chart.Style{
+			Padding: chart.Box{
+				Top: 40,
+			},
+		},
+		Height:   512,
+		BarWidth: 60,
+		Bars:     values,
 	}
-	barsA.LineStyle.Width = vg.Length(0)
-	barsA.Color = plotutil.Color(0)
-	barsA.Offset = -w
 
-	barsB, err := plotter.NewBarChart(groupB, w)
-	if err != nil {
-		panic(err)
-	}
-	barsB.LineStyle.Width = vg.Length(0)
-	barsB.Color = plotutil.Color(1)
-
-	barsC, err := plotter.NewBarChart(groupC, w)
-	if err != nil {
-		panic(err)
-	}
-	barsC.LineStyle.Width = vg.Length(0)
-	barsC.Color = plotutil.Color(2)
-	barsC.Offset = w
-
-	p.Add(barsA, barsB, barsC)
-	p.Legend.Add("Group A", barsA)
-	p.Legend.Add("Group B", barsB)
-	p.Legend.Add("Group C", barsC)
-	p.Legend.Top = true
-	p.NominalX("One", "Two", "Three", "Four", "Five")
-
-	if err := p.Save(5*vg.Inch, 3*vg.Inch, "barchart.png"); err != nil {
-		panic(err)
-	}
+	chartFile, _ := os.Create("output.png")
+	defer chartFile.Close()
+	graph.Render(chart.PNG, chartFile)
 }
