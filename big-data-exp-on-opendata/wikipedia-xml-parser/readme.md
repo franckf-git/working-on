@@ -80,4 +80,6 @@ A lot of tools for go, need some tries:
 - https://github.com/go-echarts/go-echarts > use javascript
 - https://github.com/gonum/plot > simple but more verbose than go-chart
 - https://github.com/wcharczuk/go-chart > simple
-- https://github.com/vdobler/chart
+- https://github.com/vdobler/chart > result seen nice but too verbose
+
+> We will go with wcharczuk/go-chart for start
