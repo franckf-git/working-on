@@ -14,7 +14,7 @@ func main() {
 	defer db.Close()
 	startDatabase(db)
 
-	var datas = getAlphabetFreq(db, 10)
+	var datas = getAlphabetFreq(db, 0)
 	createChart(datas)
 }
 
@@ -38,7 +38,7 @@ func getAlphabetFreq(db *sql.DB, limit int) map[string]float64 {
 			log.Fatal("Select fail - scanning values:", err)
 		}
 		letter := parsingTitle(title)
-		alphabet[letter] = float64(links)
+		alphabet[letter] = float64(links) + alphabet[letter]
 	}
 	err = rows.Err()
 	if err != nil {
@@ -64,7 +64,8 @@ func createChart(datas map[string]float64) {
 				Top: 40,
 			},
 		},
-		Height:   512,
+		Height:   1024,
+		Width:    4096,
 		BarWidth: 60,
 		Bars:     values,
 	}

@@ -83,3 +83,13 @@ A lot of tools for go, need some tries:
 - https://github.com/vdobler/chart > result seen nice but too verbose
 
 > We will go with wcharczuk/go-chart for start
+
+## **execution**
+
+Parsing of titles to get the letter works fine.
+The go-chart library is every efficient.
+
+Two issues:
+- unknown characters aren't handle, so they are in the chart but not readable (bad encoding ?).
+- As we use a map, the result in the chart aren't sorted.
+
