@@ -1,19 +1,49 @@
 package main
 
 import (
+	"database/sql"
+	"log"
 	"os"
 
 	"github.com/wcharczuk/go-chart/v2"
 )
 
 func main() {
-	var datas = map[string]float64{
-		"A": 25,
-		"B": 36,
-		"C": 0,
-		"D": 8,
-	}
+	db := openDatabase()
+	defer db.Close()
+	startDatabase(db)
+
+	var datas = getAlphabetFreq(db, 10)
 	createChart(datas)
+}
+
+func getAlphabetFreq(db *sql.DB, limit int) map[string]float64 {
+	if limit == 0 {
+		limit = countValues(db)
+	}
+
+	alphabet := make(map[string]float64)
+
+	rows, err := db.Query("SELECT title,links FROM doc LIMIT ?", limit)
+	if err != nil {
+		log.Fatal("Select fail - executing query:", err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var title string
+		var links int
+		err = rows.Scan(&title, &links)
+		if err != nil {
+			log.Fatal("Select fail - scanning values:", err)
+		}
+		alphabet[title] = float64(links)
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal("Select fail - reading rows:", err)
+	}
+
+	return alphabet
 }
 
 func createChart(datas map[string]float64) {
