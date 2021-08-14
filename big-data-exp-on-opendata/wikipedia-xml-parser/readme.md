@@ -78,6 +78,6 @@ Having datas is good, charts is better. The datas don't allow to directly have a
 A lot of tools for go, need some tries:
 
 - https://github.com/go-echarts/go-echarts > use javascript
-- https://github.com/gonum/plot
+- https://github.com/gonum/plot > simple but more verbose than go-chart
 - https://github.com/wcharczuk/go-chart > simple
 - https://github.com/vdobler/chart
