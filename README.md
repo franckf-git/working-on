@@ -1,10 +1,19 @@
-## notes and test to come
+---
+title: hello
+date: today
+resume: makdown have headers/meta ??? with frontmatter
+---
+## Hello
 
-- cwebp
-optimisation des images web
-```
-git clone https://github.com/VirtuBox/img-optimize.git $HOME/.img-optimiz
-sudo yum install optipng jpegoptim libwebp-tools -y
-```
+htis is a test
 
-- fail-fast approach.
+- md header/metadatas works
+- what ? i known *stuff* now
+
+> gray-matter
+
+
+- `#FF0000`
+
+
+[[_TOC_]]
