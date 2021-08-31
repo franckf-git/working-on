@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"time"
 )
 
@@ -15,20 +16,29 @@ func main() {
 		return
 	}
 	var fileToWatch string = os.Args[1]
-	var commandToExec []string = os.Args[2:]
-	fileToWatchInfos, err := os.Stat(fileToWatch) // find a way to use var
-	var fileToWatchLastModifyOriginal time.Time = fileToWatchInfos.ModTime()
-	if err != nil {
-		fmt.Println("Problem this file to watch:", err)
-		os.Exit(1)
-	}
+	var command []string = os.Args[2:]
 	for {
-		time.Sleep(time.Second)
-		var fileToWatchLastModify time.Time = fileToWatchInfos.ModTime()
-		if fileToWatchLastModify != fileToWatchLastModifyOriginal {
+		var fileToWatchInfos, err = os.Stat(fileToWatch)
+		if err != nil {
+			fmt.Println("Problem this file to watch:", err)
+			os.Exit(1)
+		}
+		var fileToWatchLastModifyOriginal time.Time = fileToWatchInfos.ModTime()
 
-			fmt.Println(commandToExec)
-			fileToWatchLastModifyOriginal = fileToWatchLastModify
+		time.Sleep(time.Second)
+
+		var fileToWatchLastInfos, _ = os.Stat(fileToWatch)
+		var fileToWatchLastModify time.Time = fileToWatchLastInfos.ModTime()
+		if fileToWatchLastModify != fileToWatchLastModifyOriginal {
+			var commandToExec = []string{"-c"}
+			commandToExec = append(commandToExec, command...)
+			var cmd *exec.Cmd = exec.Command("bash", commandToExec...)
+			var stdout, errcmd = cmd.CombinedOutput()
+			if errcmd != nil {
+				fmt.Println("Problem with this command:", errcmd)
+				os.Exit(1)
+			}
+			fmt.Println(string(stdout))
 		}
 	}
 }
