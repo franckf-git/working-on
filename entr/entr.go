@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 	"time"
 )
 
@@ -17,10 +18,12 @@ func main() {
 	}
 	var fileToWatch string = os.Args[1]
 	var command []string = os.Args[2:]
+	var commandToExec string = strings.Join(command, " ")
+
 	for {
 		var fileToWatchInfos, err = os.Stat(fileToWatch)
 		if err != nil {
-			fmt.Println("Problem this file to watch:", err)
+			fmt.Println("Problem with this file to watch:", err)
 			os.Exit(1)
 		}
 		var fileToWatchLastModifyOriginal time.Time = fileToWatchInfos.ModTime()
@@ -30,9 +33,7 @@ func main() {
 		var fileToWatchLastInfos, _ = os.Stat(fileToWatch)
 		var fileToWatchLastModify time.Time = fileToWatchLastInfos.ModTime()
 		if fileToWatchLastModify != fileToWatchLastModifyOriginal {
-			var commandToExec = []string{"-c"}
-			commandToExec = append(commandToExec, command...)
-			var cmd *exec.Cmd = exec.Command("bash", commandToExec...)
+			var cmd *exec.Cmd = exec.Command("bash", "-c", commandToExec)
 			var stdout, errcmd = cmd.CombinedOutput()
 			if errcmd != nil {
 				fmt.Println("Problem with this command:", errcmd)
