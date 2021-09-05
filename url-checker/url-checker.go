@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"sync"
 )
 
 var urls = []string{
@@ -12,22 +13,30 @@ var urls = []string{
 	"https://www.twitch.tv/",
 }
 
-func main() {
-	var results = make(map[string]bool)
-	results["test"] = true
-	checkUrl(urls[0])
-	fmt.Println(results)
+type urlsStatus struct {
+	mu      sync.Mutex
+	results map[string]bool
 }
 
-func checkUrl(url string) bool {
+func (exec *urlsStatus) checkUrl(url string) {
+	exec.mu.Lock()
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println("error accessing url:", url, err)
-		return false
+		exec.results[url] = false
 	}
 	if resp.StatusCode > 299 {
 		fmt.Println("Response failed with status code:", resp.StatusCode)
-		return false
+		exec.results[url] = false
 	}
-	return true
+	exec.results[url] = true
+	exec.mu.Unlock()
+}
+
+func main() {
+	checker := urlsStatus{results: make(map[string]bool)}
+	for _, url := range urls {
+		checker.checkUrl(url)
+	}
+	fmt.Println(checker.results)
 }
