@@ -23,16 +23,14 @@ func (exec *urlsStatus) checkUrl(url string) {
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println("error accessing url:", url, err)
-		// panic if url doesn't exist
 		exec.results[url] = false
 	} else {
-		exec.results[url] = true
-	}
-	if resp.StatusCode > 299 {
-		fmt.Println("Response failed with status code:", resp.StatusCode)
-		exec.results[url] = false
-	} else {
-		exec.results[url] = true
+		if resp.StatusCode > 299 {
+			fmt.Println("Response failed with status code:", resp.StatusCode)
+			exec.results[url] = false
+		} else {
+			exec.results[url] = true
+		}
 	}
 	exec.mu.Unlock()
 }
