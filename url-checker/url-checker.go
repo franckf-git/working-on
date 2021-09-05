@@ -9,8 +9,8 @@ import (
 var urls = []string{
 	"http://localhost:5051/posts",
 	"http://localhost:5052/posts",
-	//"https://jsonplaceholder.typicode.com/todos/",
-	//"https://www.twitch.tv/",
+	"https://jsonplaceholder.typicode.com/todos/",
+	"https://www.twitch.tv/",
 }
 
 type urlsStatus struct {
@@ -19,7 +19,6 @@ type urlsStatus struct {
 }
 
 func (exec *urlsStatus) checkUrl(url string, urlChannel chan map[string]bool) {
-	//exec.mu.Lock()
 	result := make(map[string]bool)
 	resp, err := http.Get(url)
 	if err != nil {
@@ -36,15 +35,17 @@ func (exec *urlsStatus) checkUrl(url string, urlChannel chan map[string]bool) {
 			urlChannel <- result
 		}
 	}
-	//	exec.mu.Unlock()
 }
 
 func main() {
 	checker := urlsStatus{results: make(map[string]bool)}
 	urlChannel := make(chan map[string]bool)
 	for _, url := range urls {
+		checker.mu.Lock()
 		go checker.checkUrl(url, urlChannel)
+		checker.mu.Unlock()
 	}
+	// double loop: one to get resutl form chan and one to fusion two maps
 	for i := 0; i < len(urls); i++ {
 		result := <-urlChannel
 		for k, v := range result {
