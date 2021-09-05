@@ -21,6 +21,7 @@ type urlsStatus struct {
 func (exec *urlsStatus) checkUrl(url string) {
 	exec.mu.Lock()
 	resp, err := http.Get(url)
+	exec.results[url] = true
 	if err != nil {
 		fmt.Println("error accessing url:", url, err)
 		exec.results[url] = false
@@ -29,7 +30,6 @@ func (exec *urlsStatus) checkUrl(url string) {
 		fmt.Println("Response failed with status code:", resp.StatusCode)
 		exec.results[url] = false
 	}
-	exec.results[url] = true
 	exec.mu.Unlock()
 }
 
