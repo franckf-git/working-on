@@ -18,33 +18,44 @@ type urlsStatus struct {
 	results map[string]bool
 }
 
-func (exec *urlsStatus) checkUrl(url string) {
-	exec.mu.Lock()
+func (exec *urlsStatus) checkUrl(url string, urlChannel chan map[string]bool) {
+	//exec.mu.Lock()
+	result := make(map[string]bool)
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println("error accessing url:", url, err)
-		exec.results[url] = false
+		result[url] = false
+		urlChannel <- result
 	} else {
 		if resp.StatusCode > 299 {
 			fmt.Println("Response failed with status code:", resp.StatusCode)
-			exec.results[url] = false
+			result[url] = false
+			urlChannel <- result
 		} else {
-			exec.results[url] = true
+			result[url] = true
+			urlChannel <- result
 		}
 	}
-	exec.mu.Unlock()
+	//	exec.mu.Unlock()
 }
 
 func main() {
 	checker := urlsStatus{results: make(map[string]bool)}
+	urlChannel := make(chan map[string]bool)
 	for _, url := range urls {
-		checker.checkUrl(url)
+		go checker.checkUrl(url, urlChannel)
+	}
+	for i := 0; i < len(urls); i++ {
+		result := <-urlChannel
+		for k, v := range result {
+			checker.results[k] = v
+		}
 	}
 	fmt.Println(checker.results)
 }
 
 /*
-With waitgroup - not async
+// With waitgroup - not async because of mutex
 func main() {
 	checker := urlsStatus{results: make(map[string]bool)}
 	var waitForAllUrls sync.WaitGroup
@@ -53,9 +64,9 @@ func main() {
 		go func(asyncUrl string) {
 			defer waitForAllUrls.Done()
 			checker.checkUrl(asyncUrl)
-		}(url)
+			}(url)
+		}
+		waitForAllUrls.Wait()
+		fmt.Println(checker.results)
 	}
-	waitForAllUrls.Wait()
-	fmt.Println(checker.results)
-}
 */
