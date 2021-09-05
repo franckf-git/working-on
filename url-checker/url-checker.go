@@ -9,8 +9,8 @@ import (
 var urls = []string{
 	"http://localhost:5051/posts",
 	"http://localhost:5052/posts",
-	"https://jsonplaceholder.typicode.com/todos/",
-	"https://www.twitch.tv/",
+	//"https://jsonplaceholder.typicode.com/todos/",
+	//"https://www.twitch.tv/",
 }
 
 type urlsStatus struct {
@@ -42,3 +42,20 @@ func main() {
 	}
 	fmt.Println(checker.results)
 }
+
+/*
+With waitgroup - not async
+func main() {
+	checker := urlsStatus{results: make(map[string]bool)}
+	var waitForAllUrls sync.WaitGroup
+	for _, url := range urls {
+		waitForAllUrls.Add(1)
+		go func(asyncUrl string) {
+			defer waitForAllUrls.Done()
+			checker.checkUrl(asyncUrl)
+		}(url)
+	}
+	waitForAllUrls.Wait()
+	fmt.Println(checker.results)
+}
+*/
