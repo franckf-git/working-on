@@ -7,6 +7,7 @@ import (
 
 var urls = []string{
 	"http://localhost:5051/posts",
+	"http://localhost:5052/posts",
 	"https://jsonplaceholder.typicode.com/todos/",
 	"https://www.twitch.tv/",
 }
