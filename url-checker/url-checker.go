@@ -55,6 +55,8 @@ func main() {
 	fmt.Println(checker.results)
 }
 
+// TODO need refacto
+
 /*
 // With waitgroup - not async because of mutex
 func main() {
