@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,7 +12,12 @@ import (
 )
 
 func WelcomePage(res http.ResponseWriter, req *http.Request) {
-	fmt.Fprintln(res, config.WelcomeMessage)
+	homepage := struct {
+		Message string `json:"message"`
+	}{
+		Message: config.WelcomeMessage,
+	}
+	json.NewEncoder(res).Encode(homepage)
 }
 
 func ShowAllPosts(res http.ResponseWriter, req *http.Request) {
