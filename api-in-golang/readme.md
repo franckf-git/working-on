@@ -28,6 +28,7 @@ peu d'idées est bienvenue :
 - https://tutorialedge.net/golang/creating-restful-api-with-golang/
 - https://golangdocs.com/golang-mux-router
 - https://stackoverflow.com/questions/42091720/api-testing-in-golang
+- https://semaphoreci.com/community/tutorials/building-and-testing-a-rest-api-in-go-with-gorilla-mux-and-postgresql
 
 
 ## Questions
