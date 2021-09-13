@@ -1,32 +1,18 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
 	"lite-api-crud/config"
+	"lite-api-crud/controllers"
 
 	"github.com/gorilla/mux"
 )
 
-func WelcomePage(res http.ResponseWriter, req *http.Request) {
-	homepage := struct {
-		Message string `json:"message"`
-	}{
-		Message: config.WelcomeMessage,
-	}
-	json.NewEncoder(res).Encode(homepage)
-}
-
-func ShowAllPosts(res http.ResponseWriter, req *http.Request) {
-	fmt.Fprintln(res, "all posts")
-}
-
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/", WelcomePage)
-	router.HandleFunc("/api/v1/posts", ShowAllPosts)
+	router.HandleFunc("/", controllers.WelcomePage)
+	router.HandleFunc("/api/v1/posts", controllers.ShowAllPosts)
 	log.Fatal(http.ListenAndServe(config.PORT, router))
 }
