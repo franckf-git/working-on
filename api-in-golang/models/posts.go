@@ -22,11 +22,14 @@ func RegisterPost(db *sql.DB, title string, datas string, idUser int) (id int, e
 		return 0, err
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(title, datas, created, idUser)
+	result, err := stmt.Exec(title, datas, created, idUser)
 	if err != nil {
 		log.Println("Insert fail - executing query:", err)
 		return 0, err
 	}
 	insert.Commit()
+
+	idReturn, _ := result.LastInsertId()
+	id = int(idReturn)
 	return
 }
