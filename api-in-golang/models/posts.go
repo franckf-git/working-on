@@ -2,7 +2,6 @@ package models
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"time"
 
@@ -10,7 +9,7 @@ import (
 )
 
 func RegisterPost(db *sql.DB, title string, datas string, idUser int) (id int, err error) {
-	created := fmt.Sprintln(time.Now())
+	var created string = time.Now().Format(time.RFC3339)
 
 	insert, err := db.Begin()
 	if err != nil {
