@@ -11,7 +11,6 @@ import (
 
 func OpenDatabase() *sql.DB {
 	db, err := sql.Open("sqlite3", config.Database)
-	log.Println(config.Database)
 	if err != nil {
 		log.Fatal("Fail to open database:", err)
 	}
@@ -21,7 +20,7 @@ func OpenDatabase() *sql.DB {
 func StartDatabase(db *sql.DB) {
 	sqlStmt := `
 	CREATE TABLE IF NOT EXISTS posts(
-		id INTEGER NOT NULL PRIMARY KEY,
+		id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 		title TEXT NOT NULL,
 		datas TEXT NOT NULL,
 		created TEXT NOT NULL,
@@ -29,7 +28,7 @@ func StartDatabase(db *sql.DB) {
 		FOREIGN KEY(idUser) REFERENCES users(id)
 		);
 	CREATE TABLE IF NOT EXISTS users(
-		id INTEGER NOT NULL PRIMARY KEY,
+		id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 		user TEXT NOT NULL
 		);`
 	var err error
