@@ -19,8 +19,8 @@ func init() {
 
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/", controllers.WelcomePage)
-	router.HandleFunc("/api/v1/posts", controllers.ShowAllPosts)
+	router.HandleFunc("/", controllers.WelcomePage).Methods("GET")
+	router.HandleFunc("/api/v1/posts", controllers.ShowAllPosts).Methods("GET")
 	router.HandleFunc("/api/v1/post", controllers.AddPost).Methods("POST")
 	log.Println("api server is up")
 	log.Fatal(http.ListenAndServe(config.PORT, router))
