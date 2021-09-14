@@ -22,5 +22,6 @@ func main() {
 	router.HandleFunc("/", controllers.WelcomePage)
 	router.HandleFunc("/api/v1/posts", controllers.ShowAllPosts)
 	router.HandleFunc("/api/v1/post", controllers.AddPost).Methods("POST")
+	log.Println("api server is up")
 	log.Fatal(http.ListenAndServe(config.PORT, router))
 }
