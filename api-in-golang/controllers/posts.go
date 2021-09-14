@@ -1,13 +1,17 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
 	"lite-api-crud/models"
 	"net/http"
 )
 
 func ShowAllPosts(res http.ResponseWriter, req *http.Request) {
-	fmt.Fprintln(res, "all posts")
+	db := models.OpenDatabase()
+	defer db.Close()
+	posts := models.GetAllPosts(db)
+	json.NewEncoder(res).Encode(posts)
 }
 
 func AddPost(res http.ResponseWriter, req *http.Request) {

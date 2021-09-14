@@ -5,6 +5,8 @@ import (
 	"log"
 	"time"
 
+	"lite-api-crud/config"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -31,5 +33,37 @@ func RegisterPost(db *sql.DB, title string, datas string, idUser int) (id int, e
 
 	idReturn, _ := result.LastInsertId()
 	id = int(idReturn)
+	return
+}
+
+func GetAllPosts(db *sql.DB) (Posts []config.Post) {
+	rows, err := db.Query("SELECT * FROM posts")
+	if err != nil {
+		log.Fatal("Select fail - executing query:", err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var id int
+		var title string
+		var datas string
+		var created string
+		var idUser int
+		err = rows.Scan(&id, &title, &datas, &created, &idUser)
+		if err != nil {
+			log.Fatal("Select fail - scanning values:", err)
+		}
+		currentPost := config.Post{
+			Id:      id,
+			Title:   title,
+			Datas:   datas,
+			Created: created,
+			IdUser:  idUser,
+		}
+		Posts = append(Posts, currentPost)
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal("Select fail - reading rows:", err)
+	}
 	return
 }
