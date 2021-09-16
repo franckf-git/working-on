@@ -1,7 +1,8 @@
-package models
+package tests
 
 import (
 	"database/sql"
+	"lite-api-crud/models"
 	"log"
 	"os"
 	"testing"
@@ -15,9 +16,9 @@ func Test_RegisterPost(t *testing.T) {
 		log.Fatal("Fail to open database:", err)
 	}
 	defer db.Close()
-	StartDatabase(db)
-	firstInsert, _ := RegisterPost(db, "title1", "datas1", 1)
-	secondInsert, _ := RegisterPost(db, "title2", "datas2", 2)
+	models.StartDatabase(db)
+	firstInsert, _ := models.RegisterPost(db, "title1", "datas1", 1)
+	secondInsert, _ := models.RegisterPost(db, "title2", "datas2", 2)
 	if firstInsert != 1 && secondInsert != 2 {
 		t.Errorf("RegisterPost tests fail")
 	}
