@@ -11,3 +11,9 @@ type Post struct {
 	Created string `json:"created"`
 	IdUser  int    `json:"idUser"`
 }
+
+type NewPost struct {
+	Title  string `json:"title"`
+	Datas  string `json:"datas"`
+	IdUser int    `json:"idUser"`
+}
