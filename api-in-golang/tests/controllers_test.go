@@ -16,7 +16,13 @@ func Test_Welcomepage(t *testing.T) {
 	gotCode := recorder.Result().StatusCode
 	gotType := recorder.Header().Get("Content-Type")
 
-	if gotBody == "" || gotCode != 200 || gotType != "application/json" {
-		t.Errorf("WelcomePage fails, got body: %v - code: %d - content-type: %v", gotBody, gotCode, gotType)
+	if gotBody == "" {
+		t.Errorf("WelcomePage fails, got body: %v", gotBody)
+	}
+	if gotCode != 200 {
+		t.Errorf("WelcomePage fails, got code: %d", gotCode)
+	}
+	if gotType != "application/json" {
+		t.Errorf("WelcomePage fails, got content-type: %v", gotType)
 	}
 }
