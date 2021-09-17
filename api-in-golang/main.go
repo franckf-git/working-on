@@ -12,6 +12,7 @@ import (
 )
 
 func init() {
+	models.CreateStorageFolder()
 	db := models.OpenDatabase()
 	defer db.Close()
 	models.StartDatabase(db)

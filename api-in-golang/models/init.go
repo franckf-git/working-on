@@ -3,11 +3,18 @@ package models
 import (
 	"database/sql"
 	"log"
+	"os"
+	"strings"
 
 	"lite-api-crud/config"
 
 	_ "github.com/mattn/go-sqlite3"
 )
+
+func CreateStorageFolder() {
+	var folder string = strings.Split(config.Database, "/")[1]
+	os.Mkdir(folder, 0755)
+}
 
 func OpenDatabase() *sql.DB {
 	db, err := sql.Open("sqlite3", config.Database)
