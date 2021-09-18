@@ -3,7 +3,6 @@ package tests
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"lite-api-crud/config"
 	router "lite-api-crud/routers"
 	"net/http"
@@ -36,7 +35,7 @@ func Test_WelcomePage(t *testing.T) {
 		t.Errorf("WelcomePage fails, got status: %v", gotJSON.Status)
 	}
 	if gotJSON.Message == "" {
-		t.Errorf("WelcomePage fails, message if empty")
+		t.Errorf("WelcomePage fails, message is empty")
 	}
 	if gotCode != 200 {
 		t.Errorf("WelcomePage fails, got code: %d", gotCode)
@@ -86,7 +85,7 @@ func Test_ShowAllPosts(t *testing.T) {
 	}
 }
 
-func Test_AddPosts(t *testing.T) {
+func Test_AddPost(t *testing.T) {
 	body := []byte(`{"title":"add test post","datas":"datasfill","idUser":99}`)
 	request, _ := http.NewRequest("POST", "/api/v1/post", bytes.NewBuffer(body))
 	responseRec := httptest.NewRecorder()
@@ -95,11 +94,22 @@ func Test_AddPosts(t *testing.T) {
 	gotBody := responseRec.Body.Bytes()
 	gotCode := responseRec.Result().StatusCode
 	gotType := responseRec.Header().Get("Content-Type")
-	fmt.Println(gotBody)
+	gotJSON := config.Message{}
+	json.Unmarshal(gotBody, &gotJSON)
+
+	if gotJSON.Status != "success" {
+		t.Errorf("AddPost fails, got status: %v", gotJSON.Status)
+	}
+	if gotJSON.Message == "" {
+		t.Errorf("AddPost fails, message is empty")
+	}
+	if gotJSON.Id != 3 {
+		t.Errorf("AddPost fails, got id: %d", gotJSON.Id)
+	}
 	if gotCode != 200 {
-		t.Errorf("AddPosts fails, got code: %d", gotCode)
+		t.Errorf("AddPost fails, got code: %d", gotCode)
 	}
 	if gotType != "application/json" {
-		t.Errorf("AddPosts fails, got content-type: %v", gotType)
+		t.Errorf("AddPost fails, got content-type: %v", gotType)
 	}
 }

@@ -22,4 +22,5 @@ type NewPost struct {
 type Message struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
+	Id      int    `json:"id"`
 }
