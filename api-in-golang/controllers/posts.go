@@ -13,6 +13,7 @@ func ShowAllPosts(res http.ResponseWriter, req *http.Request) {
 	db := models.OpenDatabase()
 	defer db.Close()
 	posts := models.GetAllPosts(db)
+	res.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(res).Encode(posts)
 }
 

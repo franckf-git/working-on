@@ -2,11 +2,14 @@ package tests
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"lite-api-crud/config"
 	router "lite-api-crud/routers"
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"reflect"
 	"testing"
 )
 
@@ -57,7 +60,19 @@ func Test_ShowAllPosts(t *testing.T) {
 	gotBody := responseRec.Body.Bytes()
 	gotCode := responseRec.Result().StatusCode
 	gotType := responseRec.Header().Get("Content-Type")
-	fmt.Println(gotBody)
+	gotJSON := []config.Post{}
+	json.Unmarshal(gotBody, &gotJSON)
+
+	// carefull very couple to model_test.RegisterPosts
+	gotJSON[0].Created = fakeCreatedTime
+	gotJSON[1].Created = fakeCreatedTime
+	want := []config.Post{
+		{Id: 1, Title: "title1", Datas: "datas1", Created: fakeCreatedTime, IdUser: 1},
+		{Id: 2, Title: "title2", Datas: "datas2", Created: fakeCreatedTime, IdUser: 2},
+	}
+	if !reflect.DeepEqual(gotJSON, want) {
+		t.Errorf("ShowAllPosts fail, got datas: %v", gotJSON)
+	}
 	if gotCode != 200 {
 		t.Errorf("ShowAllPosts fails, got code: %d", gotCode)
 	}
