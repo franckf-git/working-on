@@ -48,5 +48,6 @@ func main() {
 		result := <-urlChannel
 		results = append(results, result)
 	}
+	close(urlChannel)
 	fmt.Println(results)
 }
