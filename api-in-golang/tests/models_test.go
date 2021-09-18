@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"fmt"
 	"lite-api-crud/config"
 	"lite-api-crud/models"
 	"os"
@@ -10,6 +11,8 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 )
+
+var fakeCreatedTime string = time.Now().Format(time.RFC3339)
 
 func Test_RegisterPost(t *testing.T) {
 	db := models.OpenDatabase()
@@ -21,8 +24,6 @@ func Test_RegisterPost(t *testing.T) {
 	if firstInsert != 1 && secondInsert != 2 {
 		t.Errorf("RegisterPost tests fail")
 	}
-
-	os.Remove("./test.db")
 }
 
 func Test_GetAllPosts(t *testing.T) {
@@ -30,10 +31,7 @@ func Test_GetAllPosts(t *testing.T) {
 	defer db.Close()
 	models.StartDatabase(db)
 
-	models.RegisterPost(db, "title1", "datas1", 1)
-	models.RegisterPost(db, "title2", "datas2", 2)
 	postsTests := models.GetAllPosts(db)
-	fakeCreatedTime := time.Now().Format(time.RFC3339)
 	postsTests[0].Created = fakeCreatedTime
 	postsTests[1].Created = fakeCreatedTime
 	want := []config.Post{
@@ -41,8 +39,12 @@ func Test_GetAllPosts(t *testing.T) {
 		{Id: 2, Title: "title2", Datas: "datas2", Created: fakeCreatedTime, IdUser: 2},
 	}
 	if !reflect.DeepEqual(postsTests, want) {
+		fmt.Println(postsTests)
 		t.Errorf("GetAllPosts tests fail")
 	}
+}
 
-	os.Remove("./test.db")
+func Test_End_Models(t *testing.T) {
+	os.Remove(config.Database)
+	os.Remove("./storage/")
 }

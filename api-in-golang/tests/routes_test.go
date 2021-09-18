@@ -61,7 +61,7 @@ func Test_AddPosts(t *testing.T) {
 	t.Errorf("Docs fails %d", gotCode)
 }
 
-func Test_End(t *testing.T) {
+func Test_End_Routes(t *testing.T) {
 	os.Remove(config.Database)
 	os.Remove("./storage/")
 }
