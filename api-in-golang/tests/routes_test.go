@@ -2,6 +2,7 @@ package tests
 
 import (
 	"bytes"
+	"fmt"
 	router "lite-api-crud/routers"
 	"net/http"
 	"net/http/httptest"
@@ -41,16 +42,28 @@ func Test_Docs(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/api/v1/docs", nil)
 	responseRec := httptest.NewRecorder()
 	apiTest.Router.ServeHTTP(responseRec, request)
+
 	gotCode := responseRec.Result().StatusCode
-	t.Errorf("Docs fails %d", gotCode)
+	if gotCode != 301 {
+		t.Errorf("Docs redirect fails, got code: %d", gotCode)
+	}
 }
 
 func Test_ShowAllPosts(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/api/v1/posts", nil)
 	responseRec := httptest.NewRecorder()
 	apiTest.Router.ServeHTTP(responseRec, request)
+
+	gotBody := responseRec.Body.Bytes()
 	gotCode := responseRec.Result().StatusCode
-	t.Errorf("Docs fails %d", gotCode)
+	gotType := responseRec.Header().Get("Content-Type")
+	fmt.Println(gotBody)
+	if gotCode != 200 {
+		t.Errorf("ShowAllPosts fails, got code: %d", gotCode)
+	}
+	if gotType != "application/json" {
+		t.Errorf("ShowAllPosts fails, got content-type: %v", gotType)
+	}
 }
 
 func Test_AddPosts(t *testing.T) {
@@ -58,6 +71,15 @@ func Test_AddPosts(t *testing.T) {
 	request, _ := http.NewRequest("POST", "/api/v1/post", bytes.NewBuffer(body))
 	responseRec := httptest.NewRecorder()
 	apiTest.Router.ServeHTTP(responseRec, request)
+
+	gotBody := responseRec.Body.Bytes()
 	gotCode := responseRec.Result().StatusCode
-	t.Errorf("Docs fails %d", gotCode)
+	gotType := responseRec.Header().Get("Content-Type")
+	fmt.Println(gotBody)
+	if gotCode != 200 {
+		t.Errorf("AddPosts fails, got code: %d", gotCode)
+	}
+	if gotType != "application/json" {
+		t.Errorf("AddPosts fails, got content-type: %v", gotType)
+	}
 }
