@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"lite-api-crud/config"
 	"lite-api-crud/models"
-	"os"
 	"reflect"
 	"testing"
 	"time"
@@ -12,12 +11,16 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+func init() {
+	models.InitializeDB()
+}
+
 var fakeCreatedTime string = time.Now().Format(time.RFC3339)
 
 func Test_RegisterPost(t *testing.T) {
 	db := models.OpenDatabase()
 	defer db.Close()
-	models.StartDatabase(db)
+	models.CleanTables(db)
 
 	firstInsert, _ := models.RegisterPost(db, "title1", "datas1", 1)
 	secondInsert, _ := models.RegisterPost(db, "title2", "datas2", 2)
@@ -29,7 +32,6 @@ func Test_RegisterPost(t *testing.T) {
 func Test_GetAllPosts(t *testing.T) {
 	db := models.OpenDatabase()
 	defer db.Close()
-	models.StartDatabase(db)
 
 	postsTests := models.GetAllPosts(db)
 	postsTests[0].Created = fakeCreatedTime
@@ -42,9 +44,4 @@ func Test_GetAllPosts(t *testing.T) {
 		fmt.Println(postsTests)
 		t.Errorf("GetAllPosts tests fail")
 	}
-}
-
-func Test_End_Models(t *testing.T) {
-	os.Remove(config.Database)
-	os.Remove("./storage/")
 }

@@ -51,3 +51,10 @@ func InitializeDB() {
 	defer db.Close()
 	startDatabase(db)
 }
+
+func CleanTables(db *sql.DB) {
+	db.Exec("DELETE FROM posts")
+	db.Exec("DELETE FROM users")
+	db.Exec("VACUUM")
+	db.Exec("UPDATE sqlite_sequence SET seq =0")
+}

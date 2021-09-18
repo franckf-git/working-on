@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"lite-api-crud/config"
+	"bytes"
 	router "lite-api-crud/routers"
 	"net/http"
 	"net/http/httptest"
@@ -54,14 +54,10 @@ func Test_ShowAllPosts(t *testing.T) {
 }
 
 func Test_AddPosts(t *testing.T) {
-	request, _ := http.NewRequest("POST", "/api/v1/post", nil)
+	body := []byte(`{"title":"add test post","datas":"datasfill","idUser":99}`)
+	request, _ := http.NewRequest("POST", "/api/v1/post", bytes.NewBuffer(body))
 	responseRec := httptest.NewRecorder()
 	apiTest.Router.ServeHTTP(responseRec, request)
 	gotCode := responseRec.Result().StatusCode
 	t.Errorf("Docs fails %d", gotCode)
-}
-
-func Test_End_Routes(t *testing.T) {
-	os.Remove(config.Database)
-	os.Remove("./storage/")
 }
