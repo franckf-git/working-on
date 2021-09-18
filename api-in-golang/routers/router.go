@@ -21,7 +21,7 @@ func (a *App) Run() {
 }
 
 func (a *App) Initialize() {
-	initializeDB()
+	models.InitializeDB()
 	a.Router = mux.NewRouter().StrictSlash(true)
 	a.initializeRoutes()
 }
@@ -31,11 +31,4 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/api/v1/docs", controllers.Docs).Methods("GET")
 	a.Router.HandleFunc("/api/v1/posts", controllers.ShowAllPosts).Methods("GET")
 	a.Router.HandleFunc("/api/v1/post", controllers.AddPost).Methods("POST")
-}
-
-func initializeDB() {
-	models.CreateStorageFolder()
-	db := models.OpenDatabase()
-	defer db.Close()
-	models.StartDatabase(db)
 }

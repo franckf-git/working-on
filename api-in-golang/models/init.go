@@ -11,7 +11,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func CreateStorageFolder() {
+func createStorageFolder() {
 	var folder string = strings.Split(config.Database, "/")[1]
 	os.Mkdir(folder, 0755)
 }
@@ -24,7 +24,7 @@ func OpenDatabase() *sql.DB {
 	return db
 }
 
-func StartDatabase(db *sql.DB) {
+func startDatabase(db *sql.DB) {
 	sqlStmt := `
 	CREATE TABLE IF NOT EXISTS posts(
 		id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -43,4 +43,11 @@ func StartDatabase(db *sql.DB) {
 	if err != nil {
 		log.Println("Error during creating tables:", err, sqlStmt)
 	}
+}
+
+func InitializeDB() {
+	createStorageFolder()
+	db := OpenDatabase()
+	defer db.Close()
+	startDatabase(db)
 }
