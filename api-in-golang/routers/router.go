@@ -16,11 +16,14 @@ type App struct {
 }
 
 func (a *App) Run() {
-	a.Router = mux.NewRouter().StrictSlash(true)
-	initializeDB()
-	a.initializeRoutes()
 	log.Println("api server is up")
 	log.Fatal(http.ListenAndServe(config.PORT, a.Router))
+}
+
+func (a *App) Initialize() {
+	initializeDB()
+	a.Router = mux.NewRouter().StrictSlash(true)
+	a.initializeRoutes()
 }
 
 func (a *App) initializeRoutes() {

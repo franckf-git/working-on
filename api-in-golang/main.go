@@ -6,5 +6,6 @@ import (
 
 func main() {
 	api := router.App{}
+	api.Initialize()
 	api.Run()
 }

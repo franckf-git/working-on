@@ -1,20 +1,29 @@
 package tests
 
 import (
-	"lite-api-crud/controllers"
+	router "lite-api-crud/routers"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 )
 
-func Test_Welcomepage(t *testing.T) {
-	request, _ := http.NewRequest("GET", "/", nil) // args of req don't matter fix it with routes
-	recorder := httptest.NewRecorder()
-	controllers.WelcomePage(recorder, request)
+var apiTest = router.App{}
 
-	gotBody := recorder.Body.String()
-	gotCode := recorder.Result().StatusCode
-	gotType := recorder.Header().Get("Content-Type")
+func TestMain(m *testing.M) {
+	apiTest.Initialize()
+	code := m.Run()
+	os.Exit(code)
+}
+
+func Test_Welcomepage(t *testing.T) {
+	request, _ := http.NewRequest("GET", "/", nil)
+	responseRec := httptest.NewRecorder()
+	apiTest.Router.ServeHTTP(responseRec, request)
+
+	gotBody := responseRec.Body.String()
+	gotCode := responseRec.Result().StatusCode
+	gotType := responseRec.Header().Get("Content-Type")
 
 	if gotBody == "" {
 		t.Errorf("WelcomePage fails, got body: %v", gotBody)
