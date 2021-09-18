@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"sync"
 )
 
 var urls = []string{
@@ -13,63 +12,41 @@ var urls = []string{
 	"https://www.twitch.tv/",
 }
 
-type urlsStatus struct {
-	mu      sync.Mutex
-	results map[string]bool
+type urlOK struct {
+	url    string
+	status bool
 }
 
-func (exec *urlsStatus) checkUrl(url string, urlChannel chan map[string]bool) {
-	result := make(map[string]bool)
+func checkUrl(url string, urlChannel chan urlOK) {
+	result := urlOK{}
+	result.url = url
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println("error accessing url:", url, err)
-		result[url] = false
+		result.status = false
 		urlChannel <- result
 	} else {
 		if resp.StatusCode > 299 {
-			fmt.Println("Response failed with status code:", resp.StatusCode)
-			result[url] = false
+			fmt.Println("response failed with status code:", resp.StatusCode)
+			result.status = false
 			urlChannel <- result
 		} else {
-			result[url] = true
+			result.status = true
 			urlChannel <- result
 		}
 	}
 }
 
 func main() {
-	checker := urlsStatus{results: make(map[string]bool)}
-	urlChannel := make(chan map[string]bool)
+	urlChannel := make(chan urlOK)
 	for _, url := range urls {
-		checker.mu.Lock()
-		go checker.checkUrl(url, urlChannel)
-		checker.mu.Unlock()
+		go checkUrl(url, urlChannel)
 	}
-	// double loop: one to get resutl form chan and one to fusion two maps
+
+	results := make([]urlOK, 0)
 	for i := 0; i < len(urls); i++ {
 		result := <-urlChannel
-		for k, v := range result {
-			checker.results[k] = v
-		}
+		results = append(results, result)
 	}
-	fmt.Println(checker.results)
+	fmt.Println(results)
 }
-
-// TODO need refacto
-
-/*
-// With waitgroup - not async because of mutex
-func main() {
-	checker := urlsStatus{results: make(map[string]bool)}
-	var waitForAllUrls sync.WaitGroup
-	for _, url := range urls {
-		waitForAllUrls.Add(1)
-		go func(asyncUrl string) {
-			defer waitForAllUrls.Done()
-			checker.checkUrl(asyncUrl)
-			}(url)
-		}
-		waitForAllUrls.Wait()
-		fmt.Println(checker.results)
-	}
-*/
