@@ -18,3 +18,8 @@ type NewPost struct {
 	Datas  string `json:"datas"`
 	IdUser int    `json:"idUser"`
 }
+
+type Message struct {
+	Status  string `json:"status"`
+	Message string `json:"message"`
+}

@@ -26,12 +26,17 @@ func Test_WelcomePage(t *testing.T) {
 	responseRec := httptest.NewRecorder()
 	apiTest.Router.ServeHTTP(responseRec, request)
 
-	gotBody := responseRec.Body.String()
+	gotBody := responseRec.Body.Bytes()
 	gotCode := responseRec.Result().StatusCode
 	gotType := responseRec.Header().Get("Content-Type")
+	gotJSON := config.Message{}
+	json.Unmarshal(gotBody, &gotJSON)
 
-	if gotBody == "" {
-		t.Errorf("WelcomePage fails, got body: %v", gotBody)
+	if gotJSON.Status != "information" {
+		t.Errorf("WelcomePage fails, got status: %v", gotJSON.Status)
+	}
+	if gotJSON.Message == "" {
+		t.Errorf("WelcomePage fails, message if empty")
 	}
 	if gotCode != 200 {
 		t.Errorf("WelcomePage fails, got code: %d", gotCode)

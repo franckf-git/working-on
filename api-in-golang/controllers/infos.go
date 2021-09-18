@@ -7,9 +7,8 @@ import (
 )
 
 func WelcomePage(res http.ResponseWriter, req *http.Request) {
-	homepage := struct {
-		Message string `json:"message"`
-	}{
+	homepage := config.Message{
+		Status:  "information",
 		Message: config.WelcomeMessage,
 	}
 	res.Header().Set("Content-Type", "application/json")
