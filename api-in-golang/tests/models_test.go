@@ -8,6 +8,7 @@ import (
 	"os"
 	"reflect"
 	"testing"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -37,11 +38,12 @@ func Test_GetAllPosts(t *testing.T) {
 	models.RegisterPost(db, "title1", "datas1", 1)
 	models.RegisterPost(db, "title2", "datas2", 2)
 	postsTests := models.GetAllPosts(db)
-	postsTests[0].Created = ""
-	postsTests[1].Created = ""
+	fakeCreatedTime := time.Now().Format(time.RFC3339)
+	postsTests[0].Created = fakeCreatedTime
+	postsTests[1].Created = fakeCreatedTime
 	want := []config.Post{
-		{1, "title1", "datas1", "", 1},
-		{2, "title2", "datas2", "", 2},
+		{Id: 1, Title: "title1", Datas: "datas1", Created: fakeCreatedTime, IdUser: 1},
+		{Id: 2, Title: "title2", Datas: "datas2", Created: fakeCreatedTime, IdUser: 2},
 	}
 	if !reflect.DeepEqual(postsTests, want) {
 		t.Errorf("GetAllPosts tests fail")
