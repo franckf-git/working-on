@@ -33,6 +33,7 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 			Status:  "error",
 			Message: "error while decoding payload",
 		}
+		res.WriteHeader(http.StatusUnsupportedMediaType)
 		json.NewEncoder(res).Encode(failed)
 	}
 
@@ -45,6 +46,7 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 			Status:  "error",
 			Message: "error while saving post",
 		}
+		res.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(res).Encode(failed)
 	}
 
@@ -53,6 +55,7 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 		Message: "The post has been saved on id: " + fmt.Sprint(id),
 		Id:      id,
 	}
+	res.WriteHeader(http.StatusCreated)
 	json.NewEncoder(res).Encode(successfull)
 }
 
@@ -81,6 +84,7 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 			Status:  "error",
 			Message: "error while decoding payload",
 		}
+		res.WriteHeader(http.StatusUnsupportedMediaType)
 		json.NewEncoder(res).Encode(failed)
 	}
 
@@ -93,6 +97,7 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 			Status:  "error",
 			Message: "error while updating post",
 		}
+		res.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(res).Encode(failed)
 	}
 
@@ -101,6 +106,7 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 		Message: "The post has been updated on id: " + fmt.Sprint(id),
 		Id:      id,
 	}
+	res.WriteHeader(http.StatusCreated)
 	json.NewEncoder(res).Encode(successfull)
 }
 
@@ -117,6 +123,7 @@ func DeletePost(res http.ResponseWriter, req *http.Request) {
 			Status:  "error",
 			Message: "error while deleting post",
 		}
+		res.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(res).Encode(failed)
 	}
 

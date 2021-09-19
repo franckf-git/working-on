@@ -134,7 +134,7 @@ func Test_UpdatePost(t *testing.T) {
 	if gotJSON.Id != 2 {
 		t.Errorf("UpdatePost 2 fails, got id: %d", gotJSON.Id)
 	}
-	if gotCode != 200 {
+	if gotCode != 201 {
 		t.Errorf("UpdatePost 2 fails, got code: %d", gotCode)
 	}
 	if gotType != "application/json" {
@@ -247,7 +247,7 @@ func Test_AddPost(t *testing.T) {
 	if gotJSON.Id != 3 {
 		t.Errorf("AddPost fails, got id: %d", gotJSON.Id)
 	}
-	if gotCode != 200 {
+	if gotCode != 201 {
 		t.Errorf("AddPost fails, got code: %d", gotCode)
 	}
 	if gotType != "application/json" {
