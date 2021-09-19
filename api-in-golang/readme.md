@@ -75,3 +75,9 @@ curl http://127.0.0.1:8000/api/v1/post/2
 ```
 curl --location --request PUT 'http://127.0.0.1:8000/api/v1/post/2' --header 'Content-Type: application/json' --data-raw '{"title":"from json","datas":"datasfill","idUser":5}'
 ```
+
+### Supprimer un post
+
+```
+curl --location --request DELETE 'http://127.0.0.1:8000/api/v1/post/2'
+```

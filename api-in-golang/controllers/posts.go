@@ -103,3 +103,27 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 	}
 	json.NewEncoder(res).Encode(successfull)
 }
+
+func DeletePost(res http.ResponseWriter, req *http.Request) {
+	db := models.OpenDatabase()
+	defer db.Close()
+	vars := mux.Vars(req)
+	id, _ := strconv.Atoi(vars["id"])
+	res.Header().Set("Content-Type", "application/json")
+	err := models.DeletingPost(db, id)
+	if err != nil {
+		log.Println("Error deleting post:", err)
+		failed := config.Message{
+			Status:  "error",
+			Message: "error while deleting post",
+		}
+		json.NewEncoder(res).Encode(failed)
+	}
+
+	successfull := config.Message{
+		Status:  "success",
+		Message: "The post has been deleted",
+		Id:      id,
+	}
+	json.NewEncoder(res).Encode(successfull)
+}

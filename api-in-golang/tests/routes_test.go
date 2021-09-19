@@ -85,35 +85,6 @@ func Test_ShowAllPosts(t *testing.T) {
 	}
 }
 
-func Test_AddPost(t *testing.T) {
-	body := []byte(`{"title":"add test post","datas":"datasfill","idUser":99}`)
-	request, _ := http.NewRequest("POST", "/api/v1/post", bytes.NewBuffer(body))
-	responseRec := httptest.NewRecorder()
-	apiTest.Router.ServeHTTP(responseRec, request)
-
-	gotBody := responseRec.Body.Bytes()
-	gotCode := responseRec.Result().StatusCode
-	gotType := responseRec.Header().Get("Content-Type")
-	gotJSON := config.Message{}
-	json.Unmarshal(gotBody, &gotJSON)
-
-	if gotJSON.Status != "success" {
-		t.Errorf("AddPost fails, got status: %v", gotJSON.Status)
-	}
-	if gotJSON.Message == "" {
-		t.Errorf("AddPost fails, message is empty")
-	}
-	if gotJSON.Id != 3 {
-		t.Errorf("AddPost fails, got id: %d", gotJSON.Id)
-	}
-	if gotCode != 200 {
-		t.Errorf("AddPost fails, got code: %d", gotCode)
-	}
-	if gotType != "application/json" {
-		t.Errorf("AddPost fails, got content-type: %v", gotType)
-	}
-}
-
 func Test_ShowPost(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/api/v1/post/2", nil)
 	responseRec := httptest.NewRecorder()
@@ -194,5 +165,92 @@ func Test_UpdatePost(t *testing.T) {
 	}
 	if gotTypeCheck != "application/json" {
 		t.Errorf("Update 2 check response fails, got content-type: %v", gotTypeCheck)
+	}
+}
+
+func Test_DeletePost(t *testing.T) {
+	request, _ := http.NewRequest("DELETE", "/api/v1/post/2", nil)
+	responseRec := httptest.NewRecorder()
+	apiTest.Router.ServeHTTP(responseRec, request)
+
+	gotBody := responseRec.Body.Bytes()
+	gotCode := responseRec.Result().StatusCode
+	gotType := responseRec.Header().Get("Content-Type")
+	gotJSON := config.Message{}
+	json.Unmarshal(gotBody, &gotJSON)
+
+	// carefull very couple to model_test.RegisterPosts
+	if gotJSON.Status != "success" {
+		t.Errorf("DeletePost 2 fails, got status: %v", gotJSON.Status)
+	}
+	if gotJSON.Message == "" {
+		t.Errorf("DeletePost 2 fails, message is empty")
+	}
+	if gotJSON.Id != 2 {
+		t.Errorf("DeletePost 2 fails, got id: %d", gotJSON.Id)
+	}
+	if gotCode != 200 {
+		t.Errorf("DeletePost 2 fails, got code: %d", gotCode)
+	}
+	if gotType != "application/json" {
+		t.Errorf("DeletePost 2 fails, got content-type: %v", gotType)
+	}
+
+	// now check if post is remove
+	requestCheck, _ := http.NewRequest("GET", "/api/v1/posts", nil)
+	responseRecCheck := httptest.NewRecorder()
+	apiTest.Router.ServeHTTP(responseRecCheck, requestCheck)
+
+	gotBodyCheck := responseRecCheck.Body.Bytes()
+	gotCodeCheck := responseRecCheck.Result().StatusCode
+	gotTypeCheck := responseRecCheck.Header().Get("Content-Type")
+	gotJSONCheck := []config.Post{}
+	json.Unmarshal(gotBodyCheck, &gotJSONCheck)
+
+	if len(gotJSONCheck) != 1 {
+		t.Errorf("Delete Check fail, more then 1 post")
+	}
+	// carefull very couple to model_test.RegisterPosts
+	gotJSONCheck[0].Created = fakeCreatedTime
+	wantCheck := []config.Post{
+		{Id: 1, Title: "title1", Datas: "datas1", Created: fakeCreatedTime, IdUser: 1},
+	}
+	if !reflect.DeepEqual(gotJSONCheck, wantCheck) {
+		t.Errorf("Delete Check fail, got datas: %v", gotJSONCheck)
+	}
+	if gotCodeCheck != 200 {
+		t.Errorf("Delete Check fails, got code: %d", gotCodeCheck)
+	}
+	if gotTypeCheck != "application/json" {
+		t.Errorf("Delete Check fails, got content-type: %v", gotTypeCheck)
+	}
+}
+
+func Test_AddPost(t *testing.T) {
+	body := []byte(`{"title":"add test post","datas":"datasfill","idUser":99}`)
+	request, _ := http.NewRequest("POST", "/api/v1/post", bytes.NewBuffer(body))
+	responseRec := httptest.NewRecorder()
+	apiTest.Router.ServeHTTP(responseRec, request)
+
+	gotBody := responseRec.Body.Bytes()
+	gotCode := responseRec.Result().StatusCode
+	gotType := responseRec.Header().Get("Content-Type")
+	gotJSON := config.Message{}
+	json.Unmarshal(gotBody, &gotJSON)
+
+	if gotJSON.Status != "success" {
+		t.Errorf("AddPost fails, got status: %v", gotJSON.Status)
+	}
+	if gotJSON.Message == "" {
+		t.Errorf("AddPost fails, message is empty")
+	}
+	if gotJSON.Id != 3 {
+		t.Errorf("AddPost fails, got id: %d", gotJSON.Id)
+	}
+	if gotCode != 200 {
+		t.Errorf("AddPost fails, got code: %d", gotCode)
+	}
+	if gotType != "application/json" {
+		t.Errorf("AddPost fails, got content-type: %v", gotType)
 	}
 }

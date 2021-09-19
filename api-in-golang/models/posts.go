@@ -113,3 +113,17 @@ func UpdatingPost(db *sql.DB, id int, title string, datas string, idUser int) (e
 	update.Commit()
 	return
 }
+
+func DeletingPost(db *sql.DB, id int) (err error) {
+	stmt, err := db.Prepare("DELETE FROM posts WHERE id = ?")
+	if err != nil {
+		log.Fatal("Delete fail - executing query:", err)
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(id)
+	if err != nil {
+		log.Println("Delete fail - executing query:", err)
+		return err
+	}
+	return
+}
