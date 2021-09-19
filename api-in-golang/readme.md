@@ -60,3 +60,9 @@ curl http://127.0.0.1:8000/api/v1/posts
 ```
 curl --location --request POST 'http://127.0.0.1:8000/api/v1/post' --header 'Content-Type: application/json' --data-raw '{"title":"from json","datas":"datasfill","idUser":5}'
 ```
+
+### Post par id
+
+```
+curl http://127.0.0.1:8000/api/v1/post/2
+```

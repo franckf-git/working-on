@@ -30,5 +30,6 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/", controllers.WelcomePage).Methods("GET")
 	a.Router.HandleFunc("/api/v1/docs", controllers.Docs).Methods("GET")
 	a.Router.HandleFunc("/api/v1/posts", controllers.ShowAllPosts).Methods("GET")
+	a.Router.HandleFunc("/api/v1/post/{id:[0-9]+}", controllers.ShowPost).Methods("GET")
 	a.Router.HandleFunc("/api/v1/post", controllers.AddPost).Methods("POST")
 }

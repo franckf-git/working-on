@@ -113,3 +113,30 @@ func Test_AddPost(t *testing.T) {
 		t.Errorf("AddPost fails, got content-type: %v", gotType)
 	}
 }
+
+func Test_ShowPost(t *testing.T) {
+	request, _ := http.NewRequest("GET", "/api/v1/post/2", nil)
+	responseRec := httptest.NewRecorder()
+	apiTest.Router.ServeHTTP(responseRec, request)
+
+	gotBody := responseRec.Body.Bytes()
+	gotCode := responseRec.Result().StatusCode
+	gotType := responseRec.Header().Get("Content-Type")
+	gotJSON := config.Post{}
+	json.Unmarshal(gotBody, &gotJSON)
+
+	// carefull very couple to model_test.RegisterPosts
+	gotJSON.Created = fakeCreatedTime
+	want := config.Post{
+		Id: 2, Title: "title2", Datas: "datas2", Created: fakeCreatedTime, IdUser: 2,
+	}
+	if !reflect.DeepEqual(gotJSON, want) {
+		t.Errorf("ShowPost 2 fail, got datas: %v", gotJSON)
+	}
+	if gotCode != 200 {
+		t.Errorf("ShowPost 2 fails, got code: %d", gotCode)
+	}
+	if gotType != "application/json" {
+		t.Errorf("ShowPost 2 fails, got content-type: %v", gotType)
+	}
+}

@@ -7,6 +7,9 @@ import (
 	"lite-api-crud/models"
 	"log"
 	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 func ShowAllPosts(res http.ResponseWriter, req *http.Request) {
@@ -51,4 +54,14 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 		Id:      id,
 	}
 	json.NewEncoder(res).Encode(successfull)
+}
+
+func ShowPost(res http.ResponseWriter, req *http.Request) {
+	db := models.OpenDatabase()
+	defer db.Close()
+	vars := mux.Vars(req)
+	id, _ := strconv.Atoi(vars["id"])
+	post := models.GetPost(db, id)
+	res.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(res).Encode(post)
 }
