@@ -65,3 +65,41 @@ func ShowPost(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(res).Encode(post)
 }
+
+func UpdatePost(res http.ResponseWriter, req *http.Request) {
+	var post config.NewPost
+	decoder := json.NewDecoder(req.Body)
+	defer req.Body.Close()
+	vars := mux.Vars(req)
+	id, _ := strconv.Atoi(vars["id"])
+	res.Header().Set("Content-Type", "application/json")
+
+	err := decoder.Decode(&post)
+	if err != nil {
+		log.Println("Error decoding post:", err, post)
+		failed := config.Message{
+			Status:  "error",
+			Message: "error while decoding payload",
+		}
+		json.NewEncoder(res).Encode(failed)
+	}
+
+	db := models.OpenDatabase()
+	defer db.Close()
+	err = models.UpdatingPost(db, id, post.Title, post.Datas, post.IdUser)
+	if err != nil {
+		log.Println("Error updating post:", err, post)
+		failed := config.Message{
+			Status:  "error",
+			Message: "error while updating post",
+		}
+		json.NewEncoder(res).Encode(failed)
+	}
+
+	successfull := config.Message{
+		Status:  "success",
+		Message: "The post has been updated on id: " + fmt.Sprint(id),
+		Id:      id,
+	}
+	json.NewEncoder(res).Encode(successfull)
+}

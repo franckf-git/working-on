@@ -140,3 +140,59 @@ func Test_ShowPost(t *testing.T) {
 		t.Errorf("ShowPost 2 fails, got content-type: %v", gotType)
 	}
 }
+
+func Test_UpdatePost(t *testing.T) {
+	body := []byte(`{"title":"update test post","datas":"datasfill","idUser":99}`)
+	request, _ := http.NewRequest("PUT", "/api/v1/post/2", bytes.NewBuffer(body))
+	responseRec := httptest.NewRecorder()
+	apiTest.Router.ServeHTTP(responseRec, request)
+
+	gotBody := responseRec.Body.Bytes()
+	gotCode := responseRec.Result().StatusCode
+	gotType := responseRec.Header().Get("Content-Type")
+	gotJSON := config.Message{}
+	json.Unmarshal(gotBody, &gotJSON)
+
+	// carefull very couple to model_test.RegisterPosts
+	if gotJSON.Status != "success" {
+		t.Errorf("UpdatePost 2 fails, got status: %v", gotJSON.Status)
+	}
+	if gotJSON.Message == "" {
+		t.Errorf("UpdatePost 2 fails, message is empty")
+	}
+	if gotJSON.Id != 2 {
+		t.Errorf("UpdatePost 2 fails, got id: %d", gotJSON.Id)
+	}
+	if gotCode != 200 {
+		t.Errorf("UpdatePost 2 fails, got code: %d", gotCode)
+	}
+	if gotType != "application/json" {
+		t.Errorf("UpdatePost 2 fails, got content-type: %v", gotType)
+	}
+
+	// now we make a request to if values are good
+	requestCheck, _ := http.NewRequest("GET", "/api/v1/post/2", nil)
+	responseRecCheck := httptest.NewRecorder()
+	apiTest.Router.ServeHTTP(responseRecCheck, requestCheck)
+
+	gotBodyCheck := responseRecCheck.Body.Bytes()
+	gotCodeCheck := responseRecCheck.Result().StatusCode
+	gotTypeCheck := responseRecCheck.Header().Get("Content-Type")
+	gotJSONCheck := config.Post{}
+	json.Unmarshal(gotBodyCheck, &gotJSONCheck)
+
+	// carefull very couple to model_test.RegisterPosts
+	gotJSONCheck.Created = fakeCreatedTime
+	want := config.Post{
+		Id: 2, Title: "update test post", Datas: "datasfill", Created: fakeCreatedTime, IdUser: 99,
+	}
+	if !reflect.DeepEqual(gotJSONCheck, want) {
+		t.Errorf("Update 2 check response fail, got datas: %v", gotJSONCheck)
+	}
+	if gotCodeCheck != 200 {
+		t.Errorf("Update 2 check response fails, got code: %d", gotCodeCheck)
+	}
+	if gotTypeCheck != "application/json" {
+		t.Errorf("Update 2 check response fails, got content-type: %v", gotTypeCheck)
+	}
+}

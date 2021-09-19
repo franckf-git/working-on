@@ -47,6 +47,9 @@ peu d'idées est bienvenue :
 - besoin de mutex ? pour eviter les ecritures/suppressions en bdd (race
   condition) ?
 
+- harmonisation des requêtes du model (Exec, Prepare, Query, Begin, QueryRow, ...),
+  c'est un peu le bazard
+
 ## Documentation de l'API
 
 ### Tous les posts
@@ -65,4 +68,10 @@ curl --location --request POST 'http://127.0.0.1:8000/api/v1/post' --header 'Con
 
 ```
 curl http://127.0.0.1:8000/api/v1/post/2
+```
+
+### Mettre à jour un post
+
+```
+curl --location --request PUT 'http://127.0.0.1:8000/api/v1/post/2' --header 'Content-Type: application/json' --data-raw '{"title":"from json","datas":"datasfill","idUser":5}'
 ```

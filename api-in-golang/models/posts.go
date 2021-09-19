@@ -91,3 +91,25 @@ func GetPost(db *sql.DB, id int) (Post config.Post) {
 	}
 	return
 }
+
+func UpdatingPost(db *sql.DB, id int, title string, datas string, idUser int) (err error) {
+
+	update, err := db.Begin()
+	if err != nil {
+		log.Fatal("Update fail - opening database:", err)
+		return err
+	}
+	stmt, err := update.Prepare("UPDATE posts SET title = ?, datas = ?, idUser = ? WHERE id=?")
+	if err != nil {
+		log.Fatal("Update fail - preparing query:", err)
+		return err
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(title, datas, idUser, id)
+	if err != nil {
+		log.Println("Update fail - executing query:", err)
+		return err
+	}
+	update.Commit()
+	return
+}
