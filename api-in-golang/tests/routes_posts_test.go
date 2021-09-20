@@ -3,6 +3,7 @@ package tests
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"lite-api-crud/config"
 	router "lite-api-crud/routers"
 	"net/http"
@@ -252,5 +253,90 @@ func Test_AddPost(t *testing.T) {
 	}
 	if gotType != "application/json" {
 		t.Errorf("AddPost fails, got content-type: %v", gotType)
+	}
+}
+
+func Test_Fails(t *testing.T) {
+	testCases := []struct {
+		desc         string
+		route        string
+		method       string
+		body         io.Reader
+		expectedCode int
+	}{
+		{
+			desc:         "Add Post with bad json formating",
+			route:        "/api/v1/post",
+			method:       "POST",
+			body:         bytes.NewBuffer([]byte(`{"titl":"post","datas":"datasfill","idUser":99}`)),
+			expectedCode: 415,
+		},
+		{
+			desc:         "Get Post who doesn't exist",
+			route:        "/api/v1/post/99",
+			method:       "GET",
+			body:         nil,
+			expectedCode: 404,
+		},
+		{
+			desc:         "Update Post who doesn't exist",
+			route:        "/api/v1/post/99",
+			method:       "PUT",
+			body:         bytes.NewBuffer([]byte(`{"title":"post","datas":"datasfill","idUser":99}`)),
+			expectedCode: 404,
+		},
+		{
+			desc:         "Update Post with bad formating",
+			route:        "/api/v1/post/1",
+			method:       "PUT",
+			body:         bytes.NewBuffer([]byte(`{"titl":"post","datas":"datasfill","idUser":99}`)),
+			expectedCode: 415,
+		},
+		{
+			desc:         "Delete Post who doesn't exist",
+			route:        "/api/v1/post/99",
+			method:       "DELETE",
+			body:         nil,
+			expectedCode: 404,
+		},
+		{
+			desc:         "Bad routing",
+			route:        "/api/v9/posts",
+			method:       "GET",
+			body:         nil,
+			expectedCode: 404,
+		},
+		/*
+			{
+				desc:         "",
+				route:        "",
+				method:       "",
+				body:         nil,
+				expectedCode: 0,
+			},
+		*/
+	}
+	for _, tC := range testCases {
+		t.Run(tC.desc, func(t *testing.T) {
+			request, _ := http.NewRequest(tC.method, tC.route, tC.body)
+			response := httptest.NewRecorder()
+			apiTest.Router.ServeHTTP(response, request)
+
+			gotBody := response.Body.Bytes()
+			gotCode := response.Result().StatusCode
+			gotType := response.Header().Get("Content-Type")
+			gotJSON := config.Message{}
+			json.Unmarshal(gotBody, &gotJSON)
+
+			if gotCode != tC.expectedCode {
+				t.Errorf("%v fails, got code: %d", tC.desc, gotCode)
+			}
+			if gotType != "application/json" {
+				t.Errorf("%v fails, got content-type: %v", tC.desc, gotType)
+			}
+			if gotJSON.Status != "error" {
+				t.Errorf("%v fails, got status: %v", tC.desc, gotJSON.Status)
+			}
+		})
 	}
 }
