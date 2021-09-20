@@ -262,6 +262,7 @@ func Test_Fails(t *testing.T) {
 		route        string
 		method       string
 		body         io.Reader
+		contenttype  string
 		expectedCode int
 	}{
 		{
@@ -269,6 +270,14 @@ func Test_Fails(t *testing.T) {
 			route:        "/api/v1/post",
 			method:       "POST",
 			body:         bytes.NewBuffer([]byte(`{"titl":"post","datas":"datasfill","idUser":99}`)),
+			expectedCode: 415,
+		},
+		{
+			desc:         "Add Post with bad content type",
+			route:        "/api/v1/post",
+			method:       "POST",
+			body:         bytes.NewBuffer([]byte(`{"title":"post","datas":"datasfill","idUser":99}`)),
+			contenttype:  "apl/jason",
 			expectedCode: 415,
 		},
 		{
@@ -293,6 +302,14 @@ func Test_Fails(t *testing.T) {
 			expectedCode: 415,
 		},
 		{
+			desc:         "Update Post with bad content type",
+			route:        "/api/v1/post/1",
+			method:       "PUT",
+			body:         bytes.NewBuffer([]byte(`{"title":"post","datas":"datasfill","idUser":99}`)),
+			contenttype:  "apl/jason",
+			expectedCode: 415,
+		},
+		{
 			desc:         "Delete Post who doesn't exist",
 			route:        "/api/v1/post/99",
 			method:       "DELETE",
@@ -312,6 +329,7 @@ func Test_Fails(t *testing.T) {
 				route:        "",
 				method:       "",
 				body:         nil,
+				contenttype:  "",
 				expectedCode: 0,
 			},
 		*/
@@ -319,6 +337,10 @@ func Test_Fails(t *testing.T) {
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
 			request, _ := http.NewRequest(tC.method, tC.route, tC.body)
+			request.Header.Add("Content-Type", "application/json")
+			if tC.contenttype != "" {
+				request.Header.Add("Content-Type", tC.contenttype)
+			}
 			response := httptest.NewRecorder()
 			apiTest.Router.ServeHTTP(response, request)
 
