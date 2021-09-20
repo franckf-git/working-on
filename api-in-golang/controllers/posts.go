@@ -64,7 +64,18 @@ func ShowPost(res http.ResponseWriter, req *http.Request) {
 	defer db.Close()
 	vars := mux.Vars(req)
 	id, _ := strconv.Atoi(vars["id"])
-	post := models.GetPost(db, id)
+	post, err := models.GetPost(db, id)
+	if err != nil {
+		log.Println("Error getting post:", err)
+		failed := config.Message{
+			Status:  "error",
+			Message: "error while getting post " + fmt.Sprint(err),
+		}
+		res.Header().Set("Content-Type", "application/json")
+		res.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(res).Encode(failed)
+		return
+	}
 	res.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(res).Encode(post)
 }

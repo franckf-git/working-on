@@ -68,7 +68,7 @@ func GetAllPosts(db *sql.DB) (Posts []config.Post) {
 	return
 }
 
-func GetPost(db *sql.DB, id int) (Post config.Post) {
+func GetPost(db *sql.DB, id int) (Post config.Post, err error) {
 	stmt, err := db.Prepare("SELECT * FROM posts WHERE id = ?")
 	if err != nil {
 		log.Fatal("Select fail - executing query:", err)
@@ -80,7 +80,8 @@ func GetPost(db *sql.DB, id int) (Post config.Post) {
 	var idUser int
 	err = stmt.QueryRow(id).Scan(&id, &title, &datas, &created, &idUser)
 	if err != nil {
-		log.Fatal("Select fail - reading rows:", err)
+		log.Println("Select fail - reading rows:", err)
+		return
 	}
 	Post = config.Post{
 		Id:      id,

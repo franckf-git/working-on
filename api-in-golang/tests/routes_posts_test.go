@@ -351,7 +351,7 @@ func Test_Fails(t *testing.T) {
 			json.Unmarshal(gotBody, &gotJSON)
 
 			if gotCode != tC.expectedCode {
-				t.Errorf("%v fails, got code: %d", tC.desc, gotCode)
+				t.Errorf("%v fails, got code: %d \n %v", tC.desc, gotCode, gotJSON)
 			}
 			if gotType != "application/json" {
 				t.Errorf("%v fails, got content-type: %v", tC.desc, gotType)
