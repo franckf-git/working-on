@@ -121,10 +121,15 @@ func DeletingPost(db *sql.DB, id int) (err error) {
 		log.Fatal("Delete fail - executing query:", err)
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(id)
+	query, err := stmt.Exec(id)
 	if err != nil {
 		log.Println("Delete fail - executing query:", err)
 		return err
 	}
-	return
+	lines, _ := query.RowsAffected()
+	if lines == 0 {
+		log.Println("Delete fail - id not found")
+		return errors.New("delete fail - id not found")
+	}
+	return nil
 }

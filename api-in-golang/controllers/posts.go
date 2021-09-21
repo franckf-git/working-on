@@ -163,8 +163,9 @@ func DeletePost(res http.ResponseWriter, req *http.Request) {
 			Status:  "error",
 			Message: "error while deleting post",
 		}
-		res.WriteHeader(http.StatusInternalServerError)
+		res.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(res).Encode(failed)
+		return
 	}
 
 	successfull := config.Message{
