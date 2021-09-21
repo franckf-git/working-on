@@ -116,6 +116,7 @@ func Test_ShowPost(t *testing.T) {
 func Test_UpdatePost(t *testing.T) {
 	body := []byte(`{"title":"update test post","datas":"datasfill","idUser":99}`)
 	request, _ := http.NewRequest("PUT", "/api/v1/post/2", bytes.NewBuffer(body))
+	request.Header.Set("Content-Type", "application/json")
 	responseRec := httptest.NewRecorder()
 	apiTest.Router.ServeHTTP(responseRec, request)
 
@@ -308,7 +309,7 @@ func Test_Fails(t *testing.T) {
 			method:       "PUT",
 			body:         bytes.NewBuffer([]byte(`{"title":"post","datas":"datasfill","idUser":99}`)),
 			contenttype:  "apl/jason",
-			expectedCode: 415,
+			expectedCode: 406,
 		},
 		{
 			desc:         "Delete Post who doesn't exist",

@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"errors"
 	"log"
 	"time"
 
@@ -95,24 +96,23 @@ func GetPost(db *sql.DB, id int) (Post config.Post, err error) {
 
 func UpdatingPost(db *sql.DB, id int, title string, datas string, idUser int) (err error) {
 
-	update, err := db.Begin()
-	if err != nil {
-		log.Fatal("Update fail - opening database:", err)
-		return err
-	}
-	stmt, err := update.Prepare("UPDATE posts SET title = ?, datas = ?, idUser = ? WHERE id=?")
+	stmt, err := db.Prepare("UPDATE posts SET title = ?, datas = ?, idUser = ? WHERE id=?")
 	if err != nil {
 		log.Fatal("Update fail - preparing query:", err)
-		return err
+		return
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(title, datas, idUser, id)
+	query, err := stmt.Exec(title, datas, idUser, id)
 	if err != nil {
 		log.Println("Update fail - executing query:", err)
-		return err
+		return
 	}
-	update.Commit()
-	return
+	lines, _ := query.RowsAffected()
+	if lines == 0 {
+		log.Println("Update fail - id not found")
+		return errors.New("update fail - id not found")
+	}
+	return nil
 }
 
 func DeletingPost(db *sql.DB, id int) (err error) {

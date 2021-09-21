@@ -102,15 +102,29 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 	id, _ := strconv.Atoi(vars["id"])
 	res.Header().Set("Content-Type", "application/json")
 
+	contentType := req.Header.Get("Content-Type")
+	if contentType != "application/json" {
+		log.Println("Error bad content-type formating:", req.Header)
+		failed := config.Message{
+			Status:  "error",
+			Message: "error bad content-type formating:" + fmt.Sprint(req.Header),
+		}
+		res.WriteHeader(http.StatusNotAcceptable)
+		json.NewEncoder(res).Encode(failed)
+		return
+	}
+
+	decoder.DisallowUnknownFields()
 	err := decoder.Decode(&post)
 	if err != nil {
 		log.Println("Error decoding post:", err, post)
 		failed := config.Message{
 			Status:  "error",
-			Message: "error while decoding payload",
+			Message: "error while decoding payload" + fmt.Sprint(err, post),
 		}
 		res.WriteHeader(http.StatusUnsupportedMediaType)
 		json.NewEncoder(res).Encode(failed)
+		return
 	}
 
 	db := models.OpenDatabase()
@@ -120,10 +134,11 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 		log.Println("Error updating post:", err, post)
 		failed := config.Message{
 			Status:  "error",
-			Message: "error while updating post",
+			Message: "error while updating post " + fmt.Sprint(err),
 		}
-		res.WriteHeader(http.StatusInternalServerError)
+		res.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(res).Encode(failed)
+		return
 	}
 
 	successfull := config.Message{
