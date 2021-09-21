@@ -230,6 +230,7 @@ func Test_DeletePost(t *testing.T) {
 func Test_AddPost(t *testing.T) {
 	body := []byte(`{"title":"add test post","datas":"datasfill","idUser":99}`)
 	request, _ := http.NewRequest("POST", "/api/v1/post", bytes.NewBuffer(body))
+	request.Header.Set("Content-Type", "application/json")
 	responseRec := httptest.NewRecorder()
 	apiTest.Router.ServeHTTP(responseRec, request)
 
@@ -278,7 +279,7 @@ func Test_Fails(t *testing.T) {
 			method:       "POST",
 			body:         bytes.NewBuffer([]byte(`{"title":"post","datas":"datasfill","idUser":99}`)),
 			contenttype:  "apl/jason",
-			expectedCode: 415,
+			expectedCode: 406,
 		},
 		{
 			desc:         "Get Post who doesn't exist",
@@ -337,9 +338,9 @@ func Test_Fails(t *testing.T) {
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
 			request, _ := http.NewRequest(tC.method, tC.route, tC.body)
-			request.Header.Add("Content-Type", "application/json")
+			request.Header.Set("Content-Type", "application/json")
 			if tC.contenttype != "" {
-				request.Header.Add("Content-Type", tC.contenttype)
+				request.Header.Set("Content-Type", tC.contenttype)
 			}
 			response := httptest.NewRecorder()
 			apiTest.Router.ServeHTTP(response, request)
