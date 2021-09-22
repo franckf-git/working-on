@@ -18,3 +18,13 @@ func WelcomePage(res http.ResponseWriter, req *http.Request) {
 func Docs(res http.ResponseWriter, req *http.Request) {
 	http.Redirect(res, req, config.DocsLink, http.StatusMovedPermanently)
 }
+
+func NotFoundMessage(res http.ResponseWriter, req *http.Request) {
+	notfound := config.Message{
+		Status:  "error",
+		Message: "this route doesn't exist",
+	}
+	res.WriteHeader(http.StatusNotFound)
+	res.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(res).Encode(notfound)
+}
