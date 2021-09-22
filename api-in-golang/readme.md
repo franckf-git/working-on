@@ -41,14 +41,32 @@ peu d'idées est bienvenue :
 - faire les tests avec httpTest de la librairie standard ?
   l'IDE crée des templates de tests auto, idem pour http ?
 
+  > Tous les tests utilisent la librairie standard pour faire des tests au niveau de l'API
+
 - maintenance : comment s'assurer que les librairies externes n'auront pas de
   régressions ? les inclures au dépôts ?
 
 - besoin de mutex ? pour eviter les ecritures/suppressions en bdd (race
   condition) ?
 
+## Todos
+
 - harmonisation des requêtes du model (Exec, Prepare, Query, Begin, QueryRow, ...),
   c'est un peu le bazard
+
+- refactorisation de la partie controller Posts, illisible, beaucoup de
+  répétitions et d'erreurs similaires. Besoin de reduction, utiliser les middlewares
+  pour gérer certaines choses (formating, ...) un niveau au dessus ?
+
+- utiliser des methodes pour les controleurs des routes Users, pour tester et
+  comparer avec Posts
+
+- ajouter un système de migration automatique (avec sauvegarde) pour la base de
+  données. Par exemple l'ajout d'index :
+  ```
+  CREATE [UNIQUE] INDEX index_name
+  ON table_name(column_list);
+  ```
 
 ## Documentation de l'API
 
