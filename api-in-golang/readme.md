@@ -23,8 +23,6 @@ On le fera à ma façon et on fera s=ce qu'il semble le plus naturel. Mais un
 peu d'idées est bienvenue :
 
 - https://github.com/gorilla/mux#readme
-- https://medium.com/@saumya.ranjan/how-to-create-a-rest-api-in-golang-crud-operation-in-golang-a7afd9330a7b
-- https://mapereira0101.medium.com/all-you-need-to-build-a-simple-restfull-api-with-golang-part-i-a6ae5ac0a0d8
 - https://tutorialedge.net/golang/creating-restful-api-with-golang/
 - https://golangdocs.com/golang-mux-router
 - https://stackoverflow.com/questions/42091720/api-testing-in-golang
@@ -48,6 +46,10 @@ peu d'idées est bienvenue :
 
 - besoin de mutex ? pour eviter les ecritures/suppressions en bdd (race
   condition) ?
+
+- remplacer `json.Encode` par `json.Marshal` dans les controllers ?
+  cela éviterait les appels au Struct mais les données serait moins "stables" ?
+  a tester sur Users ?
 
 ## Todos
 
