@@ -49,7 +49,8 @@ peu d'idées est bienvenue :
 
 - remplacer `json.Encode` par `json.Marshal` dans les controllers ?
   cela éviterait les appels au Struct mais les données serait moins "stables" ?
-  a tester sur Users ?
+  > Marshal est pour les []bytes (chargement en mémoire) - Encode est pour les streams
+  vérifier la pertinence dans http
 
 ## Todos
 
