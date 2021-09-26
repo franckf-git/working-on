@@ -32,10 +32,10 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 
 	err := json.Unmarshal(body, &user)
 	if err != nil || user.Email == "" || user.Password == "" {
-		log.Println("Error decoding user:", err, user)
+		log.Println("Error decoding user:", err, user.Email)
 		failed := config.Message{
 			Status:  "error",
-			Message: "error while decoding payload " + fmt.Sprint(err, user),
+			Message: "error while decoding payload " + fmt.Sprint(err, user.Email),
 		}
 		res, _ := json.Marshal(failed)
 		w.WriteHeader(http.StatusUnsupportedMediaType)
@@ -44,7 +44,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !CheckEmailPassword(user) {
-		log.Println("Error in email or password validator:", user)
+		log.Println("Error in email or password validator:", user.Email)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error in email or password validator - email must be a valid email and password must be at least 8 characters, uppercase, lowercase, numbers and specials included",
@@ -59,7 +59,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	id, err := user.RegisterUser(db)
 	if err != nil {
-		log.Println("Error register user:", err, user)
+		log.Println("Error register user:", err, user.Email)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error while saving user",

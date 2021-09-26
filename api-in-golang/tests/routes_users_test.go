@@ -46,7 +46,7 @@ func Test_Users_Route(t *testing.T) {
 			body:         `{"name":"user1@mail.lan","password":"VERYstrong&Secur3"}`,
 			contenttype:  "",
 			expectedCode: 415,
-			expectedRes:  `{"status":"error","message":"error while decoding payload <nil> { VERYstrong&Secur3}","id":0}`,
+			expectedRes:  `{"status":"error","message":"error while decoding payload <nil>","id":0}`,
 		},
 		{
 			desc:         "Bad email",

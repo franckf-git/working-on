@@ -5,6 +5,7 @@ import (
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -13,10 +14,16 @@ type User struct {
 }
 
 func (user *User) RegisterUser(db *sql.DB) (id int, err error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		log.Println("Error crypting password:", err)
+		return 0, err
+	}
+
 	stmt, errP := db.Prepare("INSERT INTO users(email,password) VALUES(?, ?)")
-	result, errE := stmt.Exec(user.Email, user.Password)
+	result, errE := stmt.Exec(user.Email, string(hash))
 	if errP != nil || errE != nil {
-		log.Fatal("Insert user fail - executing query:", err)
+		log.Println("Insert user fail - executing query:", err)
 		return 0, err
 	}
 	defer stmt.Close()
