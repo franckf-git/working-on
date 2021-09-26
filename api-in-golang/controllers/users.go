@@ -30,7 +30,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err := json.Unmarshal(body, &user)
-	if err != nil {
+	if err != nil || user.Email == "" || user.Password == "" {
 		log.Println("Error decoding user:", err, user)
 		failed := config.Message{
 			Status:  "error",
