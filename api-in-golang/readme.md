@@ -36,6 +36,8 @@ peu d'idées est bienvenue :
   qui ne serviront peut-être pas. mux est un simple router plus proche de go
   (idiomatic) suffisant pour cette petite API
 
+  > gorilla/mux est suffisament complexe pour l'instant
+
 - faire les tests avec httpTest de la librairie standard ?
   l'IDE crée des templates de tests auto, idem pour http ?
 
@@ -49,8 +51,11 @@ peu d'idées est bienvenue :
 
 - remplacer `json.Encode` par `json.Marshal` dans les controllers ?
   cela éviterait les appels au Struct mais les données serait moins "stables" ?
+
   > Marshal est pour les []bytes (chargement en mémoire) - Encode est pour les streams
-  > vérifier la pertinence dans http
+  > Pour http les deux methods se valent, Marshal est peut-être un peu plus
+  > performant, car Encode appelle celui-ci mais au final c'est juste une
+  > question de lisibilté
 
 ## Todos
 
@@ -65,7 +70,9 @@ peu d'idées est bienvenue :
   comparer avec Posts
 
   > les methodes ne peuvent être utilisées que dans le même package
-  > difficile dans un projet api multi- package comme celui-ci
+  > difficile dans un projet api multi-package comme celui-ci
+  > mais cela reste possible à condition de faire des compromis sur
+  > l'emplacement des struct
 
 - ajouter un système de migration automatique (avec sauvegarde) pour la base de
   données. Par exemple l'ajout d'index :
@@ -73,6 +80,7 @@ peu d'idées est bienvenue :
   CREATE [UNIQUE] INDEX index_name
   ON table_name(column_list);
   ```
+  > nécéssaire suite à l'oubli d'évolution de schéma lors de la création de AddUser
 
 ## Documentation de l'API
 
