@@ -114,3 +114,9 @@ curl --location --request PUT 'http://127.0.0.1:8000/api/v1/post/2' --header 'Co
 ```
 curl --location --request DELETE 'http://127.0.0.1:8000/api/v1/post/2'
 ```
+
+### Ajouter un utilisateur
+
+```
+curl --location --request POST 'http://127.0.0.1:8000/user' --header 'Content-Type: application/json' --data-raw '{"email":"user1@mail.lan","password":"VERYstrong&Secur3"}'
+```
