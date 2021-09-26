@@ -23,10 +23,10 @@ func Test_Users_Route(t *testing.T) {
 			desc:         "Create user",
 			route:        "/user",
 			method:       "POST",
-			body:         `{"name":"user1","password":"VERYstrong&Secur3"}`,
+			body:         `{"email":"user1@mail.lan","password":"VERYstrong&Secur3"}`,
 			contenttype:  "",
 			expectedCode: 201,
-			expectedRes:  `{"status":"success","message":"The user is created on id: 1","id":1}`,
+			expectedRes:  `{"status":"success","message":"The user has been saved on id: 1","id":1}`,
 		},
 		/*
 			{

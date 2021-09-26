@@ -36,7 +36,8 @@ func startDatabase(db *sql.DB) {
 		);
 	CREATE TABLE IF NOT EXISTS users(
 		id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-		user TEXT NOT NULL
+		email TEXT NOT NULL,
+		password TEXT NOT NULL
 		);`
 	var err error
 	_, err = db.Exec(sqlStmt)

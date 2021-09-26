@@ -50,7 +50,7 @@ peu d'idées est bienvenue :
 - remplacer `json.Encode` par `json.Marshal` dans les controllers ?
   cela éviterait les appels au Struct mais les données serait moins "stables" ?
   > Marshal est pour les []bytes (chargement en mémoire) - Encode est pour les streams
-  vérifier la pertinence dans http
+  > vérifier la pertinence dans http
 
 ## Todos
 
@@ -63,6 +63,9 @@ peu d'idées est bienvenue :
 
 - utiliser des methodes pour les controleurs des routes Users, pour tester et
   comparer avec Posts
+
+  > les methodes ne peuvent être utilisées que dans le même package
+  > difficile dans un projet api multi- package comme celui-ci
 
 - ajouter un système de migration automatique (avec sauvegarde) pour la base de
   données. Par exemple l'ajout d'index :
