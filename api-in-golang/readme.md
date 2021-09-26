@@ -7,14 +7,14 @@ données en sqlite3 à l'image [de celui crée en js](https://gitlab.com/franckf
 
 Les fonctionalités à atteindre seront :
 
-- route de création des utilisateurs
+- [x] route de création des utilisateurs
 - génération de token
 - authentification par JWT
-- route CRUD pour poster (titre/données/date/idUtilisateur)
+- [x] route CRUD pour poster (titre/données/date/idUtilisateur)
 - seul l'utilisateur original pourra modifier/supprimer
-- validation des entrées pour les mails
-- prise en comptes de toutes les erreurs possibles et retours par API avec
-  messages explicites
+- [x] validation des entrées pour les mails
+- [x] prise en comptes de toutes les erreurs possibles et retours par API avec
+      messages explicites
 - documentation d'api automatique ?
 
 ### Inspirations
@@ -24,8 +24,6 @@ peu d'idées est bienvenue :
 
 - https://github.com/gorilla/mux#readme
 - https://tutorialedge.net/golang/creating-restful-api-with-golang/
-- https://golangdocs.com/golang-mux-router
-- https://stackoverflow.com/questions/42091720/api-testing-in-golang
 - https://semaphoreci.com/community/tutorials/building-and-testing-a-rest-api-in-go-with-gorilla-mux-and-postgresql
 - https://golangbyexample.com/json-request-body-golang-http/
 
@@ -55,7 +53,10 @@ peu d'idées est bienvenue :
   > Marshal est pour les []bytes (chargement en mémoire) - Encode est pour les streams
   > Pour http les deux methods se valent, Marshal est peut-être un peu plus
   > performant, car Encode appelle celui-ci mais au final c'est juste une
-  > question de lisibilté
+  > question de lisibilité et de validation Encode permet DisallowUnknownFields
+  > pour retourner une erreur en cas de champs inconnus (plus compliqué avec Marshal)
+  >
+  > > bref, préférer json.Encode/Decode
 
 ## Todos
 
