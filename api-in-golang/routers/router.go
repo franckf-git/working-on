@@ -35,5 +35,6 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/api/v1/post/{id:[0-9]+}", controllers.DeletePost).Methods("DELETE")
 	a.Router.HandleFunc("/api/v1/post", controllers.AddPost).Methods("POST")
 	a.Router.HandleFunc("/user", controllers.AddUser).Methods("POST")
+	a.Router.HandleFunc("/user/jwt", controllers.AskJWT).Methods("POST")
 	a.Router.NotFoundHandler = http.HandlerFunc(controllers.NotFoundMessage)
 }

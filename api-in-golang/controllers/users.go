@@ -9,6 +9,9 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"time"
+
+	"github.com/golang-jwt/jwt"
 )
 
 func AddUser(w http.ResponseWriter, r *http.Request) {
@@ -108,4 +111,17 @@ func CheckEmailPassword(user models.User) bool {
 		return false
 	}
 	return true
+}
+
+func AskJWT(w http.ResponseWriter, r *http.Request) {
+	var hmacKey = []byte(config.JWTkey)
+	expiresAt := time.Now().Add(24 * time.Hour).Unix()
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS512, jwt.MapClaims{
+		"userId": 1,
+		"expire": expiresAt,
+	})
+	tokenString, err := token.SignedString(hmacKey)
+	fmt.Println(tokenString, err)
+	return
 }
