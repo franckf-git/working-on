@@ -12,7 +12,7 @@ type User struct {
 	Password string `json:"password"`
 }
 
-func RegisterUser(db *sql.DB, user User) (id int, err error) {
+func (user *User) RegisterUser(db *sql.DB) (id int, err error) {
 	stmt, errP := db.Prepare("INSERT INTO users(email,password) VALUES(?, ?)")
 	result, errE := stmt.Exec(user.Email, user.Password)
 	if errP != nil || errE != nil {

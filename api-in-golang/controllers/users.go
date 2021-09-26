@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"lite-api-crud/config"
 	"lite-api-crud/models"
 	"log"
@@ -10,21 +11,13 @@ import (
 )
 
 func AddUser(w http.ResponseWriter, r *http.Request) {
-	/*
-		body, _ := ioutil.ReadAll(r.Body)
-		var user models.User
-		json.Unmarshal(body, &user)
-		log.Printf("user: %#+v\n", user)
-	*/
-
-	user := models.User{
-		Email:    "dfsg",
-		Password: "sdfg",
-	}
+	body, _ := ioutil.ReadAll(r.Body)
+	var user models.User
+	json.Unmarshal(body, &user)
 
 	db := models.OpenDatabase()
 	defer db.Close()
-	id, err := models.RegisterUser(db, user)
+	id, err := user.RegisterUser(db)
 	if err != nil {
 		log.Printf("err: %#+v\n", err)
 		return
