@@ -221,8 +221,8 @@ func Test_JWT_Route(t *testing.T) {
 			method:       "POST",
 			body:         `{"email":"user1@mail.lan","password":"VERYstrong&Secur3"}`,
 			contenttype:  "",
-			expectedCode: 201,
-			expectedRes:  `{"status":"success","message":"","id":0}`,
+			expectedCode: 202,
+			expectedRes:  `{"status":"success","message":"Successfull auth, JWT created, it is valid for 24H","id":0}`,
 		},
 		{
 			desc:         "Bad content type",

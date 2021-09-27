@@ -114,14 +114,81 @@ func CheckEmailPassword(user models.User) bool {
 }
 
 func AskJWT(w http.ResponseWriter, r *http.Request) {
+	var user models.User
+	body, _ := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	w.Header().Set("Content-Type", "application/json")
+
+	contentType := r.Header.Get("Content-Type")
+	if contentType != "application/json" {
+		log.Println("Error bad content-type formating:", r.Header)
+		failed := config.Message{
+			Status:  "error",
+			Message: "error bad content-type formating:" + fmt.Sprint(r.Header),
+		}
+		res, _ := json.Marshal(failed)
+		w.WriteHeader(http.StatusNotAcceptable)
+		w.Write(res)
+		return
+	}
+
+	err := json.Unmarshal(body, &user)
+	if err != nil || user.Email == "" || user.Password == "" {
+		log.Println("Error decoding user:", err, user.Email)
+		failed := config.Message{
+			Status:  "error",
+			Message: "error while decoding payload " + fmt.Sprint(err, user.Email),
+		}
+		res, _ := json.Marshal(failed)
+		w.WriteHeader(http.StatusUnsupportedMediaType)
+		w.Write(res)
+		return
+	}
+
+	db := models.OpenDatabase()
+	defer db.Close()
+	id, err := user.CheckExistingUser(db)
+	if err != nil {
+		log.Println("Error logging user:", err, user.Email)
+		failed := config.Message{
+			Status:  "error",
+			Message: "This email doesn't exist or the password is wrong",
+		}
+		res, _ := json.Marshal(failed)
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write(res)
+		return
+	}
+
 	var hmacKey = []byte(config.JWTkey)
 	expiresAt := time.Now().Add(24 * time.Hour).Unix()
-
 	token := jwt.NewWithClaims(jwt.SigningMethodHS512, jwt.MapClaims{
-		"userId": 1,
+		"userId": id,
 		"expire": expiresAt,
 	})
 	tokenString, err := token.SignedString(hmacKey)
-	fmt.Println(tokenString, err)
-	return
+	if err != nil {
+		log.Println("Error signin token:", err, tokenString)
+		failed := config.Message{
+			Status:  "error",
+			Message: "error while signin token",
+		}
+		res, _ := json.Marshal(failed)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write(res)
+		return
+	}
+
+	successfull := struct {
+		Status  string `json:"status"`
+		Message string `json:"message"`
+		JWT     string `json:"jwt"`
+	}{
+		Status:  "success",
+		Message: "Successfull auth, JWT created, it is valid for 24H",
+		JWT:     tokenString,
+	}
+	res, _ := json.Marshal(successfull)
+	w.WriteHeader(http.StatusAccepted)
+	w.Write(res)
 }

@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -29,5 +30,19 @@ func (user *User) RegisterUser(db *sql.DB) (id int, err error) {
 	defer stmt.Close()
 	id64, _ := result.LastInsertId()
 	id = int(id64)
+	return
+}
+
+func (user *User) CheckExistingUser(db *sql.DB) (id int, err error) {
+	stmt, errP := db.Prepare("SELECT * FROM users WHERE email=?")
+	var email string
+	var hashpassword string
+	errQ := stmt.QueryRow(user.Email).Scan(&id, &email, &hashpassword)
+	errC := bcrypt.CompareHashAndPassword([]byte(hashpassword), []byte(user.Password))
+	if errP != nil || errQ != nil || errC != nil || id == 0 {
+		log.Println("Error checking user and password:", errP, errQ, errC, id)
+		return 0, fmt.Errorf("error checking user and password: %v, %v, %v, %v", errP, errQ, errC, id)
+	}
+	defer stmt.Close()
 	return
 }
