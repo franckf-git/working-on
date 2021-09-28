@@ -8,6 +8,7 @@ import (
 	"lite-api-crud/models"
 	"net/http"
 	"net/http/httptest"
+	"regexp"
 	"testing"
 )
 
@@ -222,7 +223,7 @@ func Test_JWT_Route(t *testing.T) {
 			body:         `{"email":"user1@mail.lan","password":"VERYstrong&Secur3"}`,
 			contenttype:  "",
 			expectedCode: 202,
-			expectedRes:  `{"status":"success","message":"Successfull auth, JWT created, it is valid for 24H","id":0}`,
+			expectedRes:  `{"status":"success","message":"Successfull auth, JWT created, it is valid for 24H"}`,
 		},
 		{
 			desc:         "Bad content type",
@@ -272,7 +273,7 @@ func Test_JWT_Route(t *testing.T) {
 			},
 		*/
 	}
-	for _, tC := range testCases {
+	for i, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
 			requestBody := bytes.NewBuffer([]byte(tC.body))
 			request, _ := http.NewRequest(tC.method, tC.route, requestBody)
@@ -305,6 +306,27 @@ func Test_JWT_Route(t *testing.T) {
 			}
 			if gotJSON.Id != expectedJSON.Id {
 				t.Errorf("%v fails, got id: %d", tC.desc, gotJSON.Id)
+			}
+			if i == 0 {
+				// JWT regex checking
+				var jwtregexp = regexp.MustCompile(`[0-9a-zA-Z_-]{36}\.[0-9a-zA-Z_-]{43}\.[0-9a-zA-Z_-]{86}`)
+				gotBodyCreated := response.Body.Bytes()
+				gotJSONCreated := struct {
+					Status  string `json:"status"`
+					Message string `json:"message"`
+					JWT     string `json:"jwt"`
+				}{
+					Status:  "",
+					Message: "",
+					JWT:     "",
+				}
+				json.Unmarshal(gotBodyCreated, &gotJSONCreated)
+				if gotJSONCreated.JWT == "" {
+					t.Errorf("%v fails, JWT is empty", tC.desc)
+				}
+				if !jwtregexp.MatchString(gotJSONCreated.JWT) {
+					t.Errorf("%v fails, got jwt: %v", tC.desc, gotJSONCreated.JWT)
+				}
 			}
 		})
 	}
