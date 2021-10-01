@@ -41,12 +41,7 @@ func validateToken(authToken string) (idUser int, err error) {
 	}
 	tokenToValidate := parseForAuthToken[1]
 
-	type jwtInfos struct {
-		IdUser    int   `json:"id"`
-		ExpiresAt int64 `json:"expiresAt"`
-		jwt.StandardClaims
-	}
-	var claims jwtInfos
+	var claims config.JwtInfos
 	token, err := jwt.ParseWithClaims(tokenToValidate, &claims, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])

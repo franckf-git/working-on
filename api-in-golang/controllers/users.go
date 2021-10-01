@@ -162,10 +162,12 @@ func AskJWT(w http.ResponseWriter, r *http.Request) {
 
 	var hmacKey = []byte(config.JWTkey)
 	expiresAt := time.Now().Add(24 * time.Hour).Unix()
-	token := jwt.NewWithClaims(jwt.SigningMethodHS512, jwt.MapClaims{
-		"idUser":    id,
-		"expiresAt": expiresAt,
-	})
+	claims := config.JwtInfos{
+		IdUser:         id,
+		ExpiresAt:      expiresAt,
+		StandardClaims: jwt.StandardClaims{},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
 	tokenString, err := token.SignedString(hmacKey)
 	if err != nil {
 		log.Println("Error signin token:", err, tokenString)

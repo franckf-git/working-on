@@ -1,5 +1,7 @@
 package config
 
+import "github.com/golang-jwt/jwt"
+
 var PORT string = ":8000"
 var WelcomeMessage string = "Welcome, to have more details about this API, visit /api/v1/docs"
 var Database string = "./storage/database.sqlite3"
@@ -24,4 +26,10 @@ type Message struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
 	Id      int    `json:"id"`
+}
+
+type JwtInfos struct {
+	IdUser    int   `json:"id"`
+	ExpiresAt int64 `json:"expiresAt"`
+	jwt.StandardClaims
 }

@@ -309,7 +309,7 @@ func Test_JWT_Route(t *testing.T) {
 			}
 			if i == 0 {
 				// JWT regex checking
-				var jwtregexp = regexp.MustCompile(`[0-9a-zA-Z_-]{36}\.[0-9a-zA-Z_-]{47}\.[0-9a-zA-Z_-]{86}`)
+				var jwtregexp = regexp.MustCompile(`[0-9a-zA-Z_-]{36}\.[0-9a-zA-Z_-]{40,50}\.[0-9a-zA-Z_-]{86}`)
 				gotBodyCreated := response.Body.Bytes()
 				gotJSONCreated := struct {
 					Status  string `json:"status"`
