@@ -38,6 +38,19 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	authToken := req.Header.Get("Authorization")
+	idUserJWT, errJWT := validateToken(authToken)
+	if errJWT != nil {
+		log.Println("Error decoding JWT:", errJWT)
+		failed := config.Message{
+			Status:  "error",
+			Message: "error decoding JWT:" + fmt.Sprint(errJWT),
+		}
+		res.WriteHeader(http.StatusForbidden)
+		json.NewEncoder(res).Encode(failed)
+		return
+	}
+
 	decoder.DisallowUnknownFields()
 	err := decoder.Decode(&post)
 	if err != nil {
@@ -53,7 +66,7 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 
 	db := models.OpenDatabase()
 	defer db.Close()
-	id, err := models.RegisterPost(db, post.Title, post.Datas, post.IdUser)
+	id, err := models.RegisterPost(db, post.Title, post.Datas, idUserJWT)
 	if err != nil {
 		log.Println("Error register post:", err, post)
 		failed := config.Message{
