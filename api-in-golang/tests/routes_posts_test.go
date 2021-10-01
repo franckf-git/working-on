@@ -21,6 +21,8 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
+var tempToken string = "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOjE2MzMxNDkxODcsImlkVXNlciI6MX0.gE9Nw2ZkmaAZOnkr1JfVYIgzaYLKs2DMy9ZxN7WrN4w3C96Uykr1u9xgJ2bDTRy7xR9gh8WX0ynYPIIVSp2xzw"
+
 func Test_WelcomePage(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/", nil)
 	responseRec := httptest.NewRecorder()
@@ -232,7 +234,7 @@ func Test_AddPost(t *testing.T) {
 	body := []byte(`{"title":"add test post","datas":"datasfill","idUser":99}`)
 	request, _ := http.NewRequest("POST", "/api/v1/post", bytes.NewBuffer(body))
 	request.Header.Set("Content-Type", "application/json")
-	request.Header.Set("Authorization", "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOjE2MzMxNDkxODcsImlkVXNlciI6MX0.gE9Nw2ZkmaAZOnkr1JfVYIgzaYLKs2DMy9ZxN7WrN4w3C96Uykr1u9xgJ2bDTRy7xR9gh8WX0ynYPIIVSp2xzw")
+	request.Header.Set("Authorization", tempToken)
 	responseRec := httptest.NewRecorder()
 	apiTest.Router.ServeHTTP(responseRec, request)
 
@@ -341,7 +343,7 @@ func Test_Fails(t *testing.T) {
 		t.Run(tC.desc, func(t *testing.T) {
 			request, _ := http.NewRequest(tC.method, tC.route, tC.body)
 			request.Header.Set("Content-Type", "application/json")
-			request.Header.Set("Authorization", "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOjE2MzMxNDkxODcsImlkVXNlciI6MX0.gE9Nw2ZkmaAZOnkr1JfVYIgzaYLKs2DMy9ZxN7WrN4w3C96Uykr1u9xgJ2bDTRy7xR9gh8WX0ynYPIIVSp2xzw")
+			request.Header.Set("Authorization", tempToken)
 			if tC.contenttype != "" {
 				request.Header.Set("Content-Type", tC.contenttype)
 			}
