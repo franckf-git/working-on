@@ -77,11 +77,15 @@ peu d'idées est bienvenue :
 
 - ajouter un système de migration automatique (avec sauvegarde) pour la base de
   données. Par exemple l'ajout d'index :
+
   ```
   CREATE [UNIQUE] INDEX index_name
   ON table_name(column_list);
   ```
+
   > nécéssaire suite à l'oubli d'évolution de schéma lors de la création de AddUser
+
+- add a debug mode to print error
 
 ## Documentation de l'API
 
