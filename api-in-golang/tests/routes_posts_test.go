@@ -119,7 +119,7 @@ func Test_ShowPost(t *testing.T) {
 }
 
 func Test_UpdatePost(t *testing.T) {
-	body := []byte(`{"title":"update test post","datas":"datasfill","idUser":99}`)
+	body := []byte(`{"title":"update test post","datas":"datasfill"}`)
 	request, _ := http.NewRequest("PUT", "/api/v1/post/2", bytes.NewBuffer(body))
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("Authorization", tempToken)
@@ -235,7 +235,7 @@ func Test_DeletePost(t *testing.T) {
 }
 
 func Test_AddPost(t *testing.T) {
-	body := []byte(`{"title":"add test post","datas":"datasfill","idUser":99}`)
+	body := []byte(`{"title":"add test post","datas":"datasfill"}`)
 	request, _ := http.NewRequest("POST", "/api/v1/post", bytes.NewBuffer(body))
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("Authorization", tempToken)
@@ -278,14 +278,14 @@ func Test_Fails(t *testing.T) {
 			desc:         "Add Post with bad json formating",
 			route:        "/api/v1/post",
 			method:       "POST",
-			body:         bytes.NewBuffer([]byte(`{"titl":"post","datas":"datasfill","idUser":99}`)),
+			body:         bytes.NewBuffer([]byte(`{"titl":"post","datas":"datasfill"}`)),
 			expectedCode: 415,
 		},
 		{
 			desc:         "Add Post with bad content type",
 			route:        "/api/v1/post",
 			method:       "POST",
-			body:         bytes.NewBuffer([]byte(`{"title":"post","datas":"datasfill","idUser":99}`)),
+			body:         bytes.NewBuffer([]byte(`{"title":"post","datas":"datasfill"}`)),
 			contenttype:  "apl/jason",
 			expectedCode: 406,
 		},
@@ -300,21 +300,21 @@ func Test_Fails(t *testing.T) {
 			desc:         "Update Post who doesn't exist",
 			route:        "/api/v1/post/99",
 			method:       "PUT",
-			body:         bytes.NewBuffer([]byte(`{"title":"post","datas":"datasfill","idUser":99}`)),
+			body:         bytes.NewBuffer([]byte(`{"title":"post","datas":"datasfill"}`)),
 			expectedCode: 401,
 		},
 		{
 			desc:         "Update Post with bad formating",
 			route:        "/api/v1/post/1",
 			method:       "PUT",
-			body:         bytes.NewBuffer([]byte(`{"titl":"post","datas":"datasfill","idUser":99}`)),
+			body:         bytes.NewBuffer([]byte(`{"titl":"post","datas":"datasfill"}`)),
 			expectedCode: 415,
 		},
 		{
 			desc:         "Update Post with bad content type",
 			route:        "/api/v1/post/1",
 			method:       "PUT",
-			body:         bytes.NewBuffer([]byte(`{"title":"post","datas":"datasfill","idUser":99}`)),
+			body:         bytes.NewBuffer([]byte(`{"title":"post","datas":"datasfill"}`)),
 			contenttype:  "apl/jason",
 			expectedCode: 406,
 		},

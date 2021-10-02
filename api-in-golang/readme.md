@@ -98,7 +98,7 @@ curl http://127.0.0.1:8000/api/v1/posts
 ### Ajouter un post
 
 ```
-curl --location --request POST 'http://127.0.0.1:8000/api/v1/post' --header 'Content-Type: application/json' --data-raw '{"title":"from json","datas":"datasfill","idUser":5}'
+curl --location --request POST 'http://127.0.0.1:8000/api/v1/post' --header 'Content-Type: application/json' --data-raw '{"title":"from json","datas":"datasfill"}'
 ```
 
 ### Post par id
@@ -110,7 +110,7 @@ curl http://127.0.0.1:8000/api/v1/post/2
 ### Mettre à jour un post
 
 ```
-curl --location --request PUT 'http://127.0.0.1:8000/api/v1/post/2' --header 'Content-Type: application/json' --data-raw '{"title":"from json","datas":"datasfill","idUser":5}'
+curl --location --request PUT 'http://127.0.0.1:8000/api/v1/post/2' --header 'Content-Type: application/json' --data-raw '{"title":"from json","datas":"datasfill"}'
 ```
 
 ### Supprimer un post
