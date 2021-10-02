@@ -301,7 +301,7 @@ func Test_Fails(t *testing.T) {
 			route:        "/api/v1/post/99",
 			method:       "PUT",
 			body:         bytes.NewBuffer([]byte(`{"title":"post","datas":"datasfill","idUser":99}`)),
-			expectedCode: 404,
+			expectedCode: 401,
 		},
 		{
 			desc:         "Update Post with bad formating",
@@ -317,6 +317,13 @@ func Test_Fails(t *testing.T) {
 			body:         bytes.NewBuffer([]byte(`{"title":"post","datas":"datasfill","idUser":99}`)),
 			contenttype:  "apl/jason",
 			expectedCode: 406,
+		},
+		{
+			desc:         "Update Post with bad user",
+			route:        "/api/v1/post/1",
+			method:       "PUT",
+			body:         bytes.NewBuffer([]byte(`{"title":"post","datas":"datasfill"}`)),
+			expectedCode: 401,
 		},
 		{
 			desc:         "Delete Post who doesn't exist",

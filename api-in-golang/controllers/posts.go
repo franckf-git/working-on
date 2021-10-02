@@ -155,6 +155,18 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 
 	db := models.OpenDatabase()
 	defer db.Close()
+	ids, err := models.GetAllPostsByUser(db, idUserJWT)
+	if !find(ids, id) {
+		log.Println("Error this user can't update this post:", err, post)
+		failed := config.Message{
+			Status:  "error",
+			Message: "error this user can't update this post",
+		}
+		res.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(res).Encode(failed)
+		return
+	}
+
 	err = models.UpdatingPost(db, id, post.Title, post.Datas, idUserJWT)
 	if err != nil {
 		log.Println("Error updating post:", err, post)
@@ -200,4 +212,13 @@ func DeletePost(res http.ResponseWriter, req *http.Request) {
 		Id:      id,
 	}
 	json.NewEncoder(res).Encode(successfull)
+}
+
+func find(slice []int, val int) bool {
+	for _, item := range slice {
+		if item == val {
+			return true
+		}
+	}
+	return false
 }

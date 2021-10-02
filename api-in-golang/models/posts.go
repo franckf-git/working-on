@@ -133,3 +133,24 @@ func DeletingPost(db *sql.DB, id int) (err error) {
 	}
 	return nil
 }
+
+func GetAllPostsByUser(db *sql.DB, idUser int) (ids []int, err error) {
+	rows, err := db.Query("SELECT id FROM posts WHERE idUser = ?", idUser)
+	if err != nil {
+		log.Fatal("Select fail - executing query:", err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var id int
+		err = rows.Scan(&id)
+		if err != nil {
+			log.Fatal("Select fail - scanning values:", err)
+		}
+		ids = append(ids, id)
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal("Select fail - reading rows:", err)
+	}
+	return
+}
