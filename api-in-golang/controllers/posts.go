@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"lite-api-crud/config"
 	"lite-api-crud/models"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -28,7 +27,7 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 
 	contentType := req.Header.Get("Content-Type")
 	if contentType != "application/json" {
-		log.Println("Error bad content-type formating:", req.Header)
+		config.ErrorLogg("AddPost(controllers) - bad content-type formating:", req.Header)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error bad content-type formating:" + fmt.Sprint(req.Header),
@@ -41,7 +40,7 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 	authToken := req.Header.Get("Authorization")
 	idUserJWT, errJWT := validateToken(authToken)
 	if errJWT != nil {
-		log.Println("Error decoding JWT:", errJWT)
+		config.ErrorLogg("AddPost(controllers) - decoding JWT:", errJWT)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error decoding JWT:" + fmt.Sprint(errJWT),
@@ -54,7 +53,7 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 	decoder.DisallowUnknownFields()
 	err := decoder.Decode(&post)
 	if err != nil {
-		log.Println("Error decoding post:", err, post)
+		config.ErrorLogg("AddPost(controllers) - decoding post:", err, post)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error while decoding payload " + fmt.Sprint(err, post),
@@ -68,7 +67,7 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 	defer db.Close()
 	id, err := models.RegisterPost(db, post.Title, post.Datas, idUserJWT)
 	if err != nil {
-		log.Println("Error register post:", err, post)
+		config.ErrorLogg("AddPost(controllers) - register post:", err, post)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error while saving post",
@@ -93,7 +92,7 @@ func ShowPost(res http.ResponseWriter, req *http.Request) {
 	id, _ := strconv.Atoi(vars["id"])
 	post, err := models.GetPost(db, id)
 	if err != nil {
-		log.Println("Error getting post:", err)
+		config.ErrorLogg("ShowPost(controllers) - getting post:", err)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error while getting post " + fmt.Sprint(err),
@@ -117,7 +116,7 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 
 	contentType := req.Header.Get("Content-Type")
 	if contentType != "application/json" {
-		log.Println("Error bad content-type formating:", req.Header)
+		config.ErrorLogg("UpdatePost(controllers) - bad content-type formating:", req.Header)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error bad content-type formating:" + fmt.Sprint(req.Header),
@@ -130,7 +129,7 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 	authToken := req.Header.Get("Authorization")
 	idUserJWT, errJWT := validateToken(authToken)
 	if errJWT != nil {
-		log.Println("Error decoding JWT:", errJWT)
+		config.ErrorLogg("UpdatePost(controllers) - decoding JWT:", errJWT)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error decoding JWT:" + fmt.Sprint(errJWT),
@@ -143,7 +142,7 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 	decoder.DisallowUnknownFields()
 	err := decoder.Decode(&post)
 	if err != nil {
-		log.Println("Error decoding post:", err, post)
+		config.ErrorLogg("UpdatePost(controllers) - decoding post:", err, post)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error while decoding payload" + fmt.Sprint(err, post),
@@ -157,7 +156,7 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 	defer db.Close()
 	ids, err := models.GetAllPostsByUser(db, idUserJWT)
 	if !find(ids, id) {
-		log.Println("Error this user can't update this post:", err, post)
+		config.ErrorLogg("UpdatePost(controllers) - this user can't update this post:", err, post)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error this user can't update this post",
@@ -169,7 +168,7 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 
 	err = models.UpdatingPost(db, id, post.Title, post.Datas, idUserJWT)
 	if err != nil {
-		log.Println("Error updating post:", err, post)
+		config.ErrorLogg("UpdatePost(controllers) - updating post:", err, post)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error while updating post " + fmt.Sprint(err),
@@ -192,7 +191,7 @@ func DeletePost(res http.ResponseWriter, req *http.Request) {
 	authToken := req.Header.Get("Authorization")
 	idUserJWT, errJWT := validateToken(authToken)
 	if errJWT != nil {
-		log.Println("Error decoding JWT:", errJWT)
+		config.ErrorLogg("DeletePost(controllers) - decoding JWT:", errJWT)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error decoding JWT:" + fmt.Sprint(errJWT),
@@ -210,7 +209,7 @@ func DeletePost(res http.ResponseWriter, req *http.Request) {
 
 	ids, err := models.GetAllPostsByUser(db, idUserJWT)
 	if !find(ids, id) {
-		log.Println("Error this user can't delete this post:", err)
+		config.ErrorLogg("DeletePost(controllers) - this user can't delete this post:", err)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error this user can't delete this post",
@@ -222,7 +221,7 @@ func DeletePost(res http.ResponseWriter, req *http.Request) {
 
 	err = models.DeletingPost(db, id)
 	if err != nil {
-		log.Println("Error deleting post:", err)
+		config.ErrorLogg("DeletePost(controllers) - deleting post:", err)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error while deleting post",

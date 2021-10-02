@@ -3,7 +3,7 @@ package models
 import (
 	"database/sql"
 	"fmt"
-	"log"
+	"lite-api-crud/config"
 
 	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/crypto/bcrypt"
@@ -17,14 +17,14 @@ type User struct {
 func (user *User) RegisterUser(db *sql.DB) (id int, err error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
-		log.Println("Error crypting password:", err)
+		config.ErrorLogg("RegisterUser(models) - crypting password:", err)
 		return 0, err
 	}
 
 	stmt, errP := db.Prepare("INSERT INTO users(email,password) VALUES(?, ?)")
 	result, errE := stmt.Exec(user.Email, string(hash))
 	if errP != nil || errE != nil {
-		log.Println("Insert user fail - executing query:", err)
+		config.ErrorLogg("RegisterUser(models) - executing query:", err)
 		return 0, err
 	}
 	defer stmt.Close()
@@ -40,7 +40,7 @@ func (user *User) CheckExistingUser(db *sql.DB) (id int, err error) {
 	errQ := stmt.QueryRow(user.Email).Scan(&id, &email, &hashpassword)
 	errC := bcrypt.CompareHashAndPassword([]byte(hashpassword), []byte(user.Password))
 	if errP != nil || errQ != nil || errC != nil || id == 0 {
-		log.Println("Error checking user and password:", errP, errQ, errC, id)
+		config.ErrorLogg("CheckExistingUser(models) - user and password:", errP, errQ, errC, id)
 		return 0, fmt.Errorf("error checking user and password: %v, %v, %v, %v", errP, errQ, errC, id)
 	}
 	defer stmt.Close()

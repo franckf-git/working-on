@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"lite-api-crud/config"
 	"lite-api-crud/models"
-	"log"
 	"net/http"
 	"regexp"
 	"strings"
@@ -23,7 +22,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 
 	contentType := r.Header.Get("Content-Type")
 	if contentType != "application/json" {
-		log.Println("Error bad content-type formating:", r.Header)
+		config.ErrorLogg("AddUser(controllers) - bad content-type formating:", r.Header)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error bad content-type formating:" + fmt.Sprint(r.Header),
@@ -36,7 +35,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 
 	err := json.Unmarshal(body, &user)
 	if err != nil || user.Email == "" || user.Password == "" {
-		log.Println("Error decoding user:", err, user.Email)
+		config.ErrorLogg("AddUser(controllers) - decoding user:", err, user.Email)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error while decoding payload " + fmt.Sprint(err, user.Email),
@@ -48,7 +47,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !CheckEmailPassword(user) {
-		log.Println("Error in email or password validator:", user.Email)
+		config.ErrorLogg("AddUser(controllers) - email/password valisator:", user.Email)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error in email or password validator - email must be a valid email and password must be at least 8 characters, uppercase, lowercase, numbers and specials included",
@@ -63,7 +62,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	id, err := user.RegisterUser(db)
 	if err != nil {
-		log.Println("Error register user:", err, user.Email)
+		config.ErrorLogg("AddUser(controllers) - register user:", err, user.Email)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error while saving user",
@@ -136,7 +135,7 @@ func AskJWT(w http.ResponseWriter, r *http.Request) {
 
 	contentType := r.Header.Get("Content-Type")
 	if contentType != "application/json" {
-		log.Println("Error bad content-type formating:", r.Header)
+		config.ErrorLogg("AskJWT(controllers) - bad content-type formating:", r.Header)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error bad content-type formating:" + fmt.Sprint(r.Header),
@@ -149,7 +148,7 @@ func AskJWT(w http.ResponseWriter, r *http.Request) {
 
 	err := json.Unmarshal(body, &user)
 	if err != nil || user.Email == "" || user.Password == "" {
-		log.Println("Error decoding user:", err, user.Email)
+		config.ErrorLogg("AskJWT(controllers) - decoding user:", err, user.Email)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error while decoding payload " + fmt.Sprint(err, user.Email),
@@ -164,7 +163,7 @@ func AskJWT(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	id, err := user.CheckExistingUser(db)
 	if err != nil {
-		log.Println("Error logging user:", err, user.Email)
+		config.ErrorLogg("AskJWT(controllers) - logging user:", err, user.Email)
 		failed := config.Message{
 			Status:  "error",
 			Message: "This email doesn't exist or the password is wrong",
@@ -177,7 +176,7 @@ func AskJWT(w http.ResponseWriter, r *http.Request) {
 
 	tokenString, err := GenerateToken(id)
 	if err != nil {
-		log.Println("Error signin token:", err, tokenString)
+		config.ErrorLogg("AskJWT(controllers) - signin token:", err, tokenString)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error while signin token",

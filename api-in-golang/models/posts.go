@@ -3,7 +3,6 @@ package models
 import (
 	"database/sql"
 	"errors"
-	"log"
 	"time"
 
 	"lite-api-crud/config"
@@ -16,18 +15,18 @@ func RegisterPost(db *sql.DB, title string, datas string, idUser int) (id int, e
 
 	insert, err := db.Begin()
 	if err != nil {
-		log.Fatal("Insert fail - opening database:", err)
+		config.ErrorLogg("RegisterPost(models) - opening database:", err)
 		return 0, err
 	}
 	stmt, err := insert.Prepare("INSERT INTO posts(title, datas, created, idUser) VALUES(?, ?, ?, ?)")
 	if err != nil {
-		log.Fatal("Insert fail - preparing query:", err)
+		config.ErrorLogg("RegisterPost(models) - preparing query:", err)
 		return 0, err
 	}
 	defer stmt.Close()
 	result, err := stmt.Exec(title, datas, created, idUser)
 	if err != nil {
-		log.Println("Insert fail - executing query:", err)
+		config.ErrorLogg("RegisterPost(models) - executing query:", err)
 		return 0, err
 	}
 	insert.Commit()
@@ -40,7 +39,7 @@ func RegisterPost(db *sql.DB, title string, datas string, idUser int) (id int, e
 func GetAllPosts(db *sql.DB) (Posts []config.Post) {
 	rows, err := db.Query("SELECT * FROM posts")
 	if err != nil {
-		log.Fatal("Select fail - executing query:", err)
+		config.ErrorLogg("GetAllPosts(models) - executing query:", err)
 	}
 	defer rows.Close()
 	for rows.Next() {
@@ -51,7 +50,7 @@ func GetAllPosts(db *sql.DB) (Posts []config.Post) {
 		var idUser int
 		err = rows.Scan(&id, &title, &datas, &created, &idUser)
 		if err != nil {
-			log.Fatal("Select fail - scanning values:", err)
+			config.ErrorLogg("GetAllPosts(models) - scanning values:", err)
 		}
 		currentPost := config.Post{
 			Id:      id,
@@ -64,7 +63,7 @@ func GetAllPosts(db *sql.DB) (Posts []config.Post) {
 	}
 	err = rows.Err()
 	if err != nil {
-		log.Fatal("Select fail - reading rows:", err)
+		config.ErrorLogg("GetAllPosts(models) - reading rows:", err)
 	}
 	return
 }
@@ -72,7 +71,7 @@ func GetAllPosts(db *sql.DB) (Posts []config.Post) {
 func GetPost(db *sql.DB, id int) (Post config.Post, err error) {
 	stmt, err := db.Prepare("SELECT * FROM posts WHERE id = ?")
 	if err != nil {
-		log.Fatal("Select fail - executing query:", err)
+		config.ErrorLogg("GetPost(models) - executing query:", err)
 	}
 	defer stmt.Close()
 	var title string
@@ -81,7 +80,7 @@ func GetPost(db *sql.DB, id int) (Post config.Post, err error) {
 	var idUser int
 	err = stmt.QueryRow(id).Scan(&id, &title, &datas, &created, &idUser)
 	if err != nil {
-		log.Println("Select fail - reading rows:", err)
+		config.ErrorLogg("GetPost(models) - reading rows:", err)
 		return
 	}
 	Post = config.Post{
@@ -98,18 +97,18 @@ func UpdatingPost(db *sql.DB, id int, title string, datas string, idUser int) (e
 
 	stmt, err := db.Prepare("UPDATE posts SET title = ?, datas = ? WHERE idUser = ? AND id=?")
 	if err != nil {
-		log.Fatal("Update fail - preparing query:", err)
+		config.ErrorLogg("UpdatingPost(models) - preparing query:", err)
 		return
 	}
 	defer stmt.Close()
 	query, err := stmt.Exec(title, datas, idUser, id)
 	if err != nil {
-		log.Println("Update fail - executing query:", err)
+		config.ErrorLogg("UpdatingPost(models) - executing query:", err)
 		return
 	}
 	lines, _ := query.RowsAffected()
 	if lines == 0 {
-		log.Println("Update fail - id not found")
+		config.ErrorLogg("UpdatingPost(models) - id not found")
 		return errors.New("update fail - id not found")
 	}
 	return nil
@@ -118,17 +117,17 @@ func UpdatingPost(db *sql.DB, id int, title string, datas string, idUser int) (e
 func DeletingPost(db *sql.DB, id int) (err error) {
 	stmt, err := db.Prepare("DELETE FROM posts WHERE id = ?")
 	if err != nil {
-		log.Fatal("Delete fail - executing query:", err)
+		config.ErrorLogg("DeletingPost(models) - preparing query:", err)
 	}
 	defer stmt.Close()
 	query, err := stmt.Exec(id)
 	if err != nil {
-		log.Println("Delete fail - executing query:", err)
+		config.ErrorLogg("DeletingPost(models) - executing query:", err)
 		return err
 	}
 	lines, _ := query.RowsAffected()
 	if lines == 0 {
-		log.Println("Delete fail - id not found")
+		config.ErrorLogg("DeletingPost(models) - id not found")
 		return errors.New("delete fail - id not found")
 	}
 	return nil
@@ -137,20 +136,20 @@ func DeletingPost(db *sql.DB, id int) (err error) {
 func GetAllPostsByUser(db *sql.DB, idUser int) (ids []int, err error) {
 	rows, err := db.Query("SELECT id FROM posts WHERE idUser = ?", idUser)
 	if err != nil {
-		log.Fatal("Select fail - executing query:", err)
+		config.ErrorLogg("GetAllPostsByUser(models) - executing query:", err)
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var id int
 		err = rows.Scan(&id)
 		if err != nil {
-			log.Fatal("Select fail - scanning values:", err)
+			config.ErrorLogg("GetAllPostsByUser(models) - scanning values:", err)
 		}
 		ids = append(ids, id)
 	}
 	err = rows.Err()
 	if err != nil {
-		log.Fatal("Select fail - reading rows:", err)
+		config.ErrorLogg("GetAllPostsByUser(models) - reading rows:", err)
 	}
 	return
 }

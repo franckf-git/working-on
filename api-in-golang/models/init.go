@@ -2,7 +2,6 @@ package models
 
 import (
 	"database/sql"
-	"log"
 	"os"
 	"strings"
 
@@ -19,7 +18,7 @@ func createStorageFolder() {
 func OpenDatabase() *sql.DB {
 	db, err := sql.Open("sqlite3", config.Database)
 	if err != nil {
-		log.Fatal("Fail to open database:", err)
+		config.ErrorLogg("OpenDatabase(models) - fail to open database:", err)
 	}
 	return db
 }
@@ -42,7 +41,7 @@ func startDatabase(db *sql.DB) {
 	var err error
 	_, err = db.Exec(sqlStmt)
 	if err != nil {
-		log.Println("Error during creating tables:", err, sqlStmt)
+		config.ErrorLogg("startDatabase(models) - creating tables:", err, sqlStmt)
 	}
 }
 

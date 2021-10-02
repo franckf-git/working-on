@@ -85,7 +85,7 @@ peu d'idées est bienvenue :
 
   > nécéssaire suite à l'oubli d'évolution de schéma lors de la création de AddUser
 
-- [ ] ajouter un mode debug pour couper si besoin les sorties des logs
+- [x] ajouter un mode debug pour couper si besoin les sorties des logs
 
 ## Documentation de l'API
 
