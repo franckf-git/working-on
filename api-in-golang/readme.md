@@ -29,26 +29,26 @@ peu d'idées est bienvenue :
 
 ## Questions
 
-- gorilla/mux ou gin-gonic/gin ?
-  gin semble plus populaire et contient plus de fonctionnalités (validation,...)
-  qui ne serviront peut-être pas. mux est un simple router plus proche de go
-  (idiomatic) suffisant pour cette petite API
+- [x] gorilla/mux ou gin-gonic/gin ?
+      gin semble plus populaire et contient plus de fonctionnalités (validation,...)
+      qui ne serviront peut-être pas. mux est un simple router plus proche de go
+      (idiomatic) suffisant pour cette petite API
 
   > gorilla/mux est suffisament complexe pour l'instant
 
-- faire les tests avec httpTest de la librairie standard ?
-  l'IDE crée des templates de tests auto, idem pour http ?
+- [x] faire les tests avec httpTest de la librairie standard ?
+      l'IDE crée des templates de tests auto, idem pour http ?
 
   > Tous les tests utilisent la librairie standard pour faire des tests au niveau de l'API
 
-- maintenance : comment s'assurer que les librairies externes n'auront pas de
-  régressions ? les inclures au dépôts ?
+- [ ] maintenance : comment s'assurer que les librairies externes n'auront pas de
+      régressions ? les inclures au dépôts ?
 
-- besoin de mutex ? pour eviter les ecritures/suppressions en bdd (race
-  condition) ?
+- [ ] besoin de mutex ? pour eviter les ecritures/suppressions en bdd (race
+      condition) ?
 
-- remplacer `json.Encode` par `json.Marshal` dans les controllers ?
-  cela éviterait les appels au Struct mais les données serait moins "stables" ?
+- [x] remplacer `json.Encode` par `json.Marshal` dans les controllers ?
+      cela éviterait les appels au Struct mais les données serait moins "stables" ?
 
   > Marshal est pour les []bytes (chargement en mémoire) - Encode est pour les streams
   > Pour http les deux methods se valent, Marshal est peut-être un peu plus
@@ -60,23 +60,23 @@ peu d'idées est bienvenue :
 
 ## Todos
 
-- harmonisation des requêtes du model (Exec, Prepare, Query, Begin, QueryRow, ...),
-  c'est un peu le bazard
+- [ ] harmonisation des requêtes du model (Exec, Prepare, Query, Begin, QueryRow, ...),
+      c'est un peu le bazard
 
-- refactorisation de la partie controller Posts, illisible, beaucoup de
-  répétitions et d'erreurs similaires. Besoin de reduction, utiliser les middlewares
-  pour gérer certaines choses (formating, ...) un niveau au dessus ?
+- [ ] refactorisation de la partie controller Posts, illisible, beaucoup de
+      répétitions et d'erreurs similaires. Besoin de reduction, utiliser les middlewares
+      pour gérer certaines choses (formating, ...) un niveau au dessus ?
 
-- utiliser des methodes pour les controleurs des routes Users, pour tester et
-  comparer avec Posts
+- [x] utiliser des methodes pour les controleurs des routes Users, pour tester et
+      comparer avec Posts
 
   > les methodes ne peuvent être utilisées que dans le même package
   > difficile dans un projet api multi-package comme celui-ci
   > mais cela reste possible à condition de faire des compromis sur
   > l'emplacement des struct
 
-- ajouter un système de migration automatique (avec sauvegarde) pour la base de
-  données. Par exemple l'ajout d'index :
+- [ ] ajouter un système de migration automatique (avec sauvegarde) pour la base de
+      données. Par exemple l'ajout d'index :
 
   ```
   CREATE [UNIQUE] INDEX index_name
@@ -85,7 +85,7 @@ peu d'idées est bienvenue :
 
   > nécéssaire suite à l'oubli d'évolution de schéma lors de la création de AddUser
 
-- add a debug mode to print error
+- [ ] add a debug mode to print error
 
 ## Documentation de l'API
 
@@ -130,3 +130,20 @@ curl --location --request POST 'http://127.0.0.1:8000/user' --header 'Content-Ty
 ```
 curl --location --request POST 'http://127.0.0.1:8000/user/JWT' --header 'Content-Type: application/json' --data-raw '{"email":"user1@mail.lan","password":"VERYstrong&Secur3"}'
 ```
+
+## Problèmes
+
+L'application est fonctionnelle mais son écriture a relevé certains problèmes de structures et d'organisations. Des lessons à connaitre pour les prochaines écritures.
+
+- On aurait dû commencer par la route utilisateur et la création des JWT avant les routes Posts, il y a aurait eu ainsi moins de modifications 'a la volée' dans les tests et les controlleurs existants. On aurait eu également une meilleure vision de la structure que l'application et cela aurait falliciter le refactoring.
+
+- Trop de tests ou mal organisés, les tests écrits au fur et mesure et jamais vraiment factorisés n'ont pas falliciter la compréhension du code et l'objectif de certains ajouts de fonctionnalités. Les tests manquait parfois de descriptions, difficile donc de déterminer quels tests échouaients. On à tester tous les cas de figures mais certains tests étaient peut-être redondants, voire inutiles.
+
+- Mettre en place rapidement le debug dans les logs aurait faciliter la lecture des tests. Les tests étaient noyés dans les messages d'erreurs des tests d'échecs. Manque donc de lisibilité à la sortie.
+
+- On a pas vraiment appliqué le principe TDD, par difficulté ou par feignantise, les tests étaient crées juste après l'écriture de la fonction pour validation. Pour la plupart des cas ce sont des tests unitaires pas du TDD.
+  Seule la partie Test_Fails à vraiment été faites en TDD, et en encore puisque on crée tout les cas de figures à l'avance (tant que l'on les avait en tête).
+
+- Refactoriser au fur et à mesure aurait permis d'avoir un code spagetti aussi vite. La refactorisation va maintenant être douloureuse.
+
+- Manque d'utilisations des fonctionnalités de go. Les structs et surtout les pointers ont sous-utilisés. Les struct auraient apportés plus de structures/organisations, à revoir lors de la refactorisation. Il manque également le réflexe d'utiliser les pointers, ce n'est pas encore naturel et pas encore forcément compris.
