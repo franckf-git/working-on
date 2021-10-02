@@ -19,7 +19,7 @@ Les fonctionalités à atteindre seront :
 
 ### Inspirations
 
-On le fera à ma façon et on fera s=ce qu'il semble le plus naturel. Mais un
+On le fera à ma façon et on fera ce qu'il semble le plus naturel. Mais un
 peu d'idées est bienvenue :
 
 - https://github.com/gorilla/mux#readme
@@ -85,7 +85,7 @@ peu d'idées est bienvenue :
 
   > nécéssaire suite à l'oubli d'évolution de schéma lors de la création de AddUser
 
-- [ ] add a debug mode to print error
+- [ ] ajouter un mode debug pour couper si besoin les sorties des logs
 
 ## Documentation de l'API
 
@@ -144,6 +144,6 @@ L'application est fonctionnelle mais son écriture a relevé certains problèmes
 - On a pas vraiment appliqué le principe TDD, par difficulté ou par feignantise, les tests étaient crées juste après l'écriture de la fonction pour validation. Pour la plupart des cas ce sont des tests unitaires pas du TDD.
   Seule la partie Test_Fails à vraiment été faites en TDD, et en encore puisque on crée tout les cas de figures à l'avance (tant que l'on les avait en tête).
 
-- Refactoriser au fur et à mesure aurait permis d'avoir un code spagetti aussi vite. La refactorisation va maintenant être douloureuse.
+- Refactoriser au fur et à mesure aurait permis d'éviter d'avoir un code spagetti aussi vite. La refactorisation va maintenant être douloureuse.
 
 - Manque d'utilisations des fonctionnalités de go. Les structs et surtout les pointers ont sous-utilisés. Les struct auraient apportés plus de structures/organisations, à revoir lors de la refactorisation. Il manque également le réflexe d'utiliser les pointers, ce n'est pas encore naturel et pas encore forcément compris.
