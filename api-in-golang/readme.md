@@ -8,10 +8,10 @@ données en sqlite3 à l'image [de celui crée en js](https://gitlab.com/franckf
 Les fonctionalités à atteindre seront :
 
 - [x] route de création des utilisateurs
-- génération de token
-- authentification par JWT
+- [x] génération de token
+- [x] authentification par JWT
 - [x] route CRUD pour poster (titre/données/date/idUtilisateur)
-- seul l'utilisateur original pourra modifier/supprimer
+- [x] seul l'utilisateur original pourra modifier/supprimer
 - [x] validation des entrées pour les mails
 - [x] prise en comptes de toutes les erreurs possibles et retours par API avec
       messages explicites
@@ -110,17 +110,23 @@ curl http://127.0.0.1:8000/api/v1/post/2
 ### Mettre à jour un post
 
 ```
-curl --location --request PUT 'http://127.0.0.1:8000/api/v1/post/2' --header 'Content-Type: application/json' --data-raw '{"title":"from json","datas":"datasfill"}'
+curl --location --request PUT 'http://127.0.0.1:8000/api/v1/post/2' --header 'Content-Type: application/json' --header 'Authorization: Bearer qdyg.7dhq.djqsik' --data-raw '{"title":"from json","datas":"datasfill"}'
 ```
 
 ### Supprimer un post
 
 ```
-curl --location --request DELETE 'http://127.0.0.1:8000/api/v1/post/2'
+curl --location --request DELETE 'http://127.0.0.1:8000/api/v1/post/2' --header 'Authorization: Bearer qdyg.7dhq.djqsik'
 ```
 
 ### Ajouter un utilisateur
 
 ```
 curl --location --request POST 'http://127.0.0.1:8000/user' --header 'Content-Type: application/json' --data-raw '{"email":"user1@mail.lan","password":"VERYstrong&Secur3"}'
+```
+
+### Ask for JWT
+
+```
+curl --location --request POST 'http://127.0.0.1:8000/user/JWT' --header 'Content-Type: application/json' --data-raw '{"email":"user1@mail.lan","password":"VERYstrong&Secur3"}'
 ```
