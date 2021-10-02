@@ -147,11 +147,81 @@ func Test_checkEmailPassword(t *testing.T) {
 			want: false,
 		},
 		{
-			name: "Password - bad length",
+			name: "Invalid email - injection",
+			args: args{
+				user: models.User{
+					Email:    "example<script>alert('Injected!');</script>@domain.com",
+					Password: "VERYstrong&Secur3",
+				},
+			},
+			want: false,
+		},
+		{
+			name: "Invalid email - new lines",
+			args: args{
+				user: models.User{
+					Email:    "example@domain.com\n",
+					Password: "VERYstrong&Secur3",
+				},
+			},
+			want: false,
+		},
+		{
+			name: "Invalid email - null bytes",
+			args: args{
+				user: models.User{
+					Email:    "example<%00>@domain.com",
+					Password: "VERYstrong&Secur3",
+				},
+			},
+			want: false,
+		},
+		{
+			name: "Email whitespace",
+			args: args{
+				user: models.User{
+					Email:    " user1@mail.lan ",
+					Password: "VERYstrong&Secur3",
+				},
+			},
+			want: true,
+		},
+		{
+			name: "Invalid email lenght - too long",
+			args: args{
+				user: models.User{
+					Email:    "user12345678901234567890@maillofkmelkfmekfmrekfmremipsum.lan",
+					Password: "VERYstrong&Secur3",
+				},
+			},
+			want: false,
+		},
+		{
+			name: "Password - bad length - too short",
 			args: args{
 				user: models.User{
 					Email:    "user1@mail.lan",
 					Password: "rR&4567",
+				},
+			},
+			want: false,
+		},
+		{
+			name: "Password - bad length - too long",
+			args: args{
+				user: models.User{
+					Email:    "user1@mail.lan",
+					Password: "rR&456zjfelkjzelfkjezlfjzoifjzefzlf7sfdsfsdfdsfdsfcaa",
+				},
+			},
+			want: false,
+		},
+		{
+			name: "Password - no whitespace",
+			args: args{
+				user: models.User{
+					Email:    "user1@mail.lan",
+					Password: " VERYstrong&Secur3 ",
 				},
 			},
 			want: false,
