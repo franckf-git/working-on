@@ -96,7 +96,7 @@ func GetPost(db *sql.DB, id int) (Post config.Post, err error) {
 
 func UpdatingPost(db *sql.DB, id int, title string, datas string, idUser int) (err error) {
 
-	stmt, err := db.Prepare("UPDATE posts SET title = ?, datas = ?, idUser = ? WHERE id=?")
+	stmt, err := db.Prepare("UPDATE posts SET title = ?, datas = ? WHERE idUser = ? AND id=?")
 	if err != nil {
 		log.Fatal("Update fail - preparing query:", err)
 		return

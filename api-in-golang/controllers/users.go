@@ -160,15 +160,7 @@ func AskJWT(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var hmacKey = []byte(config.JWTkey)
-	expiresAt := time.Now().Add(24 * time.Hour).Unix()
-	claims := config.JwtInfos{
-		IdUser:         id,
-		ExpiresAt:      expiresAt,
-		StandardClaims: jwt.StandardClaims{},
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
-	tokenString, err := token.SignedString(hmacKey)
+	tokenString, err := GenerateToken(id)
 	if err != nil {
 		log.Println("Error signin token:", err, tokenString)
 		failed := config.Message{
@@ -193,4 +185,17 @@ func AskJWT(w http.ResponseWriter, r *http.Request) {
 	res, _ := json.Marshal(successfull)
 	w.WriteHeader(http.StatusAccepted)
 	w.Write(res)
+}
+
+func GenerateToken(id int) (string, error) {
+	var hmacKey = []byte(config.JWTkey)
+	expiresAt := time.Now().Add(24 * time.Hour).Unix()
+	claims := config.JwtInfos{
+		IdUser:         id,
+		ExpiresAt:      expiresAt,
+		StandardClaims: jwt.StandardClaims{},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
+	tokenString, err := token.SignedString(hmacKey)
+	return tokenString, err
 }

@@ -3,8 +3,10 @@ package tests
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"lite-api-crud/config"
+	"lite-api-crud/controllers"
 	router "lite-api-crud/routers"
 	"net/http"
 	"net/http/httptest"
@@ -21,7 +23,8 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
-var tempToken string = "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzQXQiOjE2MzMxNDkxODcsImlkVXNlciI6MX0.gE9Nw2ZkmaAZOnkr1JfVYIgzaYLKs2DMy9ZxN7WrN4w3C96Uykr1u9xgJ2bDTRy7xR9gh8WX0ynYPIIVSp2xzw"
+var tempJWT, _ = controllers.GenerateToken(2)
+var tempToken string = fmt.Sprint("Bearer ", tempJWT)
 
 func Test_WelcomePage(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/", nil)
@@ -119,6 +122,7 @@ func Test_UpdatePost(t *testing.T) {
 	body := []byte(`{"title":"update test post","datas":"datasfill","idUser":99}`)
 	request, _ := http.NewRequest("PUT", "/api/v1/post/2", bytes.NewBuffer(body))
 	request.Header.Set("Content-Type", "application/json")
+	request.Header.Set("Authorization", tempToken)
 	responseRec := httptest.NewRecorder()
 	apiTest.Router.ServeHTTP(responseRec, request)
 
@@ -159,7 +163,7 @@ func Test_UpdatePost(t *testing.T) {
 	// carefull very couple to model_test.RegisterPosts
 	gotJSONCheck.Created = fakeCreatedTime
 	want := config.Post{
-		Id: 2, Title: "update test post", Datas: "datasfill", Created: fakeCreatedTime, IdUser: 99,
+		Id: 2, Title: "update test post", Datas: "datasfill", Created: fakeCreatedTime, IdUser: 2,
 	}
 	if !reflect.DeepEqual(gotJSONCheck, want) {
 		t.Errorf("Update 2 check response fail, got datas: %v", gotJSONCheck)
