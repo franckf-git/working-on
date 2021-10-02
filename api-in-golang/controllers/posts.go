@@ -189,12 +189,38 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 }
 
 func DeletePost(res http.ResponseWriter, req *http.Request) {
+	authToken := req.Header.Get("Authorization")
+	idUserJWT, errJWT := validateToken(authToken)
+	if errJWT != nil {
+		log.Println("Error decoding JWT:", errJWT)
+		failed := config.Message{
+			Status:  "error",
+			Message: "error decoding JWT:" + fmt.Sprint(errJWT),
+		}
+		res.WriteHeader(http.StatusForbidden)
+		json.NewEncoder(res).Encode(failed)
+		return
+	}
+
 	db := models.OpenDatabase()
 	defer db.Close()
 	vars := mux.Vars(req)
 	id, _ := strconv.Atoi(vars["id"])
 	res.Header().Set("Content-Type", "application/json")
-	err := models.DeletingPost(db, id)
+
+	ids, err := models.GetAllPostsByUser(db, idUserJWT)
+	if !find(ids, id) {
+		log.Println("Error this user can't delete this post:", err)
+		failed := config.Message{
+			Status:  "error",
+			Message: "error this user can't delete this post",
+		}
+		res.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(res).Encode(failed)
+		return
+	}
+
+	err = models.DeletingPost(db, id)
 	if err != nil {
 		log.Println("Error deleting post:", err)
 		failed := config.Message{
