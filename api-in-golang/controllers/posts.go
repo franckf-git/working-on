@@ -35,8 +35,7 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	authToken := req.Header.Get("Authorization")
-	idUserJWT, _ := ValidateToken(authToken)
+	idUserJWT, _ := strconv.Atoi(req.Header.Get("idUser"))
 
 	decoder.DisallowUnknownFields()
 	err := decoder.Decode(&post)
@@ -111,8 +110,7 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	authToken := req.Header.Get("Authorization")
-	idUserJWT, _ := ValidateToken(authToken)
+	idUserJWT, _ := strconv.Atoi(req.Header.Get("idUser"))
 
 	decoder.DisallowUnknownFields()
 	err := decoder.Decode(&post)
@@ -163,8 +161,7 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 }
 
 func DeletePost(res http.ResponseWriter, req *http.Request) {
-	authToken := req.Header.Get("Authorization")
-	idUserJWT, _ := ValidateToken(authToken)
+	idUserJWT, _ := strconv.Atoi(req.Header.Get("idUser"))
 
 	db := models.OpenDatabase()
 	defer db.Close()

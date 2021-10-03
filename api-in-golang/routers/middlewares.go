@@ -23,8 +23,7 @@ func isAuthorized(next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		authToken := r.Header.Get("Authorization")
-		_, errJWT := controllers.ValidateToken(authToken)
-		// work but the jwt must be decrypt twice - one for auth and one to get idUser
+		idUser, errJWT := controllers.ValidateToken(authToken)
 		if errJWT != nil {
 			config.ErrorLogg("isAuthorized(routes) - decoding JWT:", errJWT)
 			failed := config.Message{
@@ -35,6 +34,7 @@ func isAuthorized(next http.HandlerFunc) http.HandlerFunc {
 			json.NewEncoder(w).Encode(failed)
 			return
 		}
+		r.Header.Set("idUser", fmt.Sprint(idUser))
 		next.ServeHTTP(w, r)
 	}
 }
