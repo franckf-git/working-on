@@ -15,7 +15,6 @@ func ShowAllPosts(res http.ResponseWriter, req *http.Request) {
 	db := models.OpenDatabase()
 	defer db.Close()
 	posts := models.GetAllPosts(db)
-	res.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(res).Encode(posts)
 }
 
@@ -23,7 +22,6 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 	var post config.NewPost
 	decoder := json.NewDecoder(req.Body)
 	defer req.Body.Close()
-	res.Header().Set("Content-Type", "application/json")
 
 	contentType := req.Header.Get("Content-Type")
 	if contentType != "application/json" {
@@ -87,12 +85,10 @@ func ShowPost(res http.ResponseWriter, req *http.Request) {
 			Status:  "error",
 			Message: "error while getting post " + fmt.Sprint(err),
 		}
-		res.Header().Set("Content-Type", "application/json")
 		res.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(res).Encode(failed)
 		return
 	}
-	res.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(res).Encode(post)
 }
 
@@ -102,7 +98,6 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 	defer req.Body.Close()
 	vars := mux.Vars(req)
 	id, _ := strconv.Atoi(vars["id"])
-	res.Header().Set("Content-Type", "application/json")
 
 	contentType := req.Header.Get("Content-Type")
 	if contentType != "application/json" {
@@ -175,7 +170,6 @@ func DeletePost(res http.ResponseWriter, req *http.Request) {
 	defer db.Close()
 	vars := mux.Vars(req)
 	id, _ := strconv.Atoi(vars["id"])
-	res.Header().Set("Content-Type", "application/json")
 
 	ids, err := models.GetAllPostsByUser(db, idUserJWT)
 	if !find(ids, id) {

@@ -11,7 +11,6 @@ func WelcomePage(res http.ResponseWriter, req *http.Request) {
 		Status:  "information",
 		Message: config.WelcomeMessage,
 	}
-	res.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(res).Encode(homepage)
 }
 

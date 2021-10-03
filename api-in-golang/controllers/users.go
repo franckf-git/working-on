@@ -13,7 +13,6 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	body, _ := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
-	w.Header().Set("Content-Type", "application/json")
 
 	contentType := r.Header.Get("Content-Type")
 	if contentType != "application/json" {
@@ -82,7 +81,6 @@ func AskJWT(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	body, _ := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
-	w.Header().Set("Content-Type", "application/json")
 
 	contentType := r.Header.Get("Content-Type")
 	if contentType != "application/json" {

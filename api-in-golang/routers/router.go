@@ -23,6 +23,7 @@ func (a *App) Run() {
 func (a *App) Initialize() {
 	models.InitializeDB()
 	a.Router = mux.NewRouter().StrictSlash(true)
+	a.Router.Use(setHeader)
 	a.initializeRoutes()
 }
 
