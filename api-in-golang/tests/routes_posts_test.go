@@ -266,6 +266,74 @@ func Test_AddPost(t *testing.T) {
 	}
 }
 
+func Test_MiddlewareBadAuth(t *testing.T) {
+	body := []byte(`{"title":"add test post","datas":"datasfill"}`)
+	request, _ := http.NewRequest("POST", "/api/v1/post", bytes.NewBuffer(body))
+	request.Header.Set("Content-Type", "application/json")
+	request.Header.Set("BadAuth", tempToken)
+	responseRec := httptest.NewRecorder()
+	apiTest.Router.ServeHTTP(responseRec, request)
+
+	gotBody := responseRec.Body.Bytes()
+	gotCode := responseRec.Result().StatusCode
+	gotType := responseRec.Header().Get("Content-Type")
+	gotJSON := config.Message{}
+	json.Unmarshal(gotBody, &gotJSON)
+
+	if gotJSON.Status != "error" {
+		t.Errorf("Middleware fails, got status: %v", gotJSON.Status)
+	}
+	if gotJSON.Message == "" {
+		t.Errorf("Middleware fails, message is empty")
+	}
+	if gotJSON.Message != "no authorization token found" {
+		t.Errorf("Middleware fails, got message: %v", gotJSON.Message)
+	}
+	if gotJSON.Id != 0 {
+		t.Errorf("Middleware fails, got id: %d", gotJSON.Id)
+	}
+	if gotCode != 403 {
+		t.Errorf("Middleware fails, got code: %d", gotCode)
+	}
+	if gotType != "application/json" {
+		t.Errorf("Middleware fails, got content-type: %v", gotType)
+	}
+}
+
+func Test_MiddlewareBadToken(t *testing.T) {
+	body := []byte(`{"title":"add test post","datas":"datasfill"}`)
+	request, _ := http.NewRequest("POST", "/api/v1/post", bytes.NewBuffer(body))
+	request.Header.Set("Content-Type", "application/json")
+	request.Header.Set("Authorization", "Bearer 61121212.LDFJKSSDFL.fdjksffskd")
+	responseRec := httptest.NewRecorder()
+	apiTest.Router.ServeHTTP(responseRec, request)
+
+	gotBody := responseRec.Body.Bytes()
+	gotCode := responseRec.Result().StatusCode
+	gotType := responseRec.Header().Get("Content-Type")
+	gotJSON := config.Message{}
+	json.Unmarshal(gotBody, &gotJSON)
+
+	if gotJSON.Status != "error" {
+		t.Errorf("Middleware fails, got status: %v", gotJSON.Status)
+	}
+	if gotJSON.Message == "" {
+		t.Errorf("Middleware fails, message is empty")
+	}
+	if gotJSON.Message != "error decoding JWT:invalid character 'ë' looking for beginning of value" {
+		t.Errorf("Middleware fails, got message: %v", gotJSON.Message)
+	}
+	if gotJSON.Id != 0 {
+		t.Errorf("Middleware fails, got id: %d", gotJSON.Id)
+	}
+	if gotCode != 403 {
+		t.Errorf("Middleware fails, got code: %d", gotCode)
+	}
+	if gotType != "application/json" {
+		t.Errorf("Middleware fails, got content-type: %v", gotType)
+	}
+}
+
 func Test_Fails(t *testing.T) {
 	testCases := []struct {
 		desc         string

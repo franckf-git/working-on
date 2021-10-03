@@ -38,17 +38,7 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 	}
 
 	authToken := req.Header.Get("Authorization")
-	idUserJWT, errJWT := validateToken(authToken)
-	if errJWT != nil {
-		config.ErrorLogg("AddPost(controllers) - decoding JWT:", errJWT)
-		failed := config.Message{
-			Status:  "error",
-			Message: "error decoding JWT:" + fmt.Sprint(errJWT),
-		}
-		res.WriteHeader(http.StatusForbidden)
-		json.NewEncoder(res).Encode(failed)
-		return
-	}
+	idUserJWT, _ := ValidateToken(authToken)
 
 	decoder.DisallowUnknownFields()
 	err := decoder.Decode(&post)
@@ -127,17 +117,7 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 	}
 
 	authToken := req.Header.Get("Authorization")
-	idUserJWT, errJWT := validateToken(authToken)
-	if errJWT != nil {
-		config.ErrorLogg("UpdatePost(controllers) - decoding JWT:", errJWT)
-		failed := config.Message{
-			Status:  "error",
-			Message: "error decoding JWT:" + fmt.Sprint(errJWT),
-		}
-		res.WriteHeader(http.StatusForbidden)
-		json.NewEncoder(res).Encode(failed)
-		return
-	}
+	idUserJWT, _ := ValidateToken(authToken)
 
 	decoder.DisallowUnknownFields()
 	err := decoder.Decode(&post)
@@ -189,17 +169,7 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 
 func DeletePost(res http.ResponseWriter, req *http.Request) {
 	authToken := req.Header.Get("Authorization")
-	idUserJWT, errJWT := validateToken(authToken)
-	if errJWT != nil {
-		config.ErrorLogg("DeletePost(controllers) - decoding JWT:", errJWT)
-		failed := config.Message{
-			Status:  "error",
-			Message: "error decoding JWT:" + fmt.Sprint(errJWT),
-		}
-		res.WriteHeader(http.StatusForbidden)
-		json.NewEncoder(res).Encode(failed)
-		return
-	}
+	idUserJWT, _ := ValidateToken(authToken)
 
 	db := models.OpenDatabase()
 	defer db.Close()

@@ -11,7 +11,7 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-func validateToken(authToken string) (idUser int, err error) {
+func ValidateToken(authToken string) (idUser int, err error) {
 	parseForAuthToken := strings.Split(authToken, " ")
 	if len(parseForAuthToken) != 2 {
 		return 0, fmt.Errorf("bad formating in Bearer")
