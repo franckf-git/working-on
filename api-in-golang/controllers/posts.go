@@ -238,12 +238,3 @@ func DeletePost(res http.ResponseWriter, req *http.Request) {
 	}
 	json.NewEncoder(res).Encode(successfull)
 }
-
-func find(slice []int, val int) bool {
-	for _, item := range slice {
-		if item == val {
-			return true
-		}
-	}
-	return false
-}

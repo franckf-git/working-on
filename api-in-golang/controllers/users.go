@@ -7,11 +7,6 @@ import (
 	"lite-api-crud/config"
 	"lite-api-crud/models"
 	"net/http"
-	"regexp"
-	"strings"
-	"time"
-
-	"github.com/golang-jwt/jwt"
 )
 
 func AddUser(w http.ResponseWriter, r *http.Request) {
@@ -81,50 +76,6 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	res, _ := json.Marshal(successfull)
 	w.WriteHeader(http.StatusCreated)
 	w.Write(res)
-}
-
-func CheckEmailPassword(user models.User) bool {
-	user.Email = strings.Trim(user.Email, " ")
-	var validEmail = regexp.MustCompile(`(?:[a-z0-9!#$%&'*+/=?^_{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])`)
-	if !validEmail.MatchString(user.Email) {
-		return false
-	}
-
-	var newline = regexp.MustCompile("\n")
-	if newline.MatchString(user.Email) {
-		return false
-	}
-
-	if len(user.Password) < 8 {
-		return false
-	}
-
-	if len(user.Password) > 52 || len(user.Email) > 52 {
-		return false
-	}
-
-	var numbers = regexp.MustCompile("[0-9]")
-	var lower = regexp.MustCompile("[a-z]")
-	var upper = regexp.MustCompile("[A-Z]")
-	var nospecials = regexp.MustCompile(`[^\w]`)
-	var nowhitepace = regexp.MustCompile(" ")
-
-	if !numbers.MatchString(user.Password) {
-		return false
-	}
-	if !lower.MatchString(user.Password) {
-		return false
-	}
-	if !upper.MatchString(user.Password) {
-		return false
-	}
-	if !nospecials.MatchString(user.Password) {
-		return false
-	}
-	if nowhitepace.MatchString(user.Password) {
-		return false
-	}
-	return true
 }
 
 func AskJWT(w http.ResponseWriter, r *http.Request) {
@@ -199,17 +150,4 @@ func AskJWT(w http.ResponseWriter, r *http.Request) {
 	res, _ := json.Marshal(successfull)
 	w.WriteHeader(http.StatusAccepted)
 	w.Write(res)
-}
-
-func GenerateToken(id int) (string, error) {
-	var hmacKey = []byte(config.JWTkey)
-	expiresAt := time.Now().Add(24 * time.Hour).Unix()
-	claims := config.JwtInfos{
-		IdUser:         id,
-		ExpiresAt:      expiresAt,
-		StandardClaims: jwt.StandardClaims{},
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
-	tokenString, err := token.SignedString(hmacKey)
-	return tokenString, err
 }
