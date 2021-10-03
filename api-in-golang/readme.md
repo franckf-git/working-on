@@ -47,6 +47,9 @@ peu d'idées est bienvenue :
 - [ ] besoin de mutex ? pour eviter les ecritures/suppressions en bdd (race
       condition) ?
 
+  > Gérer par database/sql et le pool de connection dans go si les requêtes sont bien préparées
+  > Tester également `db, err := sql.Open("sqlite3", "file:locked.sqlite?cache=shared&mode=rwc")`
+
 - [x] remplacer `json.Encode` par `json.Marshal` dans les controllers ?
       cela éviterait les appels au Struct mais les données serait moins "stables" ?
 
@@ -60,8 +63,10 @@ peu d'idées est bienvenue :
 
 ## Todos
 
-- [ ] harmonisation des requêtes du model (Exec, Prepare, Query, Begin, QueryRow, ...),
+- [x] harmonisation des requêtes du model (Exec, Prepare, Query, Begin, QueryRow, ...),
       c'est un peu le bazard
+
+  > voir autres todos
 
 - [ ] refactorisation de la partie controller Posts, illisible, beaucoup de
       répétitions et d'erreurs similaires. Besoin de reduction, utiliser les middlewares
@@ -86,6 +91,36 @@ peu d'idées est bienvenue :
   > nécéssaire suite à l'oubli d'évolution de schéma lors de la création de AddUser
 
 - [x] ajouter un mode debug pour couper si besoin les sorties des logs
+
+- [ ] "Don’t Open() and Close() databases frequently. Instead, create one sql.DB object for each distinct datastore you need to access, and keep it until the program is done accessing that datastore. Pass it around as needed, or make it available somehow globally, but keep it open. And don’t Open() and Close() from a short-lived function. Instead, pass the sql.DB into that short-lived function as an argument." dans le main ?
+"The returned DB is safe for concurrent use by multiple goroutines and maintains its own pool of idle connections. Thus, the Open function should be called just once. It is rarely necessary to close a DB."
+
+- [ ] "always prepare queries" mais peut présenter des risques de sécurité si le pool de connection est plein
+
+  ```
+  stmt, err := db.Prepare("select id, name from users where id = ?")
+if err != nil {
+	log.Fatal(err)
+}
+defer stmt.Close()
+rows, err := stmt.Query(1)
+if err != nil {
+	log.Fatal(err)
+}
+defer rows.Close()
+for rows.Next() {
+	// ...
+}
+if err = rows.Err(); err != nil {
+	log.Fatal(err)
+}
+  ```
+
+- [ ] "To verify that the data source name is valid, call Ping."
+
+- [ ] "Use Exec(), preferably with a prepared statement, to accomplish an INSERT, UPDATE, DELETE, or another statement that doesn’t return rows."
+
+- [ ] utiliser une sqlite en mémoire pour les tests ":memory:", "file::memory:?cache=shared" ou "file:test.db?cache=shared&mode=memory"
 
 ## Documentation de l'API
 
