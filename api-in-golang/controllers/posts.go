@@ -14,7 +14,16 @@ import (
 func ShowAllPosts(res http.ResponseWriter, req *http.Request) {
 	db := models.OpenDatabase()
 	defer db.Close()
-	posts := models.GetAllPosts(db)
+	posts, err := models.GetAllPosts(db)
+	if err != nil {
+		config.ErrorLogg("ShowAllPostsPost(controllers) - register post:", err)
+		failed := config.Message{
+			Status:  "error",
+			Message: "error while retriving posts",
+		}
+		res.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(res).Encode(failed)
+	}
 	json.NewEncoder(res).Encode(posts)
 }
 

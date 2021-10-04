@@ -33,7 +33,7 @@ func Test_GetAllPosts(t *testing.T) {
 	db := models.OpenDatabase()
 	defer db.Close()
 
-	postsTests := models.GetAllPosts(db)
+	postsTests, _ := models.GetAllPosts(db)
 	postsTests[0].Created = fakeCreatedTime
 	postsTests[1].Created = fakeCreatedTime
 	want := []config.Post{
