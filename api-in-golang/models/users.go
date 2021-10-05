@@ -2,7 +2,6 @@ package models
 
 import (
 	"database/sql"
-	"fmt"
 	"lite-api-crud/config"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -15,34 +14,50 @@ type User struct {
 }
 
 func (user *User) RegisterUser(db *sql.DB) (id int, err error) {
+	stmt, err := db.Prepare("INSERT INTO users(email,password) VALUES(?, ?)")
+	if err != nil {
+		config.ErrorLogg("RegisterUser(models) - preparing query:", err)
+		return
+	}
+	defer stmt.Close()
+
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		config.ErrorLogg("RegisterUser(models) - crypting password:", err)
-		return 0, err
+		return
 	}
 
-	stmt, errP := db.Prepare("INSERT INTO users(email,password) VALUES(?, ?)")
-	result, errE := stmt.Exec(user.Email, string(hash))
-	if errP != nil || errE != nil {
+	result, err := stmt.Exec(user.Email, string(hash))
+	if err != nil {
 		config.ErrorLogg("RegisterUser(models) - executing query:", err)
-		return 0, err
+		return
 	}
-	defer stmt.Close()
-	id64, _ := result.LastInsertId()
-	id = int(id64)
+
+	idReturn, _ := result.LastInsertId()
+	id = int(idReturn)
 	return
 }
 
 func (user *User) CheckExistingUser(db *sql.DB) (id int, err error) {
-	stmt, errP := db.Prepare("SELECT * FROM users WHERE email=?")
-	var email string
-	var hashpassword string
-	errQ := stmt.QueryRow(user.Email).Scan(&id, &email, &hashpassword)
-	errC := bcrypt.CompareHashAndPassword([]byte(hashpassword), []byte(user.Password))
-	if errP != nil || errQ != nil || errC != nil || id == 0 {
-		config.ErrorLogg("CheckExistingUser(models) - user and password:", errP, errQ, errC, id)
-		return 0, fmt.Errorf("error checking user and password: %v, %v, %v, %v", errP, errQ, errC, id)
+	stmt, err := db.Prepare("SELECT * FROM users WHERE email=?")
+	if err != nil {
+		config.ErrorLogg("CheckExistingUser(models) - preparing query:", err)
+		return
 	}
 	defer stmt.Close()
+
+	var email string
+	var hashpassword string
+	err = stmt.QueryRow(user.Email).Scan(&id, &email, &hashpassword)
+	if err != nil {
+		config.ErrorLogg("CheckExistingUser(models) - reading rows:", err)
+		return
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(hashpassword), []byte(user.Password))
+	if err != nil {
+		config.ErrorLogg("CheckExistingUser(models) - compare hash password:", err)
+		return
+	}
 	return
 }
