@@ -75,7 +75,7 @@ func GetAllPosts(db *sql.DB) (Posts []config.Post, err error) {
 func GetPost(db *sql.DB, id int) (Post config.Post, err error) {
 	stmt, err := db.Prepare("SELECT * FROM posts WHERE id = ?")
 	if err != nil {
-		config.ErrorLogg("GetPost(models) - executing query:", err)
+		config.ErrorLogg("GetPost(models) - preparing query:", err)
 		return
 	}
 	defer stmt.Close()
