@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"log"
 	"os"
 	"strings"
 
@@ -18,13 +19,13 @@ func createStorageFolder() {
 func OpenDatabase() *sql.DB {
 	db, err := sql.Open("sqlite3", config.Database)
 	if err != nil {
-		config.ErrorLogg("OpenDatabase(models) - fail to open database:", err)
+		log.Fatal("OpenDatabase(models) - fail to open database:", err)
 	}
 	return db
 }
 
 func startDatabase(db *sql.DB) {
-	sqlStmt := `
+	createTablePosts := `
 	CREATE TABLE IF NOT EXISTS posts(
 		id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 		title TEXT NOT NULL,
@@ -32,17 +33,16 @@ func startDatabase(db *sql.DB) {
 		created TEXT NOT NULL,
 		idUser INTEGER NOT NULL,
 		FOREIGN KEY(idUser) REFERENCES users(id)
-		);
+		);`
+	createTableUsers := `
 	CREATE TABLE IF NOT EXISTS users(
 		id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 		email TEXT NOT NULL,
 		password TEXT NOT NULL
 		);`
-	var err error
-	_, err = db.Exec(sqlStmt)
-	if err != nil {
-		config.ErrorLogg("startDatabase(models) - creating tables:", err, sqlStmt)
-	}
+
+	execDB(db, createTablePosts)
+	execDB(db, createTableUsers)
 }
 
 func InitializeDB() {
@@ -53,8 +53,22 @@ func InitializeDB() {
 }
 
 func CleanTables(db *sql.DB) {
-	db.Exec("DELETE FROM posts")
-	db.Exec("DELETE FROM users")
-	db.Exec("VACUUM")
-	db.Exec("UPDATE sqlite_sequence SET seq =0")
+	execDB(db, "DELETE FROM posts")
+	execDB(db, "DELETE FROM users")
+	execDB(db, "VACUUM")
+	execDB(db, "UPDATE sqlite_sequence SET seq =0")
+}
+
+func execDB(db *sql.DB, request string) {
+	stmt, err := db.Prepare(request)
+	if err != nil {
+		config.ErrorLogg(request, " - preparing query:", err)
+		return
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec()
+	if err != nil {
+		config.ErrorLogg(request, " - creating tables:", err)
+	}
 }
