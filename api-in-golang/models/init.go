@@ -21,6 +21,10 @@ func OpenDatabase() *sql.DB {
 	if err != nil {
 		log.Fatal("OpenDatabase(models) - fail to open database:", err)
 	}
+	err = db.Ping()
+	if err != nil {
+		log.Fatal("OpenDatabase(models) - fail to ping database:", err)
+	}
 	return db
 }
 
