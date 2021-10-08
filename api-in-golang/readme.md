@@ -42,7 +42,7 @@ peu d'idées est bienvenue :
   > Tous les tests utilisent la librairie standard pour faire des tests au niveau de l'API
 
 - [ ] maintenance : comment s'assurer que les librairies externes n'auront pas de
-      régressions ? les inclures au dépôts ?
+      régressions ? les inclures au dépôts ? https://stackoverflow.com/questions/9985559/organizing-a-multiple-file-go-project
 
 - [ ] besoin de mutex ? pour eviter les ecritures/suppressions en bdd (race
       condition) ?
