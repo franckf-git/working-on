@@ -15,8 +15,6 @@ import (
 var fakeCreatedTime string = time.Now().Format(time.RFC3339)
 
 func Test_RegisterPost(t *testing.T) {
-	models.CleanTables(controllers.Db)
-
 	firstInsert, _ := models.RegisterPost(controllers.Db, "title1", "datas1", 1)
 	secondInsert, _ := models.RegisterPost(controllers.Db, "title2", "datas2", 2)
 	if firstInsert != 1 && secondInsert != 2 {

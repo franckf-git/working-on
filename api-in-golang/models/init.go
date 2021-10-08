@@ -64,13 +64,6 @@ func InitializeDB(state string) *sql.DB {
 	}
 }
 
-func CleanTables(db *sql.DB) {
-	execDB(db, "DELETE FROM posts")
-	execDB(db, "DELETE FROM users")
-	execDB(db, "VACUUM")
-	execDB(db, "UPDATE sqlite_sequence SET seq =0")
-}
-
 func execDB(db *sql.DB, request string) {
 	stmt, err := db.Prepare(request)
 	if err != nil {
