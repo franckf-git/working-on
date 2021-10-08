@@ -90,8 +90,11 @@ peu d'idées est bienvenue :
 
 - [x] ajouter un mode debug pour couper si besoin les sorties des logs
 
-- [ ] "Don’t Open() and Close() databases frequently. Instead, create one sql.DB object for each distinct datastore you need to access, and keep it until the program is done accessing that datastore. Pass it around as needed, or make it available somehow globally, but keep it open. And don’t Open() and Close() from a short-lived function. Instead, pass the sql.DB into that short-lived function as an argument." dans le main ?
-      "The returned DB is safe for concurrent use by multiple goroutines and maintains its own pool of idle connections. Thus, the Open function should be called just once. It is rarely necessary to close a DB."
+- [x] "Don’t Open() and Close() databases frequently. Instead, create one sql.DB object for each distinct datastore you need to access, and keep it until the program is done accessing that datastore. Pass it around as needed, or make it available somehow globally, but keep it open. And don’t Open() and Close() from a short-lived function. Instead, pass the sql.DB into that short-lived function as an argument." dans le main ?  
+       ["The returned DB is safe for concurrent use by multiple goroutines and maintains its own pool of idle connections. Thus, the Open function should be called just once. It is rarely necessary to close a DB."](https://pkg.go.dev/database/sql#Open)  
+       ["It is rare to Close a DB, as the DB handle is meant to be long-lived and shared between many goroutines."](https://pkg.go.dev/database/sql#DB.Close)
+
+> ouvrir la base de données une fois et l'utiliser tel que, si vraiment necéssaire la fermer à la fin de l'application (dans le main)
 
 - [x] "always prepare queries" mais peut présenter des risques de sécurité si le pool de connection est plein
 
@@ -112,7 +115,7 @@ curl http://127.0.0.1:8000/api/v1/posts
 ### Ajouter un post
 
 ```
-curl --location --request POST 'http://127.0.0.1:8000/api/v1/post' --header 'Content-Type: application/json' --data-raw '{"title":"from json","datas":"datasfill"}'
+curl --location --request POST 'http://127.0.0.1:8000/api/v1/post' --header 'Content-Type: application/json' --header 'Authorization: Bearer qdyg.7dhq.djqsik' --data-raw '{"title":"from json","datas":"datasfill"}'
 ```
 
 ### Post par id
@@ -142,7 +145,7 @@ curl --location --request POST 'http://127.0.0.1:8000/user' --header 'Content-Ty
 ### Ask for JWT
 
 ```
-curl --location --request POST 'http://127.0.0.1:8000/user/JWT' --header 'Content-Type: application/json' --data-raw '{"email":"user1@mail.lan","password":"VERYstrong&Secur3"}'
+curl --location --request POST 'http://127.0.0.1:8000/user/jwt' --header 'Content-Type: application/json' --data-raw '{"email":"user1@mail.lan","password":"VERYstrong&Secur3"}'
 ```
 
 ## Problèmes

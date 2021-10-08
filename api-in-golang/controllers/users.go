@@ -52,7 +52,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := user.RegisterUser(db)
+	id, err := user.RegisterUser(Db)
 	if err != nil {
 		config.ErrorLogg("AddUser(controllers) - register user:", err, user.Email)
 		failed := config.Message{
@@ -106,7 +106,7 @@ func AskJWT(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := user.CheckExistingUser(db)
+	id, err := user.CheckExistingUser(Db)
 	if err != nil {
 		config.ErrorLogg("AskJWT(controllers) - logging user:", err, user.Email)
 		failed := config.Message{

@@ -12,7 +12,7 @@ import (
 )
 
 func ShowAllPosts(res http.ResponseWriter, req *http.Request) {
-	posts, err := models.GetAllPosts(db)
+	posts, err := models.GetAllPosts(Db)
 	if err != nil {
 		config.ErrorLogg("ShowAllPostsPost(controllers) - register post:", err)
 		failed := config.Message{
@@ -57,7 +57,7 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	id, err := models.RegisterPost(db, post.Title, post.Datas, idUserJWT)
+	id, err := models.RegisterPost(Db, post.Title, post.Datas, idUserJWT)
 	if err != nil {
 		config.ErrorLogg("AddPost(controllers) - register post:", err, post)
 		failed := config.Message{
@@ -80,7 +80,7 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 func ShowPost(res http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id, _ := strconv.Atoi(vars["id"])
-	post, err := models.GetPost(db, id)
+	post, err := models.GetPost(Db, id)
 	if err != nil {
 		config.ErrorLogg("ShowPost(controllers) - getting post:", err)
 		failed := config.Message{
@@ -128,7 +128,7 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	ids, err := models.GetAllPostsByUser(db, idUserJWT)
+	ids, err := models.GetAllPostsByUser(Db, idUserJWT)
 	if !find(ids, id) {
 		config.ErrorLogg("UpdatePost(controllers) - this user can't update this post:", err, post)
 		failed := config.Message{
@@ -140,7 +140,7 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	err = models.UpdatingPost(db, id, post.Title, post.Datas, idUserJWT)
+	err = models.UpdatingPost(Db, id, post.Title, post.Datas, idUserJWT)
 	if err != nil {
 		config.ErrorLogg("UpdatePost(controllers) - updating post:", err, post)
 		failed := config.Message{
@@ -167,7 +167,7 @@ func DeletePost(res http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id, _ := strconv.Atoi(vars["id"])
 
-	ids, err := models.GetAllPostsByUser(db, idUserJWT)
+	ids, err := models.GetAllPostsByUser(Db, idUserJWT)
 	if !find(ids, id) {
 		config.ErrorLogg("DeletePost(controllers) - this user can't delete this post:", err)
 		failed := config.Message{
@@ -179,7 +179,7 @@ func DeletePost(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	err = models.DeletingPost(db, id)
+	err = models.DeletingPost(Db, id)
 	if err != nil {
 		config.ErrorLogg("DeletePost(controllers) - deleting post:", err)
 		failed := config.Message{
