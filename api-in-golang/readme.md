@@ -44,7 +44,7 @@ peu d'idées est bienvenue :
 - [ ] maintenance : comment s'assurer que les librairies externes n'auront pas de
       régressions ? les inclures au dépôts ? https://stackoverflow.com/questions/9985559/organizing-a-multiple-file-go-project
 
-- [ ] besoin de mutex ? pour eviter les ecritures/suppressions en bdd (race
+- [x] besoin de mutex ? pour eviter les ecritures/suppressions en bdd (race
       condition) ?
 
   > Gérer par database/sql et le pool de connection dans go si les requêtes sont bien préparées
@@ -103,6 +103,8 @@ peu d'idées est bienvenue :
 - [x] "Use Exec(), preferably with a prepared statement, to accomplish an INSERT, UPDATE, DELETE, or another statement that doesn’t return rows."
 
 - [x] utiliser une sqlite en mémoire pour les tests ":memory:", "file::memory:?cache=shared" ou "file:test.db?cache=shared&mode=memory"
+
+- [ ] réparer le `make test` pour ne pas dépendre de l'IDE pour lancer les tests. En profiter pour inverser les variables d'environnement (le défaut sur la prod, le test dans le make)
 
 ## Documentation de l'API
 
@@ -164,3 +166,5 @@ L'application est fonctionnelle mais son écriture a relevé certains problèmes
 - Refactoriser au fur et à mesure aurait permis d'éviter d'avoir un code spagetti aussi vite. La refactorisation va maintenant être douloureuse.
 
 - Manque d'utilisations des fonctionnalités de go. Les structs et surtout les pointers ont sous-utilisés. Les struct auraient apportés plus de structures/organisations, à revoir lors de la refactorisation. Il manque également le réflexe d'utiliser les pointers, ce n'est pas encore naturel et pas encore forcément compris.
+
+- Quelques difficultées pour utiliser globalement la connection de la base de données. Au final, une fois la librairie sql bien comprise, tout s'agence bien. L'utilisation de variables d'environnement est dommage mais nécessaire pour faire cohabiter la production et les tests. Il est aussi étrange que ce soit le module controller qui initialise la db mais c'est lui qui l'utilise et qui le passe ensuite aux models.
