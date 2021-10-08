@@ -6,7 +6,6 @@ import (
 
 	"lite-api-crud/config"
 	"lite-api-crud/controllers"
-	"lite-api-crud/models"
 
 	"github.com/gorilla/mux"
 )
@@ -21,7 +20,6 @@ func (a *App) Run() {
 }
 
 func (a *App) Initialize() {
-	models.InitializeDB()
 	a.Router = mux.NewRouter().StrictSlash(true)
 	a.Router.Use(setHeader)
 	a.initializeRoutes()

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"fmt"
 	"lite-api-crud/config"
 	"lite-api-crud/models"
@@ -10,6 +11,8 @@ import (
 
 	"github.com/golang-jwt/jwt"
 )
+
+var db *sql.DB = models.InitializeDB("test")
 
 func ValidateToken(authToken string) (idUser int, err error) {
 	parseForAuthToken := strings.Split(authToken, " ")

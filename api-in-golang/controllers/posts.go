@@ -12,8 +12,6 @@ import (
 )
 
 func ShowAllPosts(res http.ResponseWriter, req *http.Request) {
-	db := models.OpenDatabase()
-	defer db.Close()
 	posts, err := models.GetAllPosts(db)
 	if err != nil {
 		config.ErrorLogg("ShowAllPostsPost(controllers) - register post:", err)
@@ -59,8 +57,6 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	db := models.OpenDatabase()
-	defer db.Close()
 	id, err := models.RegisterPost(db, post.Title, post.Datas, idUserJWT)
 	if err != nil {
 		config.ErrorLogg("AddPost(controllers) - register post:", err, post)
@@ -82,8 +78,6 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 }
 
 func ShowPost(res http.ResponseWriter, req *http.Request) {
-	db := models.OpenDatabase()
-	defer db.Close()
 	vars := mux.Vars(req)
 	id, _ := strconv.Atoi(vars["id"])
 	post, err := models.GetPost(db, id)
@@ -134,8 +128,6 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	db := models.OpenDatabase()
-	defer db.Close()
 	ids, err := models.GetAllPostsByUser(db, idUserJWT)
 	if !find(ids, id) {
 		config.ErrorLogg("UpdatePost(controllers) - this user can't update this post:", err, post)
@@ -172,8 +164,6 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 func DeletePost(res http.ResponseWriter, req *http.Request) {
 	idUserJWT, _ := strconv.Atoi(req.Header.Get("idUser"))
 
-	db := models.OpenDatabase()
-	defer db.Close()
 	vars := mux.Vars(req)
 	id, _ := strconv.Atoi(vars["id"])
 

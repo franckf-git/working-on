@@ -52,8 +52,6 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := models.OpenDatabase()
-	defer db.Close()
 	id, err := user.RegisterUser(db)
 	if err != nil {
 		config.ErrorLogg("AddUser(controllers) - register user:", err, user.Email)
@@ -108,8 +106,6 @@ func AskJWT(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := models.OpenDatabase()
-	defer db.Close()
 	id, err := user.CheckExistingUser(db)
 	if err != nil {
 		config.ErrorLogg("AskJWT(controllers) - logging user:", err, user.Email)

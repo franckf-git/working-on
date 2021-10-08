@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"database/sql"
 	"fmt"
 	"lite-api-crud/config"
 	"lite-api-crud/models"
@@ -11,15 +12,10 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func init() {
-	models.InitializeDB()
-}
-
+var db *sql.DB = models.InitializeDB("test")
 var fakeCreatedTime string = time.Now().Format(time.RFC3339)
 
 func Test_RegisterPost(t *testing.T) {
-	db := models.OpenDatabase()
-	defer db.Close()
 	models.CleanTables(db)
 
 	firstInsert, _ := models.RegisterPost(db, "title1", "datas1", 1)
@@ -30,9 +26,6 @@ func Test_RegisterPost(t *testing.T) {
 }
 
 func Test_GetAllPosts(t *testing.T) {
-	db := models.OpenDatabase()
-	defer db.Close()
-
 	postsTests, _ := models.GetAllPosts(db)
 	postsTests[0].Created = fakeCreatedTime
 	postsTests[1].Created = fakeCreatedTime

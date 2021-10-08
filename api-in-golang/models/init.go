@@ -16,8 +16,8 @@ func createStorageFolder() {
 	os.Mkdir(folder, 0755)
 }
 
-func OpenDatabase() *sql.DB {
-	db, err := sql.Open("sqlite3", config.Database)
+func OpenDatabase(source string) *sql.DB {
+	db, err := sql.Open("sqlite3", source)
 	if err != nil {
 		log.Fatal("OpenDatabase(models) - fail to open database:", err)
 	}
@@ -49,11 +49,24 @@ func startDatabase(db *sql.DB) {
 	execDB(db, createTableUsers)
 }
 
-func InitializeDB() {
-	createStorageFolder()
-	db := OpenDatabase()
-	defer db.Close()
-	startDatabase(db)
+// InitializeDB with 'production' or 'test'
+func InitializeDB(state string) *sql.DB {
+	switch state {
+	case "production":
+		createStorageFolder()
+		db := OpenDatabase(config.Database)
+		//defer db.Close()
+		startDatabase(db)
+		return db
+	case "test":
+		db := OpenDatabase("file::memory:?cache=shared")
+		//defer db.Close()
+		startDatabase(db)
+		return db
+	default:
+		log.Fatal("InitializeDB: no state provide")
+		return nil
+	}
 }
 
 func CleanTables(db *sql.DB) {

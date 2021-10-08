@@ -99,7 +99,7 @@ peu d'idées est bienvenue :
 
 - [x] "Use Exec(), preferably with a prepared statement, to accomplish an INSERT, UPDATE, DELETE, or another statement that doesn’t return rows."
 
-- [ ] utiliser une sqlite en mémoire pour les tests ":memory:", "file::memory:?cache=shared" ou "file:test.db?cache=shared&mode=memory"
+- [x] utiliser une sqlite en mémoire pour les tests ":memory:", "file::memory:?cache=shared" ou "file:test.db?cache=shared&mode=memory"
 
 ## Documentation de l'API
 
