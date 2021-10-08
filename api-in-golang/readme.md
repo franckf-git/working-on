@@ -78,7 +78,7 @@ peu d'idées est bienvenue :
   > mais cela reste possible à condition de faire des compromis sur
   > l'emplacement des struct
 
-- [ ] ajouter un système de migration automatique (avec sauvegarde) pour la base de
+- [x] ajouter un système de migration automatique (avec sauvegarde) pour la base de
       données. Par exemple l'ajout d'index :
 
   ```

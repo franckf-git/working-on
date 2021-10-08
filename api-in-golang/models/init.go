@@ -89,19 +89,19 @@ func migrateDatabase() {
 		config.ErrorLogg("reading content of migrate folder", err)
 	}
 	for _, file := range fileInfo {
-		cmdToExec := "sqlite3 ./storage/database.sqlite3 < " + "./models/migrate/" + file.Name()
-		_, err := exec.Command(cmdToExec).CombinedOutput()
+		args := "sqlite3 " + config.DatabaseFile + " < " + "./models/migrate/" + file.Name()
+		out, err := exec.Command("bash", "-c", args).CombinedOutput()
 		if err != nil {
-			config.ErrorLogg("migrating", file.Name(), err)
+			config.ErrorLogg("migrating", file.Name(), string(out), err)
 		}
 	}
 }
 
 func backupDatabase() {
-	timer := string(time.Now().Format("2006-01-02"))
-	cmdToExec := "/bin/sqlite3 ./storage/database.sqlite3 > " + "./backup/" + timer + ".sql"
-	_, err := exec.Command(cmdToExec).CombinedOutput()
+	timer := string(time.Now().Format("2006-01-02_15:04:05"))
+	args := "sqlite3 " + config.DatabaseFile + " .dump " + " > " + "./models/backup/" + timer + ".sql"
+	out, err := exec.Command("bash", "-c", args).CombinedOutput()
 	if err != nil {
-		config.ErrorLogg("backup", timer, err)
+		config.ErrorLogg("backup", timer, string(out), err)
 	}
 }
