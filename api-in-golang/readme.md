@@ -144,7 +144,7 @@ curl --location --request DELETE 'http://127.0.0.1:8000/api/v1/post/2' --header 
 curl --location --request POST 'http://127.0.0.1:8000/user' --header 'Content-Type: application/json' --data-raw '{"email":"user1@mail.lan","password":"VERYstrong&Secur3"}'
 ```
 
-### Ask for JWT
+### Demander un Token
 
 ```
 curl --location --request POST 'http://127.0.0.1:8000/user/jwt' --header 'Content-Type: application/json' --data-raw '{"email":"user1@mail.lan","password":"VERYstrong&Secur3"}'
