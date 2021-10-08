@@ -1,6 +1,10 @@
 package config
 
-import "github.com/golang-jwt/jwt"
+import (
+	"os"
+
+	"github.com/golang-jwt/jwt"
+)
 
 var PORT string = ":8000"
 var WelcomeMessage string = "Welcome, to have more details about this API, visit /api/v1/docs"
@@ -8,6 +12,7 @@ var Database string = "file:./storage/database.sqlite3?cache=shared"
 var DocsLink string = "https://gitlab.com/franckf/working-on/-/blob/master/api-in-golang/readme.md#documentation-de-lapi"
 var JWTkey string = "2d01d5d9c24034d54fe4fba0ede5182d"
 var debug bool = false
+var State string = os.Getenv("ENV")
 
 type Post struct {
 	Id      int    `json:"id"`

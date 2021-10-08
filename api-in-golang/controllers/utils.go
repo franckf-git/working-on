@@ -12,7 +12,7 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-var Db *sql.DB = models.InitializeDB("test")
+var Db *sql.DB = models.InitializeDB(config.State)
 
 func ValidateToken(authToken string) (idUser int, err error) {
 	parseForAuthToken := strings.Split(authToken, " ")

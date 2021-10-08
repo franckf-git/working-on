@@ -55,17 +55,12 @@ func InitializeDB(state string) *sql.DB {
 	case "production":
 		createStorageFolder()
 		db := OpenDatabase(config.Database)
-		//defer db.Close()
-		startDatabase(db)
-		return db
-	case "test":
-		db := OpenDatabase("file::memory:?cache=shared")
-		//defer db.Close()
 		startDatabase(db)
 		return db
 	default:
-		log.Fatal("InitializeDB: no state provide")
-		return nil
+		db := OpenDatabase("file::memory:?cache=shared")
+		startDatabase(db)
+		return db
 	}
 }
 
