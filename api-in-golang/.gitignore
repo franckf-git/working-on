@@ -1,2 +1,3 @@
 storage/database.sqlite3
-tests/storage/database.sqlite3
+lite-api-crud
+models/backup/*

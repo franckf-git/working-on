@@ -16,6 +16,7 @@ type App struct {
 
 func (a *App) Run() {
 	log.Println("api server is up")
+	log.Printf("ENV: %#+v\n", config.State)
 	log.Fatal(http.ListenAndServe(config.PORT, a.Router))
 }
 
