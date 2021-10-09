@@ -3,6 +3,7 @@ package router
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"lite-api-crud/config"
 	"lite-api-crud/controllers"
@@ -15,9 +16,22 @@ type App struct {
 }
 
 func (a *App) Run() {
+	log.Println("ENV:", config.State)
+	server := &http.Server{
+		Addr:              config.PORT,
+		Handler:           a.Router,
+		ReadTimeout:       time.Second * 15,
+		ReadHeaderTimeout: 0,
+		WriteTimeout:      time.Second * 15,
+		IdleTimeout:       time.Second * 60,
+		MaxHeaderBytes:    0,
+		ErrorLog:          &log.Logger{},
+	}
 	log.Println("api server is up")
-	log.Printf("ENV: %#+v\n", config.State)
-	log.Fatal(http.ListenAndServe(config.PORT, a.Router))
+	err := server.ListenAndServe()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (a *App) Initialize() {
