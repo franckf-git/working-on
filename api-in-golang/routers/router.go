@@ -28,13 +28,21 @@ func (a *App) Initialize() {
 
 func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/", controllers.WelcomePage).Methods("GET")
-	a.Router.HandleFunc("/api/v1/docs", controllers.Docs).Methods("GET")
-	a.Router.HandleFunc("/api/v1/posts", controllers.ShowAllPosts).Methods("GET")
-	a.Router.HandleFunc("/api/v1/post/{id:[0-9]+}", controllers.ShowPost).Methods("GET")
-	a.Router.HandleFunc("/api/v1/post/{id:[0-9]+}", checkContentType(isAuthorized(controllers.UpdatePost))).Methods("PUT")
-	a.Router.HandleFunc("/api/v1/post/{id:[0-9]+}", isAuthorized(controllers.DeletePost)).Methods("DELETE")
-	a.Router.HandleFunc("/api/v1/post", checkContentType(isAuthorized(controllers.AddPost))).Methods("POST")
-	a.Router.HandleFunc("/user", checkContentType(controllers.AddUser)).Methods("POST")
-	a.Router.HandleFunc("/user/jwt", checkContentType(controllers.AskJWT)).Methods("POST")
+	api := a.Router.PathPrefix("/api").Subrouter()
+	v1 := api.PathPrefix("/v1").Subrouter()
+	post := v1.PathPrefix("/post").Subrouter()
+	user := a.Router.PathPrefix("/user").Subrouter()
+
+	v1.HandleFunc("/docs", controllers.Docs).Methods("GET")
+	v1.HandleFunc("/posts", controllers.ShowAllPosts).Methods("GET")
+
+	post.HandleFunc("", checkContentType(isAuthorized(controllers.AddPost))).Methods("POST")
+	post.HandleFunc("/{id:[0-9]+}", controllers.ShowPost).Methods("GET")
+	post.HandleFunc("/{id:[0-9]+}", checkContentType(isAuthorized(controllers.UpdatePost))).Methods("PUT")
+	post.HandleFunc("/{id:[0-9]+}", isAuthorized(controllers.DeletePost)).Methods("DELETE")
+
+	user.HandleFunc("", checkContentType(controllers.AddUser)).Methods("POST")
+	user.HandleFunc("/jwt", checkContentType(controllers.AskJWT)).Methods("POST")
+
 	a.Router.NotFoundHandler = http.HandlerFunc(controllers.NotFoundMessage)
 }
