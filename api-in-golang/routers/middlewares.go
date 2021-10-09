@@ -45,7 +45,7 @@ func setHeader(next http.Handler) http.Handler {
 	})
 }
 
-func checkContentType(next http.HandlerFunc) http.HandlerFunc {
+func checkContentType(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		contentType := r.Header.Get("Content-Type")
 		if contentType != "application/json" {

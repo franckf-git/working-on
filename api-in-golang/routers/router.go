@@ -30,19 +30,22 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/", controllers.WelcomePage).Methods("GET")
 	api := a.Router.PathPrefix("/api").Subrouter()
 	v1 := api.PathPrefix("/v1").Subrouter()
+	postReading := v1.PathPrefix("/post").Subrouter()
 	post := v1.PathPrefix("/post").Subrouter()
 	user := a.Router.PathPrefix("/user").Subrouter()
 
 	v1.HandleFunc("/docs", controllers.Docs).Methods("GET")
 	v1.HandleFunc("/posts", controllers.ShowAllPosts).Methods("GET")
 
-	post.HandleFunc("", checkContentType(isAuthorized(controllers.AddPost))).Methods("POST")
+	postReading.Use(checkContentType)
+	postReading.HandleFunc("", isAuthorized(controllers.AddPost)).Methods("POST")
+	postReading.HandleFunc("/{id:[0-9]+}", isAuthorized(controllers.UpdatePost)).Methods("PUT")
 	post.HandleFunc("/{id:[0-9]+}", controllers.ShowPost).Methods("GET")
-	post.HandleFunc("/{id:[0-9]+}", checkContentType(isAuthorized(controllers.UpdatePost))).Methods("PUT")
 	post.HandleFunc("/{id:[0-9]+}", isAuthorized(controllers.DeletePost)).Methods("DELETE")
 
-	user.HandleFunc("", checkContentType(controllers.AddUser)).Methods("POST")
-	user.HandleFunc("/jwt", checkContentType(controllers.AskJWT)).Methods("POST")
+	user.Use(checkContentType)
+	user.HandleFunc("", controllers.AddUser).Methods("POST")
+	user.HandleFunc("/jwt", controllers.AskJWT).Methods("POST")
 
 	a.Router.NotFoundHandler = http.HandlerFunc(controllers.NotFoundMessage)
 }

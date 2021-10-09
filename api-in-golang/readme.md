@@ -168,3 +168,10 @@ L'application est fonctionnelle mais son écriture a relevé certains problèmes
 - Manque d'utilisations des fonctionnalités de go. Les structs et surtout les pointers ont sous-utilisés. Les struct auraient apportés plus de structures/organisations, à revoir lors de la refactorisation. Il manque également le réflexe d'utiliser les pointers, ce n'est pas encore naturel et pas encore forcément compris.
 
 - Quelques difficultées pour utiliser globalement la connection de la base de données. Au final, une fois la librairie sql bien comprise, tout s'agence bien. L'utilisation de variables d'environnement est dommage mais nécessaire pour faire cohabiter la production et les tests. Il est aussi étrange que ce soit le module controller qui initialise la db mais c'est lui qui l'utilise et qui le passe ensuite aux models.
+
+- Ajouter un ou plusieurs middlewares sur plusieurs sous-routes, avec le même chemin mais des methodes différentes, est compliqué :
+  - Soit on fait un enchainement de fonctions de middleware, ce qui devient vite illisible
+  - Soit on utilise les sous-routes dans gorilla/mux mais uniquement sur les routes qui nous interresent, ce qui rend la déclaration des routes inconsistante
+  - Soit on adapte les chemins pour correspondre aux middlewares voulus (éclater les routes en sous-routes bien bornées), ce qui n'est pas consistant côté client et difficile à faire évoluer
+    Le manque de connaissance sur la librairie standard des Handlers ne permet pas d'envisager d'autres solutions pour l'instant.
+    Dans la version js, on avait répartit les routes en fonction des domaines, mais c'est une solution d'organisation, pas technique.
