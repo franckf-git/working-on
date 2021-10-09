@@ -8,8 +8,8 @@ import (
 	"net/http"
 )
 
-func isAuthorized(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+func isAuthorized(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Header["Authorization"] == nil {
 			config.ErrorLogg("isAuthorized(routes) - no authorization token found")
 			failed := config.Message{
@@ -35,7 +35,7 @@ func isAuthorized(next http.HandlerFunc) http.HandlerFunc {
 		}
 		r.Header.Set("idUser", fmt.Sprint(idUser))
 		next.ServeHTTP(w, r)
-	}
+	})
 }
 
 func setHeader(next http.Handler) http.Handler {

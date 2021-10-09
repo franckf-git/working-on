@@ -179,6 +179,7 @@ func Test_UpdatePost(t *testing.T) {
 func Test_DeletePost(t *testing.T) {
 	request, _ := http.NewRequest("DELETE", "/api/v1/post/2", nil)
 	request.Header.Set("Authorization", tempToken)
+	request.Header.Set("Content-Type", "application/json")
 	responseRec := httptest.NewRecorder()
 	apiTest.Router.ServeHTTP(responseRec, request)
 
@@ -400,6 +401,14 @@ func Test_Fails(t *testing.T) {
 			method:       "DELETE",
 			body:         nil,
 			expectedCode: 401,
+		},
+		{
+			desc:         "Delete Post with bad content type",
+			route:        "/api/v1/post/1",
+			method:       "DELETE",
+			body:         nil,
+			contenttype:  "apl/jason",
+			expectedCode: 406,
 		},
 		{
 			desc:         "Delete Post with bad user",

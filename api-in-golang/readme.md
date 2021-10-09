@@ -175,3 +175,4 @@ L'application est fonctionnelle mais son écriture a relevé certains problèmes
   - Soit on adapte les chemins pour correspondre aux middlewares voulus (éclater les routes en sous-routes bien bornées), ce qui n'est pas consistant côté client et difficile à faire évoluer
     Le manque de connaissance sur la librairie standard des Handlers ne permet pas d'envisager d'autres solutions pour l'instant.
     Dans la version js, on avait répartit les routes en fonction des domaines, mais c'est une solution d'organisation, pas technique.
+    La version actuelle fonctionne bien, à condition que l'on ait pas plus de deux "lots" de middlewares sur chaque route.
