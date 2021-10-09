@@ -10,7 +10,6 @@ import (
 
 func isAuthorized(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
 		if r.Header["Authorization"] == nil {
 			config.ErrorLogg("isAuthorized(routes) - no authorization token found")
 			failed := config.Message{
@@ -44,4 +43,22 @@ func setHeader(next http.Handler) http.Handler {
 		w.Header().Set("Content-Type", "application/json")
 		next.ServeHTTP(w, r)
 	})
+}
+
+func checkContentType(next http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		contentType := r.Header.Get("Content-Type")
+		if contentType != "application/json" {
+			config.ErrorLogg("AddPost(controllers) - bad content-type formating:", r.Header)
+			failed := config.Message{
+				Status:  "error",
+				Message: "error bad content-type formating:" + fmt.Sprint(r.Header),
+			}
+			w.WriteHeader(http.StatusNotAcceptable)
+			json.NewEncoder(w).Encode(failed)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+
 }

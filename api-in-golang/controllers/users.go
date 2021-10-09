@@ -14,19 +14,6 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 
-	contentType := r.Header.Get("Content-Type")
-	if contentType != "application/json" {
-		config.ErrorLogg("AddUser(controllers) - bad content-type formating:", r.Header)
-		failed := config.Message{
-			Status:  "error",
-			Message: "error bad content-type formating:" + fmt.Sprint(r.Header),
-		}
-		res, _ := json.Marshal(failed)
-		w.WriteHeader(http.StatusNotAcceptable)
-		w.Write(res)
-		return
-	}
-
 	err := json.Unmarshal(body, &user)
 	if err != nil || user.Email == "" || user.Password == "" {
 		config.ErrorLogg("AddUser(controllers) - decoding user:", err, user.Email)
@@ -79,19 +66,6 @@ func AskJWT(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	body, _ := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
-
-	contentType := r.Header.Get("Content-Type")
-	if contentType != "application/json" {
-		config.ErrorLogg("AskJWT(controllers) - bad content-type formating:", r.Header)
-		failed := config.Message{
-			Status:  "error",
-			Message: "error bad content-type formating:" + fmt.Sprint(r.Header),
-		}
-		res, _ := json.Marshal(failed)
-		w.WriteHeader(http.StatusNotAcceptable)
-		w.Write(res)
-		return
-	}
 
 	err := json.Unmarshal(body, &user)
 	if err != nil || user.Email == "" || user.Password == "" {

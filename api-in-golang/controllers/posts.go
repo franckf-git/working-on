@@ -30,18 +30,6 @@ func AddPost(res http.ResponseWriter, req *http.Request) {
 	decoder := json.NewDecoder(req.Body)
 	defer req.Body.Close()
 
-	contentType := req.Header.Get("Content-Type")
-	if contentType != "application/json" {
-		config.ErrorLogg("AddPost(controllers) - bad content-type formating:", req.Header)
-		failed := config.Message{
-			Status:  "error",
-			Message: "error bad content-type formating:" + fmt.Sprint(req.Header),
-		}
-		res.WriteHeader(http.StatusNotAcceptable)
-		json.NewEncoder(res).Encode(failed)
-		return
-	}
-
 	idUserJWT, _ := strconv.Atoi(req.Header.Get("idUser"))
 
 	decoder.DisallowUnknownFields()
@@ -100,18 +88,6 @@ func UpdatePost(res http.ResponseWriter, req *http.Request) {
 	defer req.Body.Close()
 	vars := mux.Vars(req)
 	id, _ := strconv.Atoi(vars["id"])
-
-	contentType := req.Header.Get("Content-Type")
-	if contentType != "application/json" {
-		config.ErrorLogg("UpdatePost(controllers) - bad content-type formating:", req.Header)
-		failed := config.Message{
-			Status:  "error",
-			Message: "error bad content-type formating:" + fmt.Sprint(req.Header),
-		}
-		res.WriteHeader(http.StatusNotAcceptable)
-		json.NewEncoder(res).Encode(failed)
-		return
-	}
 
 	idUserJWT, _ := strconv.Atoi(req.Header.Get("idUser"))
 
