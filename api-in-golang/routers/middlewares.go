@@ -49,7 +49,7 @@ func checkContentType(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		contentType := r.Header.Get("Content-Type")
 		if contentType != "application/json" {
-			config.ErrorLogg("AddPost(controllers) - bad content-type formating:", r.Header)
+			config.ErrorLogg("(controllers) - bad content-type formating:", r.Header)
 			failed := config.Message{
 				Status:  "error",
 				Message: "error bad content-type formating:" + fmt.Sprint(r.Header),
