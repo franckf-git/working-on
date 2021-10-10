@@ -26,7 +26,7 @@ func Test_GetAllPosts(t *testing.T) {
 	postsTests, _ := models.GetAllPosts(controllers.Db)
 	postsTests[0].Created = fakeCreatedTime
 	postsTests[1].Created = fakeCreatedTime
-	want := []config.Post{
+	want := []config.GetPost{
 		{Id: 1, Title: "title1", Datas: "datas1", Created: fakeCreatedTime, IdUser: 1},
 		{Id: 2, Title: "title2", Datas: "datas2", Created: fakeCreatedTime, IdUser: 2},
 	}

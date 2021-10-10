@@ -15,7 +15,7 @@ var JWTkey string = "2d01d5d9c24034d54fe4fba0ede5182d"
 var debug bool = false
 var State string = os.Getenv("ENV")
 
-type Post struct {
+type GetPost struct {
 	Id      int    `json:"id"`
 	Title   string `json:"title"`
 	Datas   string `json:"datas"`
@@ -23,7 +23,7 @@ type Post struct {
 	IdUser  int    `json:"idUser"`
 }
 
-type NewPost struct {
+type SetPost struct {
 	Title  string `json:"title"`
 	Datas  string `json:"datas"`
 	IdUser int    `json:"idUser"`

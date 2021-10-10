@@ -70,13 +70,13 @@ func Test_ShowAllPosts(t *testing.T) {
 	gotBody := responseRec.Body.Bytes()
 	gotCode := responseRec.Result().StatusCode
 	gotType := responseRec.Header().Get("Content-Type")
-	gotJSON := []config.Post{}
+	gotJSON := []config.GetPost{}
 	json.Unmarshal(gotBody, &gotJSON)
 
 	// carefull very couple to model_test.RegisterPosts
 	gotJSON[0].Created = fakeCreatedTime
 	gotJSON[1].Created = fakeCreatedTime
-	want := []config.Post{
+	want := []config.GetPost{
 		{Id: 1, Title: "title1", Datas: "datas1", Created: fakeCreatedTime, IdUser: 1},
 		{Id: 2, Title: "title2", Datas: "datas2", Created: fakeCreatedTime, IdUser: 2},
 	}
@@ -99,12 +99,12 @@ func Test_ShowPost(t *testing.T) {
 	gotBody := responseRec.Body.Bytes()
 	gotCode := responseRec.Result().StatusCode
 	gotType := responseRec.Header().Get("Content-Type")
-	gotJSON := config.Post{}
+	gotJSON := config.GetPost{}
 	json.Unmarshal(gotBody, &gotJSON)
 
 	// carefull very couple to model_test.RegisterPosts
 	gotJSON.Created = fakeCreatedTime
-	want := config.Post{
+	want := config.GetPost{
 		Id: 2, Title: "title2", Datas: "datas2", Created: fakeCreatedTime, IdUser: 2,
 	}
 	if !reflect.DeepEqual(gotJSON, want) {
@@ -157,12 +157,12 @@ func Test_UpdatePost(t *testing.T) {
 	gotBodyCheck := responseRecCheck.Body.Bytes()
 	gotCodeCheck := responseRecCheck.Result().StatusCode
 	gotTypeCheck := responseRecCheck.Header().Get("Content-Type")
-	gotJSONCheck := config.Post{}
+	gotJSONCheck := config.GetPost{}
 	json.Unmarshal(gotBodyCheck, &gotJSONCheck)
 
 	// carefull very couple to model_test.RegisterPosts
 	gotJSONCheck.Created = fakeCreatedTime
-	want := config.Post{
+	want := config.GetPost{
 		Id: 2, Title: "update test post", Datas: "datasfill", Created: fakeCreatedTime, IdUser: 2,
 	}
 	if !reflect.DeepEqual(gotJSONCheck, want) {
@@ -214,7 +214,7 @@ func Test_DeletePost(t *testing.T) {
 	gotBodyCheck := responseRecCheck.Body.Bytes()
 	gotCodeCheck := responseRecCheck.Result().StatusCode
 	gotTypeCheck := responseRecCheck.Header().Get("Content-Type")
-	gotJSONCheck := []config.Post{}
+	gotJSONCheck := []config.GetPost{}
 	json.Unmarshal(gotBodyCheck, &gotJSONCheck)
 
 	if len(gotJSONCheck) != 1 {
@@ -222,7 +222,7 @@ func Test_DeletePost(t *testing.T) {
 	}
 	// carefull very couple to model_test.RegisterPosts
 	gotJSONCheck[0].Created = fakeCreatedTime
-	wantCheck := []config.Post{
+	wantCheck := []config.GetPost{
 		{Id: 1, Title: "title1", Datas: "datas1", Created: fakeCreatedTime, IdUser: 1},
 	}
 	if !reflect.DeepEqual(gotJSONCheck, wantCheck) {

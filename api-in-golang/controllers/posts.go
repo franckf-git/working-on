@@ -26,7 +26,7 @@ func ShowAllPosts(res http.ResponseWriter, req *http.Request) {
 }
 
 func AddPost(res http.ResponseWriter, req *http.Request) {
-	var post config.NewPost
+	var post config.SetPost
 	decoder := json.NewDecoder(req.Body)
 	defer req.Body.Close()
 
@@ -83,7 +83,7 @@ func ShowPost(res http.ResponseWriter, req *http.Request) {
 }
 
 func UpdatePost(res http.ResponseWriter, req *http.Request) {
-	var post config.NewPost
+	var post config.SetPost
 	decoder := json.NewDecoder(req.Body)
 	defer req.Body.Close()
 	vars := mux.Vars(req)

@@ -30,7 +30,7 @@ func RegisterPost(db *sql.DB, title string, datas string, idUser int) (id int, e
 	return
 }
 
-func GetAllPosts(db *sql.DB) (Posts []config.Post, err error) {
+func GetAllPosts(db *sql.DB) (Posts []config.GetPost, err error) {
 	stmt, err := db.Prepare("SELECT * FROM posts")
 	if err != nil {
 		config.ErrorLogg("GetAllPosts(models) - preparing query:", err)
@@ -55,7 +55,7 @@ func GetAllPosts(db *sql.DB) (Posts []config.Post, err error) {
 			config.ErrorLogg("GetAllPosts(models) - scanning values:", err)
 			return
 		}
-		currentPost := config.Post{
+		currentPost := config.GetPost{
 			Id:      id,
 			Title:   title,
 			Datas:   datas,
@@ -72,7 +72,7 @@ func GetAllPosts(db *sql.DB) (Posts []config.Post, err error) {
 	return
 }
 
-func GetPost(db *sql.DB, id int) (Post config.Post, err error) {
+func GetPost(db *sql.DB, id int) (Post config.GetPost, err error) {
 	stmt, err := db.Prepare("SELECT * FROM posts WHERE id = ?")
 	if err != nil {
 		config.ErrorLogg("GetPost(models) - preparing query:", err)
@@ -89,7 +89,7 @@ func GetPost(db *sql.DB, id int) (Post config.Post, err error) {
 		config.ErrorLogg("GetPost(models) - reading rows:", err)
 		return
 	}
-	Post = config.Post{
+	Post = config.GetPost{
 		Id:      id,
 		Title:   title,
 		Datas:   datas,
