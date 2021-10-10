@@ -14,13 +14,22 @@ import (
 func ShowAllPosts(res http.ResponseWriter, req *http.Request) {
 	posts, err := models.GetAllPosts(Db)
 	if err != nil {
-		config.ErrorLogg("ShowAllPostsPost(controllers) - register post:", err)
+		config.ErrorLogg("ShowAllPostsPost(controllers) - getting posts:", err)
 		failed := config.Message{
 			Status:  "error",
 			Message: "error while retriving posts",
 		}
 		res.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(res).Encode(failed)
+		return
+	}
+	if len(posts) == 0 {
+		failed := config.Message{
+			Status:  "success",
+			Message: "no posts in database",
+		}
+		json.NewEncoder(res).Encode(failed)
+		return
 	}
 	json.NewEncoder(res).Encode(posts)
 }
