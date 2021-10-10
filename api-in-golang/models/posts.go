@@ -55,12 +55,15 @@ func GetAllPosts(db *sql.DB) (Posts []config.GetPost, err error) {
 			config.ErrorLogg("GetAllPosts(models) - scanning values:", err)
 			return
 		}
+		post := config.Post{
+			Title:  title,
+			Datas:  datas,
+			IdUser: id,
+		}
 		currentPost := config.GetPost{
 			Id:      id,
-			Title:   title,
-			Datas:   datas,
+			Post:    post,
 			Created: created,
-			IdUser:  idUser,
 		}
 		Posts = append(Posts, currentPost)
 	}
@@ -89,12 +92,15 @@ func GetPost(db *sql.DB, id int) (Post config.GetPost, err error) {
 		config.ErrorLogg("GetPost(models) - reading rows:", err)
 		return
 	}
+	post := config.Post{
+		Title:  title,
+		Datas:  datas,
+		IdUser: id,
+	}
 	Post = config.GetPost{
 		Id:      id,
-		Title:   title,
-		Datas:   datas,
+		Post:    post,
 		Created: created,
-		IdUser:  idUser,
 	}
 	return
 }

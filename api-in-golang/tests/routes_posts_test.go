@@ -77,8 +77,24 @@ func Test_ShowAllPosts(t *testing.T) {
 	gotJSON[0].Created = fakeCreatedTime
 	gotJSON[1].Created = fakeCreatedTime
 	want := []config.GetPost{
-		{Id: 1, Title: "title1", Datas: "datas1", Created: fakeCreatedTime, IdUser: 1},
-		{Id: 2, Title: "title2", Datas: "datas2", Created: fakeCreatedTime, IdUser: 2},
+		{
+			Id: 1,
+			Post: config.Post{
+				Title:  "title1",
+				Datas:  "datas1",
+				IdUser: 1,
+			},
+			Created: fakeCreatedTime,
+		},
+		{
+			Id: 2,
+			Post: config.Post{
+				Title:  "title2",
+				Datas:  "datas2",
+				IdUser: 2,
+			},
+			Created: fakeCreatedTime,
+		},
 	}
 	if !reflect.DeepEqual(gotJSON, want) {
 		t.Errorf("ShowAllPosts fail, got datas: %v", gotJSON)
@@ -105,10 +121,16 @@ func Test_ShowPost(t *testing.T) {
 	// carefull very couple to model_test.RegisterPosts
 	gotJSON.Created = fakeCreatedTime
 	want := config.GetPost{
-		Id: 2, Title: "title2", Datas: "datas2", Created: fakeCreatedTime, IdUser: 2,
+		Id: 2,
+		Post: config.Post{
+			Title:  "title2",
+			Datas:  "datas2",
+			IdUser: 2,
+		},
+		Created: fakeCreatedTime,
 	}
 	if !reflect.DeepEqual(gotJSON, want) {
-		t.Errorf("ShowPost 2 fail, got datas: %v", gotJSON)
+		t.Errorf("ShowPost 2 fail, got datas: %v %v", want, gotJSON)
 	}
 	if gotCode != 200 {
 		t.Errorf("ShowPost 2 fails, got code: %d", gotCode)
@@ -163,7 +185,13 @@ func Test_UpdatePost(t *testing.T) {
 	// carefull very couple to model_test.RegisterPosts
 	gotJSONCheck.Created = fakeCreatedTime
 	want := config.GetPost{
-		Id: 2, Title: "update test post", Datas: "datasfill", Created: fakeCreatedTime, IdUser: 2,
+		Id: 2,
+		Post: config.Post{
+			Title:  "update test post",
+			Datas:  "datasfill",
+			IdUser: 2,
+		},
+		Created: fakeCreatedTime,
 	}
 	if !reflect.DeepEqual(gotJSONCheck, want) {
 		t.Errorf("Update 2 check response fail, got datas: %v", gotJSONCheck)
@@ -223,7 +251,15 @@ func Test_DeletePost(t *testing.T) {
 	// carefull very couple to model_test.RegisterPosts
 	gotJSONCheck[0].Created = fakeCreatedTime
 	wantCheck := []config.GetPost{
-		{Id: 1, Title: "title1", Datas: "datas1", Created: fakeCreatedTime, IdUser: 1},
+		{
+			Id: 1,
+			Post: config.Post{
+				Title:  "title1",
+				Datas:  "datas1",
+				IdUser: 1,
+			},
+			Created: fakeCreatedTime,
+		},
 	}
 	if !reflect.DeepEqual(gotJSONCheck, wantCheck) {
 		t.Errorf("Delete Check fail, got datas: %v", gotJSONCheck)

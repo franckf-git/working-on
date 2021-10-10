@@ -16,14 +16,12 @@ var debug bool = false
 var State string = os.Getenv("ENV")
 
 type GetPost struct {
-	Id      int    `json:"id"`
-	Title   string `json:"title"`
-	Datas   string `json:"datas"`
+	Id int `json:"id"`
+	Post
 	Created string `json:"created"`
-	IdUser  int    `json:"idUser"`
 }
 
-type SetPost struct {
+type Post struct {
 	Title  string `json:"title"`
 	Datas  string `json:"datas"`
 	IdUser int    `json:"idUser"`

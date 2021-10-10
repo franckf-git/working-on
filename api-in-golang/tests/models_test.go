@@ -27,8 +27,24 @@ func Test_GetAllPosts(t *testing.T) {
 	postsTests[0].Created = fakeCreatedTime
 	postsTests[1].Created = fakeCreatedTime
 	want := []config.GetPost{
-		{Id: 1, Title: "title1", Datas: "datas1", Created: fakeCreatedTime, IdUser: 1},
-		{Id: 2, Title: "title2", Datas: "datas2", Created: fakeCreatedTime, IdUser: 2},
+		{
+			Id: 1,
+			Post: config.Post{
+				Title:  "title1",
+				Datas:  "datas1",
+				IdUser: 1,
+			},
+			Created: fakeCreatedTime,
+		},
+		{
+			Id: 2,
+			Post: config.Post{
+				Title:  "title2",
+				Datas:  "datas2",
+				IdUser: 2,
+			},
+			Created: fakeCreatedTime,
+		},
 	}
 	if !reflect.DeepEqual(postsTests, want) {
 		fmt.Println(postsTests)
