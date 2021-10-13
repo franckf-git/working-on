@@ -3,29 +3,15 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"lite-api-crud/config"
 	"lite-api-crud/models"
 	"net/http"
 )
 
 func AddUser(w http.ResponseWriter, r *http.Request) {
-	var user models.User
-	body, _ := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-
-	err := json.Unmarshal(body, &user)
-	if err != nil || user.Email == "" || user.Password == "" {
-		config.ErrorLogg("AddUser(controllers) - decoding user:", err, user.Email)
-		failed := config.Message{
-			Status:  "error",
-			Message: "error while decoding payload " + fmt.Sprint(err, user.Email),
-		}
-		res, _ := json.Marshal(failed)
-		w.WriteHeader(http.StatusUnsupportedMediaType)
-		w.Write(res)
-		return
-	}
+	user := decodePayloadUser(w, r.Body)
+	// todo if user.Email == "" || user.Password == "" {
 
 	if !CheckEmailPassword(user) {
 		config.ErrorLogg("AddUser(controllers) - email/password valisator:", user.Email)
@@ -63,22 +49,8 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func AskJWT(w http.ResponseWriter, r *http.Request) {
-	var user models.User
-	body, _ := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-
-	err := json.Unmarshal(body, &user)
-	if err != nil || user.Email == "" || user.Password == "" {
-		config.ErrorLogg("AskJWT(controllers) - decoding user:", err, user.Email)
-		failed := config.Message{
-			Status:  "error",
-			Message: "error while decoding payload " + fmt.Sprint(err, user.Email),
-		}
-		res, _ := json.Marshal(failed)
-		w.WriteHeader(http.StatusUnsupportedMediaType)
-		w.Write(res)
-		return
-	}
+	user := decodePayloadUser(w, r.Body)
+	// todo if user.Email == "" || user.Password == "" {
 
 	id, err := user.CheckExistingUser(Db)
 	if err != nil {
@@ -118,4 +90,23 @@ func AskJWT(w http.ResponseWriter, r *http.Request) {
 	res, _ := json.Marshal(successfull)
 	w.WriteHeader(http.StatusAccepted)
 	w.Write(res)
+}
+
+func decodePayloadUser(w http.ResponseWriter, body io.ReadCloser) (user models.User) {
+	decoder := json.NewDecoder(body)
+	defer body.Close()
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&user)
+	if err != nil {
+		config.ErrorLogg("(controllers) - decoding user:", err)
+		failed := config.Message{
+			Status:  "error",
+			Message: "error while decoding payload " + fmt.Sprint(err),
+		}
+		res, _ := json.Marshal(failed)
+		w.WriteHeader(http.StatusUnsupportedMediaType)
+		w.Write(res)
+		return
+	}
+	return
 }
