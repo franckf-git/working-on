@@ -1,9 +1,9 @@
 package tests
 
 import (
+	"database/sql"
 	"fmt"
 	"lite-api-crud/config"
-	"lite-api-crud/controllers"
 	"lite-api-crud/models"
 	"reflect"
 	"testing"
@@ -14,16 +14,18 @@ import (
 
 var fakeCreatedTime string = time.Now().Format(time.RFC3339)
 
+var db *sql.DB = models.InitializeDB("test")
+
 func Test_RegisterPost(t *testing.T) {
-	firstInsert, _ := models.RegisterPost(controllers.Db, "title1", "datas1", 1)
-	secondInsert, _ := models.RegisterPost(controllers.Db, "title2", "datas2", 2)
+	firstInsert, _ := models.RegisterPost(db, "title1", "datas1", 1)
+	secondInsert, _ := models.RegisterPost(db, "title2", "datas2", 2)
 	if firstInsert != 1 && secondInsert != 2 {
 		t.Errorf("RegisterPost tests fail")
 	}
 }
 
 func Test_GetAllPosts(t *testing.T) {
-	postsTests, _ := models.GetAllPosts(controllers.Db)
+	postsTests, _ := models.GetAllPosts(db)
 	postsTests[0].Created = fakeCreatedTime
 	postsTests[1].Created = fakeCreatedTime
 	want := []config.GetPost{

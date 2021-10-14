@@ -55,16 +55,17 @@ func startDatabase(db *sql.DB) {
 // InitializeDB with 'production' or 'test'
 func InitializeDB(state string) *sql.DB {
 	switch state {
-	case "production":
+	case "test":
+		log.Printf("config.State init: %#+v\n", config.State)
+		db := OpenDatabase("file::memory:?cache=shared")
+		startDatabase(db)
+		return db
+	default:
 		createStorageFolder()
 		db := OpenDatabase(config.Database)
 		startDatabase(db)
 		backupDatabase()
 		migrateDatabase()
-		return db
-	default:
-		db := OpenDatabase("file::memory:?cache=shared")
-		startDatabase(db)
 		return db
 	}
 }

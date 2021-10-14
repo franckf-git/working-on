@@ -3,16 +3,15 @@ BINARY_NAME=lite-api-crud
 
 all: install test build
 
-.PHONY: build test cover run clean install help
+.PHONY: build test run clean install help
 
 build:
 	go build -ldflags="-s -w" -o ${BINARY_NAME} main.go
 
 test:
-	go test -v ./...
-
-cover:
-	go test -cover ./...
+	export ENV="test"
+	go test -timeout 30s lite-api-crud/tests
+	unset ENV
 
 run:
 	make build

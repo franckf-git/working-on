@@ -106,7 +106,7 @@ peu d'idées est bienvenue :
 
 - [x] utiliser une sqlite en mémoire pour les tests ":memory:", "file::memory:?cache=shared" ou "file:test.db?cache=shared&mode=memory"
 
-- [ ] réparer le `make test` pour ne pas dépendre de l'IDE pour lancer les tests. En profiter pour inverser les variables d'environnement (le défaut sur la prod, le test dans le make)
+- [x] réparer le `make test` pour ne pas dépendre de l'IDE pour lancer les tests. En profiter pour inverser les variables d'environnement (le défaut sur la prod, le test dans le make)
 
 ## Documentation de l'API
 
