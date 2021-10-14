@@ -15,7 +15,7 @@ Les fonctionalités à atteindre seront :
 - [x] validation des entrées pour les mails
 - [x] prise en comptes de toutes les erreurs possibles et retours par API avec
       messages explicites
-- documentation d'api automatique ?
+- [ ] documentation d'api automatique ?
 
 ### Inspirations
 
@@ -66,9 +66,11 @@ peu d'idées est bienvenue :
 - [x] harmonisation des requêtes du model (Exec, Prepare, Query, Begin, QueryRow, ...),
       c'est un peu le bazard
 
-- [ ] refactorisation de la partie controller Posts, illisible, beaucoup de
+- [x] refactorisation de la partie controller Posts, illisible, beaucoup de
       répétitions et d'erreurs similaires. Besoin de reduction, utiliser les middlewares
       pour gérer certaines choses (formating, ...) un niveau au dessus ?
+
+  > Refactorisation faite au maximum, fonctionnelle mais pas satisfaisant (cf decoding json) peut-être par manque de connaissance sur gorilla/mux
 
 - [x] utiliser des methodes pour les controleurs des routes Users, pour tester et
       comparer avec Posts
@@ -170,9 +172,12 @@ L'application est fonctionnelle mais son écriture a relevé certains problèmes
 - Quelques difficultées pour utiliser globalement la connection de la base de données. Au final, une fois la librairie sql bien comprise, tout s'agence bien. L'utilisation de variables d'environnement est dommage mais nécessaire pour faire cohabiter la production et les tests. Il est aussi étrange que ce soit le module controller qui initialise la db mais c'est lui qui l'utilise et qui le passe ensuite aux models.
 
 - Ajouter un ou plusieurs middlewares sur plusieurs sous-routes, avec le même chemin mais des methodes différentes, est compliqué :
+
   - Soit on fait un enchainement de fonctions de middleware, ce qui devient vite illisible
   - Soit on utilise les sous-routes dans gorilla/mux mais uniquement sur les routes qui nous interresent, ce qui rend la déclaration des routes inconsistante
   - Soit on adapte les chemins pour correspondre aux middlewares voulus (éclater les routes en sous-routes bien bornées), ce qui n'est pas consistant côté client et difficile à faire évoluer
     Le manque de connaissance sur la librairie standard des Handlers ne permet pas d'envisager d'autres solutions pour l'instant.
     Dans la version js, on avait répartit les routes en fonction des domaines, mais c'est une solution d'organisation, pas technique.
     La version actuelle fonctionne bien, à condition que l'on ait pas plus de deux "lots" de middlewares sur chaque route.
+
+- On a effleuré les fonctionnalités de gorilla/mux, une connaissance plus approfondie aurait peut-être aider à corriger certains problèmes plus facilement.
