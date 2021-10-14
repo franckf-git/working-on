@@ -3,7 +3,6 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"lite-api-crud/config"
 	"lite-api-crud/models"
 	"net/http"
@@ -36,7 +35,23 @@ func ShowAllPosts(res http.ResponseWriter, req *http.Request) {
 }
 
 func AddPost(res http.ResponseWriter, req *http.Request) {
-	post := decodePayloadPost(res, req.Body)
+	var post config.Post
+	decoder := json.NewDecoder(req.Body)
+	defer req.Body.Close()
+
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&post)
+	if err != nil {
+		config.ErrorLogg("AddPost(controllers) - decoding post:", err)
+		failed := config.Message{
+			Status:  "error",
+			Message: "error while decoding payload " + fmt.Sprint(err),
+		}
+		res.WriteHeader(http.StatusUnsupportedMediaType)
+		json.NewEncoder(res).Encode(failed)
+		return
+	}
+
 	idUserJWT, _ := strconv.Atoi(req.Header.Get("idUser"))
 
 	id, err := models.RegisterPost(Db, post.Title, post.Datas, idUserJWT)
@@ -77,7 +92,23 @@ func ShowPost(res http.ResponseWriter, req *http.Request) {
 }
 
 func UpdatePost(res http.ResponseWriter, req *http.Request) {
-	post := decodePayloadPost(res, req.Body)
+	var post config.Post
+	decoder := json.NewDecoder(req.Body)
+	defer req.Body.Close()
+
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&post)
+	if err != nil {
+		config.ErrorLogg("UpdatePost(controllers) - decoding post:", err)
+		failed := config.Message{
+			Status:  "error",
+			Message: "error while decoding payload " + fmt.Sprint(err),
+		}
+		res.WriteHeader(http.StatusUnsupportedMediaType)
+		json.NewEncoder(res).Encode(failed)
+		return
+	}
+
 	vars := mux.Vars(req)
 	id, _ := strconv.Atoi(vars["id"])
 
@@ -152,22 +183,4 @@ func DeletePost(res http.ResponseWriter, req *http.Request) {
 		Id:      id,
 	}
 	json.NewEncoder(res).Encode(successfull)
-}
-
-func decodePayloadPost(w http.ResponseWriter, body io.ReadCloser) (post config.Post) {
-	decoder := json.NewDecoder(body)
-	defer body.Close()
-	decoder.DisallowUnknownFields()
-	err := decoder.Decode(&post)
-	if err != nil {
-		config.ErrorLogg("(controllers) - decoding post:", err)
-		failed := config.Message{
-			Status:  "error",
-			Message: "error while decoding payload " + fmt.Sprint(err),
-		}
-		w.WriteHeader(http.StatusUnsupportedMediaType)
-		json.NewEncoder(w).Encode(failed)
-		return
-	}
-	return
 }
