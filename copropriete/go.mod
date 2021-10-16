@@ -1,4 +1,4 @@
-module coproprite
+module copropriete
 
 go 1.16
 
